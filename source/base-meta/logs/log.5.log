@@ -1,0 +1,23 @@
+2024.10.07 16:21:47.298 [INFO] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024.10.07 16:21:47.531 [INFO] com.base.meta.BaseMetaApplication: The following profiles are active: dev
+2024.10.07 16:21:49.298 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024.10.07 16:21:50.748 [DEBUG] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Filter 'jsonToUrlEncodedAuthenticationFilter' configured for use
+2024.10.07 16:21:50.817 [WARN] org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter: Unable to create an RSA verifier from verifierKey (ignoreable if using MAC)
+2024.10.07 16:21:52.126 [WARN] org.springframework.cloud.netflix.archaius.ArchaiusAutoConfiguration: No spring.application.name found, defaulting to 'application'
+2024.10.07 16:21:52.130 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
+2024.10.07 16:21:52.135 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
+2024.10.07 16:21:53.034 [INFO] com.base.meta.BaseMetaApplication: Started BaseMetaApplication in 6.012 seconds (JVM running for 6.703)
+2024.10.07 16:21:53.881 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:21:53.952 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:21:54.000 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:21:54.006 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:21:54.022 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:21:54.026 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:21:54.061 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:22:07.043 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:22:07.078 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:22:07.083 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:22:07.087 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: application/json
+2024.10.07 16:22:07.103 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:22:07.103 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
+2024.10.07 16:22:07.107 [INFO] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Token request content type: null
