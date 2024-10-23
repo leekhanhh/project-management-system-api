@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public interface TestExecutionTurnRepository extends JpaRepository<TestExecutionTurn, Long>, JpaSpecificationExecutor<TestExecutionTurn> {
     @Query("SELECT count(t) FROM TestExecutionTurn t WHERE t.testExecution.id = :testExecutionId")

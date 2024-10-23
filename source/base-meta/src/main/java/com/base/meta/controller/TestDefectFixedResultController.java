@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,8 @@ public class TestDefectFixedResultController extends ABasicController {
     TestDefectFixedResultMapper testDefectFixedResultMapper;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDFR_C')")
     public ApiMessageDto<String> createTestDefectFixedResult(@Valid @RequestBody CreateTestDefectFixedResultForm createTestDefectFixedResultForm, BindingResult bindingResult) {
         TestDefect testDefect = testDefectRepository.findFirstById(createTestDefectFixedResultForm.getTestDefectId()).orElseThrow(
                 () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
@@ -51,6 +55,8 @@ public class TestDefectFixedResultController extends ABasicController {
     }
 
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDFR_U')")
     public ApiMessageDto<String> updateTestDefectFixedResult(@Valid @RequestBody UpdateTestDefectFixedResultForm updateTestDefectFixedResultForm, BindingResult bindingResult) {
         TestDefectFixedResult testDefectFixedResult = testDefectFixedResultRepository.findFirstById(updateTestDefectFixedResultForm.getId()).orElseThrow(
                 () -> new NotFoundException("Test Defect Fixed Result not found!", ErrorCode.TEST_DEFECT_FIXED_RESULT_ERROR_NOT_EXIST)
@@ -80,6 +86,19 @@ public class TestDefectFixedResultController extends ABasicController {
         ApiMessageDto<ResponseListDto<TestDefectFixedResultDto>> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List Test Defect Fixed Result successfully.");
+        return apiMessageDto;
+    }
+
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDFR_D')")
+    public ApiMessageDto<String> deleteTestDefectFixedResult(@PathVariable Long id) {
+        TestDefectFixedResult testDefectFixedResult = testDefectFixedResultRepository.findFirstById(id).orElseThrow(
+                () -> new NotFoundException("Test Defect Fixed Result not found!", ErrorCode.TEST_DEFECT_FIXED_RESULT_ERROR_NOT_EXIST)
+        );
+        testDefectFixedResultRepository.delete(testDefectFixedResult);
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setMessage("Delete a Test Defect Fixed Result successfully.");
         return apiMessageDto;
     }
 }

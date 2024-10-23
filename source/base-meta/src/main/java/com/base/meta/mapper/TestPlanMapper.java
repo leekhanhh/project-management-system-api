@@ -17,7 +17,6 @@ public interface TestPlanMapper {
     @Mapping(source = "description", target = "description")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
-    @Mapping(source = "programId", target = "program.id")
     @BeanMapping(ignoreByDefault = true)
     TestPlan fromCreateTestPlanFormToEntity(CreateTestPlanForm createTestPlanForm);
 

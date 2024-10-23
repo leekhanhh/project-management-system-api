@@ -27,7 +27,7 @@ public interface TestDefectFixedResultMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "testDefect", target = "testDefect", qualifiedByName = "fromEntityToDtoAutoComplete")
-    @Mapping(source = "actionStartDate", target = "actionStartDate")
+    @Mapping(source = "actionStartDate", target = "fixedDate")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "remark", target = "remark")
     @BeanMapping(ignoreByDefault = true)

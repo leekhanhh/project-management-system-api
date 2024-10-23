@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,8 @@ public class TestDefectController extends ABasicController {
     CategoryRepository categoryRepository;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDE_C')")
     public ApiMessageDto<String> createTestDefect(@Valid @RequestBody CreateTestDefectForm createTestDefectForm, BindingResult bindingResult) {
         TestStepExecution testStepExecution = testStepExecutionRepository.findFirstById(createTestDefectForm.getTestStepExecutionId()).orElseThrow(
                 () -> new NotFoundException("Test Step Execution not found!", ErrorCode.TEST_STEP_EXECUTION_ERROR_NOT_EXIST)
@@ -63,6 +67,8 @@ public class TestDefectController extends ABasicController {
     }
 
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDE_U')")
     public ApiMessageDto<String> updateTestDefect(@Valid @RequestBody UpdateTestDefectForm updateTestDefectForm, BindingResult bindingResult) {
         TestDefect testDefect = testDefectRepository.findFirstById(updateTestDefectForm.getId()).orElseThrow(
                 () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
@@ -108,6 +114,19 @@ public class TestDefectController extends ABasicController {
         ApiMessageDto<ResponseListDto<TestDefectDto>> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List Test Defect successfully.");
+        return apiMessageDto;
+    }
+
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDE_D')")
+    public ApiMessageDto<String> deleteTestDefect(@PathVariable Long id) {
+        TestDefect testDefect = testDefectRepository.findFirstById(id).orElseThrow(
+                () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
+        );
+        testDefectRepository.delete(testDefect);
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setMessage("Delete a Test Defect successfully.");
         return apiMessageDto;
     }
 }

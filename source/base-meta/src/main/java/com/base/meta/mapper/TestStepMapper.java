@@ -18,7 +18,6 @@ public interface TestStepMapper {
     @Mapping(source = "action", target = "action")
     @Mapping(source = "data", target = "data")
     @Mapping(source = "expectedResult", target = "expectedResult")
-    @Mapping(source = "testCaseId", target = "testCase.id")
     @BeanMapping(ignoreByDefault = true)
     TestStep fromCreateTestStepFormToEntity(CreateTestStepForm createTestStepForm);
 

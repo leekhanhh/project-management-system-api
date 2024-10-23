@@ -13,4 +13,5 @@ public class UserDto {
     private String status;
     private String position;
     private AccountDto accountDto;
+    private Integer flag;
 }

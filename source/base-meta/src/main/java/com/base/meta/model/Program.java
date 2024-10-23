@@ -31,25 +31,20 @@ public class Program extends Auditable<String> {
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @Column(name = "program_type")
+    @JoinColumn(name = "type_category_id")
     private Category programType;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @Column(name = "program_status")
+    @JoinColumn(name = "status_category_id")
     private Category programStatus;
     @Column(name = "program_category")
     private String programCategory;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    @Column(name = "program_owner")
+    @JoinColumn(name = "owner_account_id")
     private Account programOwner;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    @Column(name = "assigned_developer")
+    @JoinColumn(name = "dev_account_id")
     private Account assignedDeveloper;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id")
-    @Column(name = "assigned_tester")
+    @JoinColumn(name = "tester_account_id")
     private Account assignedTester;
 }

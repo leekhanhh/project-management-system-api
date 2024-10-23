@@ -5,12 +5,14 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testexecution.TestExecutionDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testexecution.CreateTestExecutionForm;
 import com.base.meta.form.testexecution.UpdateTestExecutionForm;
 import com.base.meta.mapper.TestExecutionMapper;
 import com.base.meta.model.Account;
 import com.base.meta.model.Category;
+import com.base.meta.model.Program;
 import com.base.meta.model.TestExecution;
 import com.base.meta.model.criteria.TestExecutionCriteria;
 import com.base.meta.repository.*;
@@ -39,7 +41,7 @@ public class TestExecutionController extends ABasicController {
     @Autowired
     TestExecutionMapper testExecutionMapper;
     @Autowired
-    ProjectRepository projectRepository;
+    ProgramRepository programRepository;
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -57,7 +59,7 @@ public class TestExecutionController extends ABasicController {
         }
         Account account = accountRepository.findById(createTestExecutionForm.getAssignedDeveloperId()).orElse(null);
         if (account == null) {
-            throw new BadRequestException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
+            throw new NotFoundException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
         TestExecution testExecution = testExecutionRepository.findByName(createTestExecutionForm.getName());
         if (testExecution != null) {
@@ -65,15 +67,20 @@ public class TestExecutionController extends ABasicController {
         }
         Category category = categoryRepository.findFirstById(createTestExecutionForm.getCategoryId());
         if (category == null) {
-            throw new BadRequestException("Category is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
+            throw new NotFoundException("Category is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
         Category status = categoryRepository.findFirstById(createTestExecutionForm.getStatusId());
         if (status == null) {
-            throw new BadRequestException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
+            throw new NotFoundException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
+        Program program = programRepository.findById(createTestExecutionForm.getProgramId()).orElseThrow(()
+                -> new NotFoundException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST));
 
         testExecution = testExecutionMapper.fromCreateTestExecutionFormToEntity(createTestExecutionForm);
         testExecution.setAssignedDeveloper(account);
+        testExecution.setCategory(category);
+        testExecution.setStatus(status);
+        testExecution.setProgram(program);
         testExecutionRepository.save(testExecution);
         apiMessageDto.setMessage("Create test execution successfully!");
         return apiMessageDto;
@@ -87,25 +94,27 @@ public class TestExecutionController extends ABasicController {
         if (!isTester()) {
             throw new UnauthorizationException("Not allowed update!");
         }
-        Account account = accountRepository.findById(updateTestExecutionForm.getAssignedDeveloperId()).orElse(null);
-        if (account == null) {
-            throw new BadRequestException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
+        Account assignedDeveloper = accountRepository.findById(updateTestExecutionForm.getAssignedDeveloperId()).orElse(null);
+        if (assignedDeveloper == null) {
+            throw new NotFoundException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
         TestExecution testExecution = testExecutionRepository.findFirstById(updateTestExecutionForm.getId());
         if (testExecution == null) {
-            throw new BadRequestException("TestExecution is not existed!", ErrorCode.TEST_EXECUTION_ERROR_EXISTED);
+            throw new NotFoundException("TestExecution is not existed!", ErrorCode.TEST_EXECUTION_ERROR_EXISTED);
         }
         Category category = categoryRepository.findFirstById(updateTestExecutionForm.getCategoryId());
         if (category == null) {
-            throw new BadRequestException("Category is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
+            throw new NotFoundException("Category is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
         Category status = categoryRepository.findFirstById(updateTestExecutionForm.getStatusId());
         if (status == null) {
-            throw new BadRequestException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
+            throw new NotFoundException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
         testExecutionMapper.updateTestExecutionFromToEntity(updateTestExecutionForm, testExecution);
-        testExecution.setAssignedDeveloper(account);
+        testExecution.setAssignedDeveloper(assignedDeveloper);
+        testExecution.setCategory(category);
+        testExecution.setStatus(status);
         testExecutionRepository.save(testExecution);
         apiMessageDto.setMessage("Update test execution successfully!");
         return apiMessageDto;

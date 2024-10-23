@@ -92,6 +92,14 @@ public class BaseMetaConstant {
     public static final Integer CATEGORY_KIND_TEST_STEP_EXECUTION = 8;
     public static final Integer CATEGORY_KIND_TEST_DEFECT = 9;
 
+    /*
+    Status validation
+     */
+    public static final Integer STATUS_VALIDATION_NOT_STARTED = 1;
+    public static final Integer STATUS_VALIDATION_IN_PROGRESS = 2;
+    public static final Integer STATUS_VALIDATION_COMPLETED = 3;
+    public static final Integer STATUS_VALIDATION_CANCELLED = 4;
+
 
 
 }

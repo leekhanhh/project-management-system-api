@@ -12,7 +12,7 @@ public class CreateTestCaseForm {
     @NotEmpty(message = "testcase name is required")
     private String name;
     @ApiModelProperty(value = "testcase precordition", required = true)
-    private String precordition;
+    private String precondition;
     @ApiModelProperty(value = "testcase menu path", required = true)
     private String menuPath;
     @ApiModelProperty(value = "program id", required = true)

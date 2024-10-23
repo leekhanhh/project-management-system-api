@@ -32,7 +32,7 @@ public interface PermissionMapper {
     @Mapping(source = "kind", target = "kind")
     @Mapping(source = "createdDate", target = "createdDate")
     @Mapping(source = "modifiedDate", target = "modifiedDate")
-    @Mapping(source = "status", target = "status")
+    @Mapping(source = "flag", target = "flag")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToPermissionDto")
     PermissionDto fromEntityToPermissionDto(Permission permission);

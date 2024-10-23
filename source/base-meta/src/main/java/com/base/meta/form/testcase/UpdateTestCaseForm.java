@@ -14,8 +14,8 @@ public class UpdateTestCaseForm {
     @ApiModelProperty(value = "testcase name", required = true)
     @NotEmpty(message = "testcase name is required")
     private String name;
-    @ApiModelProperty(value = "testcase precordition", required = true)
-    private String precordition;
+    @ApiModelProperty(value = "testcase precondition", required = true)
+    private String precondition;
     @ApiModelProperty(value = "testcase menu path", required = true)
     private String menuPath;
 }

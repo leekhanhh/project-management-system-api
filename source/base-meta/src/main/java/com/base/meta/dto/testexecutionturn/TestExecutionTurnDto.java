@@ -15,7 +15,7 @@ public class TestExecutionTurnDto extends ABasicAdminDto {
     private Date endDate;
     private Date actualStartDate;
     private Date actualEndDate;
-    private AccountDto account;
+    private AccountDto assignedDeveloper;
     private TestExecutionDto testExecution;
     private Integer testDefectCount;
     private Integer totalCasesCount;

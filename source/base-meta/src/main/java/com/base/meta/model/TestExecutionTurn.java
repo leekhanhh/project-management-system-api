@@ -32,7 +32,6 @@ public class TestExecutionTurn extends Auditable<String>{
     private Date actualEndDate;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id")
-    @Column(name = "account_id")
     private Account assignedDeveloper;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_execution_id")

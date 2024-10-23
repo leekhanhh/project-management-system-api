@@ -21,15 +21,13 @@ public class Requirement extends Auditable<String> {
     private String name;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "devision_category_id")
     private Category devision;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "acceptance_category_id")
     private Category acceptance;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @Column(name = "detail_classification")
+    @JoinColumn(name = "detail_classification_category_id")
     private Category detailClassification;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id")

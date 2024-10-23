@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TestStepRepository extends JpaRepository<TestStep, Long> , JpaSpecificationExecutor<TestStep> {
     Optional<TestStep> findFirstById(Long id);
     List<TestStep> findAllByTestCaseId(Long testCaseId);
+    Optional<TestStep> findFirstByTestCaseAndStepNumber(Long testCaseId, Integer stepNumber);
 }

@@ -103,13 +103,13 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
     }
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<TestSuiteTestCaseRelation> getTestSuiteTestCaseRelation(@PathVariable("id") Long id) {
-        ApiMessageDto<TestSuiteTestCaseRelation> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<TestSuiteTestCaseRelationDto> getTestSuiteTestCaseRelation(@PathVariable("id") Long id) {
+        ApiMessageDto<TestSuiteTestCaseRelationDto> apiMessageDto = new ApiMessageDto<>();
         TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findById(id).orElse(null);
         if (testSuiteTestCaseRelation == null) {
             throw new BadRequestException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
         }
-        apiMessageDto.setData(testSuiteTestCaseRelation);
+        apiMessageDto.setData(testSuiteTestCaseRelationMapper.fromEntityToDto(testSuiteTestCaseRelation));
         apiMessageDto.setMessage("Get test suite test case relation success.");
         return apiMessageDto;
     }

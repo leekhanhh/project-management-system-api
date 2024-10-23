@@ -18,8 +18,6 @@ public interface UserMapper {
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(source = "avatarPath", target = "avatarPath")
-    @Mapping(source = "account.status.id", target = "memberStatusCategoryId")
-    @Mapping(source = "account.position.id", target = "memberPositionCategoryId")
     @BeanMapping(ignoreByDefault = true)
     User fromCreateUserFormToEntity(CreateUserForm createUserForm);
 
@@ -40,8 +38,6 @@ public interface UserMapper {
     @Mapping(target = "account.phone", source = "phone")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
-    @Mapping(source = "account.position.id", target = "memberPositionCategoryId")
-    @Mapping(source = "account.status.id", target = "memberStatusCategoryId")
     @Mapping(target = "flag", source = "status")
     @BeanMapping(ignoreByDefault = true)
     void updateUserFromEntity(UpdateUserForm updateUserForm, @MappingTarget User user);

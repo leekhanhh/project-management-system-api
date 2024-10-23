@@ -14,9 +14,6 @@ import java.util.List;
         uses = {TestPlanMapper.class, AccountMapper.class})
 public interface TestSuiteExecutionMapper {
     @Mapping(source = "orderNumber", target = "orderNumber")
-    @Mapping(source = "statusId", target = "status.id")
-    @Mapping(source = "testSuiteId", target = "testSuite.id")
-    @Mapping(source = "testExecutionTurnId", target = "testExecutionTurn.id")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromCreateTestSuiteExecutionFormToEntity")
     TestSuiteExecution fromCreateTestSuiteExecutionFormToEntity(CreateTestSuiteExecutionForm createTestSuiteExecutionForm);
@@ -35,7 +32,6 @@ public interface TestSuiteExecutionMapper {
     List<TestSuiteExecutionDto> fromEntityToTestSuiteExecutionDtoList(List<TestSuiteExecution> testSuiteExecutionList);
 
     @Mapping(source = "orderNumber", target = "orderNumber")
-    @Mapping(source = "statusId", target = "status.id")
     @Mapping(source = "flag", target = "flag")
     @BeanMapping(ignoreByDefault = true)
     void updateTestSuiteExecutionFromEntity(UpdateTestSuiteExecutionForm updateTestSuiteExecutionForm, @MappingTarget TestSuiteExecution testSuiteExecution);
