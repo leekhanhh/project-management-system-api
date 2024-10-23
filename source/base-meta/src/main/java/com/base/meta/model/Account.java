@@ -49,12 +49,10 @@ public class Account extends Auditable<String> {
     private Integer attemptLogin;
     @Column(name = "is_super_admin")
     private Boolean isSuperAdmin = false;
-    @Column(name = "member_status")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "status_category_id")
     private Category status;
-    @Column(name = "member_position")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "position_category_id")
     private Category position;
 }

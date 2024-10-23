@@ -18,22 +18,18 @@ public class TestCaseExecution extends Auditable<String>{
     @GeneratedValue(generator = "idGenerator")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_case_id")
-    @Column(name = "test_execution_turn")
+    @JoinColumn(name = "test_execution_turn_id")
     private TestExecutionTurn testExecutionTurn;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_case_id")
-    @Column(name = "test_case")
     private TestCase testCase;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_suite_id")
-    @Column(name = "test_suite")
     private TestSuite testSuite;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "status_category_id")
     private Category status;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @Column(name = "execution_type_code")
+    @JoinColumn(name = "type_code_category_id")
     private Category testExecutionTypeCode;
 }

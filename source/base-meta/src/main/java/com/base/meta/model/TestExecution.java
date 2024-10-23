@@ -20,10 +20,10 @@ public class TestExecution extends Auditable<String>{
     private Long id;
     private String name;
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_category_id")
     private Category category;
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "status_category_id")
     private Category status;
     @Column(name = "start_date")
     private Date planStartDate;
