@@ -45,5 +45,5 @@ public class CreateUserForm {
     private String logoPath;
     @NotNull(message = "status can not be null!")
     @ApiModelProperty(name = "status", required = true)
-    private Integer status;
+    private Integer flag;
 }

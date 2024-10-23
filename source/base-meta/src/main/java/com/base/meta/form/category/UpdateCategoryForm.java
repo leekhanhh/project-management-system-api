@@ -25,4 +25,7 @@ public class UpdateCategoryForm {
     private String categoryDescription;
     @ApiModelProperty(name = "categoryOrdering")
     private Integer categoryOrdering;
+    @ApiModelProperty(name = "system flag")
+
+    private Integer flag;
 }

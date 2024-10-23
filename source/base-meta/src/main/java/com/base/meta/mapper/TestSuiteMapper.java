@@ -15,8 +15,6 @@ import java.util.List;
 public interface TestSuiteMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "testPlanId", target = "testPlan.id")
-    @Mapping(source = "accountId", target = "account.id")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromCreateTestSuiteFormToEntity")
     TestSuite fromCreateTestSuiteFormToEntity(CreateTestSuiteForm createTestSuiteForm);
@@ -36,7 +34,6 @@ public interface TestSuiteMapper {
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "accountId", target = "account.id")
     @BeanMapping(ignoreByDefault = true)
     void updateTestSuiteFromEntity(UpdateTestSuiteForm updateTestSuiteForm, @MappingTarget TestSuite testSuite);
 

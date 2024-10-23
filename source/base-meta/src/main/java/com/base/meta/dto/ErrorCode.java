@@ -125,6 +125,7 @@ public class ErrorCode {
      */
     public static final String TEST_STEP_ERROR_NOT_EXIST = "ERROR-TEST-STEP-000";
     public static final String TEST_STEP_ERROR_NAME_EXISTED = "ERROR-TEST-STEP-001";
+    public static final String TEST_STEP_ERROR_STEP_NUMBER_EXISTED = "ERROR-TEST-STEP-002";
 
     /**
      * Test plan error code
@@ -179,4 +180,10 @@ public class ErrorCode {
      * Test step execution error code
      */
     public static final String TEST_STEP_EXECUTION_ERROR_NOT_EXIST = "ERROR-TEST-STEP-EXECUTION-000";
+
+    /**
+     * Test suite execution error code
+     */
+    public static final String TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED = "ERROR-TEST-SUITE-EXECUTION-000";
+    public static final String TEST_SUITE_EXECUTION_ERROR_NOT_EXIST = "ERROR-TEST-SUITE-EXECUTION-001";
 }

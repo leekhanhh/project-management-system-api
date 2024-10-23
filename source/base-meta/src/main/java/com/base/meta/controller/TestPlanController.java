@@ -3,6 +3,7 @@ package com.base.meta.controller;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
+import com.base.meta.dto.testplan.TestPlanDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testplan.CreateTestPlanForm;
@@ -116,22 +117,22 @@ public class TestPlanController extends ABasicController{
     }
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<TestPlan> getTestPlan(@PathVariable Long id){
-        ApiMessageDto<TestPlan> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<TestPlanDto> getTestPlan(@PathVariable Long id){
+        ApiMessageDto<TestPlanDto> apiMessageDto = new ApiMessageDto<>();
         TestPlan testPlan = testPlanRepository.findById(id).orElse(null);
         if (testPlan == null) {
             throw new BadRequestException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
         }
-        apiMessageDto.setData(testPlan);
+        apiMessageDto.setData(testPlanMapper.fromEntityToTestPlanDto(testPlan));
         apiMessageDto.setMessage("Get test plan success.");
         return apiMessageDto;
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<ResponseListDto<TestPlan>> listTestPlan(TestPlanCriteria testPlanCriteria, Pageable pageable){
-        ApiMessageDto<ResponseListDto<TestPlan>> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<ResponseListDto<TestPlanDto>> listTestPlan(TestPlanCriteria testPlanCriteria, Pageable pageable){
+        ApiMessageDto<ResponseListDto<TestPlanDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestPlan> testPlanPage = testPlanRepository.findAll(testPlanCriteria.getSpecification(), pageable);
-        ResponseListDto<TestPlan> responseListDto = new ResponseListDto(testPlanPage.getContent(), testPlanPage.getTotalElements(), testPlanPage.getTotalPages());
+        ResponseListDto<TestPlanDto> responseListDto = new ResponseListDto(testPlanMapper.fromEntityToTestPlanDtoList(testPlanPage.getContent()), testPlanPage.getTotalElements(), testPlanPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test plans success.");
         return apiMessageDto;

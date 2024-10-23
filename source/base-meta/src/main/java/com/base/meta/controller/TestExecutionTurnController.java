@@ -6,6 +6,7 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testexecutionturn.TestExecutionTurnDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testexecutionturn.CreateTestExecutionTurnForm;
 import com.base.meta.form.testexecutionturn.UpdateTestExecutionTurnForm;
@@ -118,7 +119,7 @@ public class TestExecutionTurnController extends ABasicController{
         }
         TestExecutionTurn testExecutionTurn = testExecutionTurnRepository.findFirstById(updateTestExecutionTurnForm.getId());
         if(testExecutionTurn == null){
-            throw new BadRequestException("Test execution turn not found", ErrorCode.TEST_EXECUTION_TURN_ERROR_NOT_EXIST);
+            throw new NotFoundException("Test execution turn not found", ErrorCode.TEST_EXECUTION_TURN_ERROR_NOT_EXIST);
         }
 
         if(!baseMetaApiService.checkStartDateIsAfterNow(updateTestExecutionTurnForm.getPlanStartDate())){
@@ -146,10 +147,17 @@ public class TestExecutionTurnController extends ABasicController{
         }
         Account assignedDeveloper = accountRepository.findById(updateTestExecutionTurnForm.getAssignedDeveloperId()).orElse(null);
         if(assignedDeveloper == null){
-            throw new BadRequestException("Assigned developer not found", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
+            throw new NotFoundException("Assigned developer not found", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
         if(assignedDeveloper.getKind() != BaseMetaConstant.USER_KIND_DEV){
             throw new BadRequestException("This account is not a developer", ErrorCode.ACCOUNT_ERROR_NOT_KIND_DEV);
+        }
+
+        if(updateTestExecutionTurnForm.getTurnNumber() != null && !updateTestExecutionTurnForm.getTurnNumber().equals(testExecutionTurn.getTurnNumber())){
+            TestExecutionTurn testExecutionTurnByTurnNumber = testExecutionTurnRepository.findFirstByTurnNumber(updateTestExecutionTurnForm.getTurnNumber());
+            if(testExecutionTurnByTurnNumber != null){
+                throw new BadRequestException("Turn number already exists", ErrorCode.TEST_EXECUTION_TURN_ERROR_EXIST);
+            }
         }
 
         testExecutionTurnMapper.updateTestExecutionTurnFromToEntity(updateTestExecutionTurnForm, testExecutionTurn);
@@ -201,10 +209,10 @@ public class TestExecutionTurnController extends ABasicController{
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<ResponseListDto<TestExecutionTurn>> listExecutionTurn(TestExecutionTurnCriteria testExecutionTurnCriteria, Pageable pageable){
-        ApiMessageDto<ResponseListDto<TestExecutionTurn>> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<ResponseListDto<TestExecutionTurnDto>> listExecutionTurn(TestExecutionTurnCriteria testExecutionTurnCriteria, Pageable pageable){
+        ApiMessageDto<ResponseListDto<TestExecutionTurnDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestExecutionTurn> testExecutionTurnPage = testExecutionTurnRepository.findAll(testExecutionTurnCriteria.getSpecification(), pageable);
-        ResponseListDto<TestExecutionTurn> responseListDto = new ResponseListDto(testExecutionTurnPage.getContent(), testExecutionTurnPage.getTotalElements(), testExecutionTurnPage.getTotalPages());
+        ResponseListDto<TestExecutionTurnDto> responseListDto = new ResponseListDto(testExecutionTurnPage.getContent(), testExecutionTurnPage.getTotalElements(), testExecutionTurnPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test execution turn success.");
         return apiMessageDto;

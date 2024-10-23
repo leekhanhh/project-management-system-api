@@ -24,4 +24,6 @@ public class UpdateProjectForm {
     @ApiModelProperty(value = "Project status", required = true, notes = "1: not started, 2: in progress, 3: completed, 4: cancelled")
     @NotNull(message = "Project status is required")
     private Long statusId;
+    @ApiModelProperty(value = "Project flag", required = true, notes = "true: active, false: inactive")
+    private Integer flag;
 }

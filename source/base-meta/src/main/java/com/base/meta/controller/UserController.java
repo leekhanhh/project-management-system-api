@@ -6,16 +6,19 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.account.user.UserDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.form.user.UpdateUserForm;
 import com.base.meta.form.user.UpdateUserProfileForm;
 import com.base.meta.form.user.CreateUserForm;
 import com.base.meta.mapper.AccountMapper;
 import com.base.meta.mapper.UserMapper;
 import com.base.meta.model.Account;
+import com.base.meta.model.Category;
 import com.base.meta.model.Group;
 import com.base.meta.model.User;
 import com.base.meta.model.criteria.UserCriteria;
 import com.base.meta.repository.AccountRepository;
+import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.GroupRepository;
 import com.base.meta.repository.UserRepository;
 import com.base.meta.service.BaseMetaApiService;
@@ -50,6 +53,8 @@ public class UserController extends ABasicController {
     @Autowired
     GroupRepository groupRepository;
     @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     DataSource dataSource;
@@ -68,14 +73,21 @@ public class UserController extends ABasicController {
         }
         Group group = groupRepository.findFirstByKind(createUserForm.getKind());
         if (group == null) {
-            throw new BadRequestException("Group not found! [User kind is invalid!]", ErrorCode.USER_ERROR_GROUP_NOT_FOUND);
+            throw new NotFoundException("Group not found! [User kind is invalid!]", ErrorCode.USER_ERROR_GROUP_NOT_FOUND);
         }
         User user = userRepository.findFirstByAccount_Email(createUserForm.getEmail()).orElse(null);
         if (user != null) {
             throw new BadRequestException("User is exist!", ErrorCode.USER_ERROR_EXIST);
         }
+        Category status = categoryRepository.findById(createUserForm.getMemberStatusCategoryId()).orElseThrow(()
+                -> new NotFoundException("Member status category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+
+        Category position = categoryRepository.findById(createUserForm.getMemberPositionCategoryId()).orElseThrow(()
+                -> new NotFoundException("Position category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
         account = accountMapper.fromCreateUserFormToEntity(createUserForm);
         account.setGroup(group);
+        account.setStatus(status);
+        account.setPosition(position);
         account.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
         if (createUserForm.getKind()==2)
         {
@@ -85,10 +97,9 @@ public class UserController extends ABasicController {
         {
             account.setKind(BaseMetaConstant.USER_KIND_TESTER);
         }
-        accountRepository.save(account);
-
         user = userMapper.fromCreateUserFormToEntity(createUserForm);
         user.setAccount(account);
+        accountRepository.save(account);
         userRepository.save(user);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create user success.");
@@ -105,7 +116,14 @@ public class UserController extends ABasicController {
         if (user == null) {
             throw new BadRequestException("User not found!", ErrorCode.USER_ERROR_NOT_FOUND);
         }
+        Category status = categoryRepository.findById(updateUserForm.getMemberStatusCategoryId()).orElseThrow(()
+                -> new NotFoundException("Member status category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+
+        Category position = categoryRepository.findById(updateUserForm.getMemberPositionCategoryId()).orElseThrow(()
+                -> new NotFoundException("Position category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
         userMapper.updateUserFromEntity(updateUserForm, user);
+        user.getAccount().setStatus(status);
+        user.getAccount().setPosition(position);
         userRepository.save(user);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Update user success.");

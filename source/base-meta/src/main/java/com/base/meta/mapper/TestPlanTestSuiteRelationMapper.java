@@ -14,8 +14,6 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {TestPlan.class, TestSuite.class})
 public interface TestPlanTestSuiteRelationMapper {
-    @Mapping(source = "testPlanId", target = "testPlan.id")
-    @Mapping(source = "testSuiteId", target = "testSuite.id")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromCreateTestPlanTestSuiteRelationFormToEntity")
     TestPlanTestSuiteRelation fromCreateTestPlanTestSuiteRelationFormToEntity(CreateTestPlanTestSuiteRelationForm createTestPlanTestSuiteRelationForm);

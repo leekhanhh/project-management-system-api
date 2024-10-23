@@ -18,7 +18,7 @@ public class ProgramDto extends ABasicAdminDto {
     private String programCategory;
     private String startDate;
     private String endDate;
-    private AccountDto account;
+    private AccountDto owner;
     private AccountDto developer;
     private AccountDto tester;
     private CategoryDto programStatus;

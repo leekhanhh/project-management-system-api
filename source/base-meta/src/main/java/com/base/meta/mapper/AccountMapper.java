@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = {GroupMapper.class})
+        uses = {GroupMapper.class, CategoryMapper.class})
 public interface AccountMapper {
     @Mapping(source = "username", target = "username")
     @Mapping(source = "phone", target = "phone")
@@ -18,8 +18,8 @@ public interface AccountMapper {
     @Mapping(source = "fullName", target = "fullName")
     @Mapping(source = "flag", target = "flag")
     @Mapping(source = "avatarPath", target = "avatarPath")
-    @Mapping(source = "memberStatusCategoryId", target = "category.id")
-    @Mapping(source = "memberPositionCategoryId", target = "category.id")
+    @Mapping(source = "memberStatusCategoryId", target = "status.id")
+    @Mapping(source = "memberPositionCategoryId", target = "position.id")
     @BeanMapping(ignoreByDefault = true)
     Account fromCreateUserFormToEntity(CreateUserForm createUserForm);
 
@@ -42,21 +42,17 @@ public interface AccountMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "avatarPath", target = "avatarPath")
     @Mapping(source = "fullName", target = "fullName")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "phone", target = "phone")
-    @Mapping(source = "status.name", target = "memberStatus")
-    @Mapping(source = "position.name", target = "memberPosition")
+    @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
+    @Mapping(source = "position", target = "position", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Named("fromAccountToAutoCompleteDto")
     AccountAutoCompleteDto fromAccountToAutoCompleteDto(Account account);
 
-
-    @IterableMapping(elementTargetType = AccountAutoCompleteDto.class)
-    List<AccountAutoCompleteDto> convertAccountToAutoCompleteDto(List<Account> list);
+    @IterableMapping(qualifiedByName = "fromAccountToAutoCompleteDto", elementTargetType = AccountAutoCompleteDto.class)
+    List<AccountAutoCompleteDto> fromEntityListToAutoCompleteDtoList(List<Account> accounts);
 
     @IterableMapping(elementTargetType = AccountDto.class, qualifiedByName = "fromAccountToDto")
     @Named("fromEntityToAccountDtoList")
     List<AccountDto> fromEntityToAccountDtoList(List<Account> accounts);
-
 
 
 }

@@ -14,10 +14,6 @@ import java.util.List;
         uses = {ProjectMapper.class, AccountMapper.class})
 public interface TestExecutionMapper {
     @Mapping(source = "name", target = "name")
-    @Mapping(source = "categoryId", target = "category.id")
-    @Mapping(source = "statusId", target = "status.id")
-    @Mapping(source = "assignedDeveloperId", target = "assignedDeveloper.id")
-    @Mapping(source = "programId", target = "program.id")
     @Mapping(source = "detail", target = "detail")
     @Mapping(source = "planStartDate", target = "planStartDate")
     @Mapping(source = "planEndDate", target = "planEndDate")
@@ -41,9 +37,6 @@ public interface TestExecutionMapper {
     List<TestExecutionDto> fromEntityToTestExecutionDtoList(List<TestExecution> testExecutions);
 
     @Mapping(source = "name", target = "name")
-    @Mapping(source = "categoryId", target = "category.id")
-    @Mapping(source = "statusId", target = "status.id")
-    @Mapping(source = "assignedDeveloperId", target = "assignedDeveloper.id")
     @Mapping(source = "detail", target = "detail")
     @Mapping(source = "planStartDate", target = "planStartDate")
     @Mapping(source = "planEndDate", target = "planEndDate")

@@ -43,7 +43,7 @@ public interface ProjectMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
-    @Mapping(source = "status", target = "statusName", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
+    @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToProjectAutoCompleteDto")
     ProjectAutoCompleteDto fromEntityToProjectAutoCompleteDto(Project project);

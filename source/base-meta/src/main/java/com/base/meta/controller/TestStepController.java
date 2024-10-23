@@ -5,6 +5,7 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.teststep.TestStepDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.teststep.CreateTestStepForm;
 import com.base.meta.form.teststep.UpdateTestStepForm;
@@ -49,8 +50,12 @@ public class TestStepController extends ABasicController{
         }
         TestCase testCase = testCaseRepository.findById(createTestStepForm.getTestCaseId()).orElse(null);
         if (testCase == null) {
-            throw new BadRequestException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
+            throw new NotFoundException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
         }
+        if(testStepRepository.findFirstByTestCaseAndStepNumber(testCase.getId(), createTestStepForm.getStepNumber()) != null){
+            throw new BadRequestException("Step number is existed!", ErrorCode.TEST_STEP_ERROR_STEP_NUMBER_EXISTED);
+        }
+
         TestStep testStep = testStepMapper.fromCreateTestStepFormToEntity(createTestStepForm);
         testStep.setTestCase(testCase);
         testStepRepository.save(testStep);

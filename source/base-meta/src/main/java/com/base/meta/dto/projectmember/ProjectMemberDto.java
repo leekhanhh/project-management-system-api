@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class ProjectMemberDto extends ABasicAdminDto {
     private Long id;
-    private ProjectDto projectId;
-    private AccountDto accountId;
+    private ProjectDto project;
+    private AccountDto account;
     private String onBoardedDate;
     private String offBoardedDate;
 }

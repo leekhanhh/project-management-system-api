@@ -13,22 +13,20 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {AccountMapper.class, TestExecutionMapper.class})
 public interface TestExecutionTurnMapper {
-    @Mapping(source = "planStartDate", target = "startDate")
-    @Mapping(source = "planEndDate", target = "endDate")
+    @Mapping(source = "planStartDate", target = "planStartDate")
+    @Mapping(source = "planEndDate", target = "planEndDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
     @Mapping(source = "actualEndDate", target = "actualEndDate")
-    @Mapping(source = "assignedDeveloperId", target = "assignedDeveloper.id")
-    @Mapping(source = "testExecutionId", target = "testExecution.id")
     @BeanMapping(ignoreByDefault = true)
     TestExecutionTurn fromCreateTestExecutionTurnFormToEntity(CreateTestExecutionTurnForm createTestExecutionTurnForm);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "startDate", target = "startDate")
-    @Mapping(source = "endDate", target = "endDate")
+    @Mapping(source = "planStartDate", target = "startDate")
+    @Mapping(source = "planEndDate", target = "endDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
     @Mapping(source = "actualEndDate", target = "actualEndDate")
     @Mapping(source = "assignedDeveloper", target = "assignedDeveloper", qualifiedByName = "fromAccountToAutoCompleteDto")
-    @Mapping(source = "testExecution", target = "testExecution", qualifiedByName = "fromEntityToAutoCompleteTestExecutionDto")
+    @Mapping(source = "testExecution", target = "testExecution", qualifiedByName = "fromEntityToTestExecutionDtoAutoComplete")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestExecutionTurnDto fromEntityToDto(TestExecutionTurn testExecutionTurn);
@@ -36,17 +34,16 @@ public interface TestExecutionTurnMapper {
     @IterableMapping(qualifiedByName = "fromEntityToDto", elementTargetType = TestExecutionTurnDto.class)
     List<TestExecutionTurnDto> fromEntitiesToDtos(List<TestExecutionTurn> testExecutionTurns);
 
-    @Mapping(source = "planStartDate", target = "startDate")
-    @Mapping(source = "planEndDate", target = "endDate")
+    @Mapping(source = "planStartDate", target = "planStartDate")
+    @Mapping(source = "planEndDate", target = "planEndDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
     @Mapping(source = "actualEndDate", target = "actualEndDate")
-    @Mapping(source = "assignedDeveloperId", target = "assignedDeveloper.id")
     @BeanMapping(ignoreByDefault = true)
     void updateTestExecutionTurnFromToEntity(UpdateTestExecutionTurnForm updateTestExecutionTurnForm, @MappingTarget TestExecutionTurn testExecutionTurn);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "startDate", target = "startDate")
-    @Mapping(source = "endDate", target = "endDate")
+    @Mapping(source = "planStartDate", target = "startDate")
+    @Mapping(source = "planEndDate", target = "endDate")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToAutoCompleteTestExecutionTurnDto")
     TestExecutionTurnDto fromEntityToAutoCompleteTestExecutionTurnDto(TestExecutionTurn testExecutionTurn);

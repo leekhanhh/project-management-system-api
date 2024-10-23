@@ -99,6 +99,7 @@ public class TestSuiteController extends ABasicController{
         }
 
         testSuiteMapper.updateTestSuiteFromEntity(updateTestSuiteForm, testSuite);
+        testSuite.setAccount(account);
         testSuiteRepository.save(testSuite);
         apiMessageDto.setMessage("Update test suite success.");
         return apiMessageDto;

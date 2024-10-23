@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Invalid username or password!");
         }
         boolean enabled = true;
-        if (user.getStatus() != 1) {
+        if (user.getFlag() != 1) {
             log.error("User had been locked!");
             enabled = false;
         }
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserDetailsService {
 
 
         boolean enabled = true;
-        if (user.getStatus() != 1) {
+        if (user.getFlag() != 1) {
             log.error("User had been locked!");
             enabled = false;
         }

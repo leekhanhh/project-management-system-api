@@ -59,6 +59,7 @@ public class TestCaseController extends ABasicController{
             throw new BadRequestException("Test case name is existed!", ErrorCode.TEST_CASE_ERROR_NAME_EXISTED);
         }
         TestCase testCase = testCaseMapper.fromCreateTestCaseFormToEntity(createTestCaseForm);
+        testCase.setProgram(program);
         testCaseRepository.save(testCase);
         apiMessageDto.setMessage("Create a new test case success.");
         return apiMessageDto;

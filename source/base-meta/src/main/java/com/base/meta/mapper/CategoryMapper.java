@@ -17,7 +17,6 @@ public interface CategoryMapper {
     @Mapping(source = "categoryCode", target = "code")
     @Mapping(source = "categoryOrdering", target = "ordering")
     @Mapping(source = "categoryKind", target = "kind")
-    @Mapping(source = "flag", target = "flag")
     @BeanMapping(ignoreByDefault = true)
     @Named("adminCreateMapping")
     Category fromCreateCategoryFormToEntity(CreateCategoryForm createCategoryForm);
@@ -51,8 +50,10 @@ public interface CategoryMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "kind", target = "categoryKind")
     @Mapping(source = "name", target = "categoryName")
-    @Mapping(source = "kind", target = "categoryKind")
     @Mapping(source = "code", target = "categoryCode")
+    @Mapping(source = "description", target = "categoryDescription")
+    @Mapping(source = "ordering", target = "categoryOrdering")
+    @Mapping(source = "parentCategory.id", target = "parentId")
     @BeanMapping(ignoreByDefault = true)
     @Named("adminAutoCompleteMapping")
     CategoryDto fromEntityToAdminDtoAutoComplete(Category category);

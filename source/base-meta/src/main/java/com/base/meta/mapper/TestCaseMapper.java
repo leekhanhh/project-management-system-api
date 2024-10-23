@@ -16,7 +16,6 @@ public interface TestCaseMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "precondition", target = "precondition")
     @Mapping(source = "menuPath", target = "menuPath")
-    @Mapping(source = "programId", target = "program.id")
     @BeanMapping(ignoreByDefault = true)
     TestCase fromCreateTestCaseFormToEntity(CreateTestCaseForm createTestCaseForm);
 

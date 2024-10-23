@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class TestCaseUploadDto extends ABasicAdminDto {
-    private String id;
+    private Long id;
     private String testCasePrecondition;
     private String testCaseName;
     private String testCaseMenuPath;

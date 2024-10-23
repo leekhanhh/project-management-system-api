@@ -11,6 +11,9 @@ public class UpdateTestExecutionTurnForm {
     @NotNull(message = "Id is required")
     @ApiModelProperty(value = "Test execution turn id", required = true)
     private Long id;
+    @ApiModelProperty(value = "Test execution turn number", required = true)
+    @NotNull(message = "Turn number is required")
+    private Integer turnNumber;
     @ApiModelProperty(value = "Test execution turn plan start date", required = true)
     @NotNull(message = "Plan start date is required")
     private Date planStartDate;

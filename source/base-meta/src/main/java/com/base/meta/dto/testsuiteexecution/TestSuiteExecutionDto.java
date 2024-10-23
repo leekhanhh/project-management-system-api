@@ -10,7 +10,7 @@ import lombok.Data;
 public class TestSuiteExecutionDto extends ABasicAdminDto {
     private Long id;
     private Integer orderNumber;
-    private CategoryDto category;
+    private CategoryDto status;
     private TestSuiteDto testSuite;
     private TestExecutionTurnDto testExecutionTurn;
 }

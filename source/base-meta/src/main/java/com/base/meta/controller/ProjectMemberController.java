@@ -119,14 +119,23 @@ public class ProjectMemberController extends ABasicController{
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<ProjectMemberDto>> listProjectMembers(ProjectMemberCriteria projectMemberCriteria, @PageableDefault(size = 1000) Pageable pageable) {
-        if (!isSuperAdmin()) {
-            throw new UnauthorizationException("Not allowed list!");
-        }
         ApiMessageDto<ResponseListDto<ProjectMemberDto>> apiMessageDto = new ApiMessageDto<>();
         Page<ProjectMember> page = projectMemberRepository.findAll(projectMemberCriteria.getSpecification(), pageable);
         ResponseListDto<ProjectMemberDto> responseListDto = new ResponseListDto(projectMemberMapper.fromEntityToProjectMemberDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List project members success.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<ProjectMemberDto> getProjectMember(@PathVariable Long id) {
+        ApiMessageDto<ProjectMemberDto> apiMessageDto = new ApiMessageDto<>();
+        ProjectMember projectMember = projectMemberRepository.findById(id).orElse(null);
+        if (projectMember == null) {
+            throw new BadRequestException("Project member is not existed!", ErrorCode.PROJECT_MEMBER_ERROR_NOT_EXIST);
+        }
+        apiMessageDto.setData(projectMemberMapper.fromEntityToProjectMemberDto(projectMember));
+        apiMessageDto.setMessage("Get project member success.");
         return apiMessageDto;
     }
 }

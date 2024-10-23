@@ -1,7 +1,6 @@
 package com.base.meta.repository;
 
 import com.base.meta.model.TestSuiteTestCaseRelation;
-import io.swagger.models.auth.In;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +16,4 @@ public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestS
 
     @Query("SELECT count(t) FROM TestSuiteTestCaseRelation t WHERE t.testSuite.id = :testSuiteId")
     Integer countByTestSuiteId(@Param("testSuiteId") Long testSuiteId);
-
 }

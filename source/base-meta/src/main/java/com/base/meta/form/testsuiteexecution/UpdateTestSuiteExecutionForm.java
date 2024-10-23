@@ -14,4 +14,6 @@ public class UpdateTestSuiteExecutionForm {
     private Integer orderNumber;
     @ApiModelProperty(value = "Test suite execution status id", required = true)
     private Long statusId;
+    @ApiModelProperty(value = "Test suite execution flag")
+    private Integer flag;
 }
