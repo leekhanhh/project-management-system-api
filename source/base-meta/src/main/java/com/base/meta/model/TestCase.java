@@ -20,7 +20,7 @@ public class TestCase extends Auditable<String> {
     private String name;
     private String precondition;
     private String menuPath;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "program_id")
     private Program program;
 

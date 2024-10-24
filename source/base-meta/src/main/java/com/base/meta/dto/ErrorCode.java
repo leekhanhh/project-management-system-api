@@ -72,6 +72,7 @@ public class ErrorCode {
     public static final String USER_ERROR_BUSY = "ERROR-USER-011";
     public static final String USER_ERROR_ON_SITE_PATERNITY = "ERROR-USER-012";
     public static final String USER_ERROR_RETIRED = "ERROR-USER-013";
+    public static final String USER_ERROR_IN_PROJECT = "ERROR-USER-014";
 
 
     /**

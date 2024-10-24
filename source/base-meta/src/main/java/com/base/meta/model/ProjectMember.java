@@ -20,11 +20,9 @@ public class ProjectMember extends Auditable<String> {
     private Long id;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
-    @MapsId
     private Project project;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
-    @MapsId
     private Account account;
     @Column(name = "on_boarded_date")
     private Date onBoardedDate;

@@ -24,7 +24,7 @@ public class TestPlan extends Auditable<String>{
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_id")
     private Program program;
 }

@@ -17,10 +17,10 @@ public class TestSuiteTestCaseRelation extends Auditable<String>{
     @GenericGenerator(name = "idGenerator", strategy = "com.base.meta.service.id.IdGenerator")
     @GeneratedValue(generator = "idGenerator")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_suite_id")
     private TestSuite testSuite;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 }

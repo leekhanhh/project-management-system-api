@@ -18,9 +18,6 @@ public class CreateUserForm {
     @NotEmpty(message = "password can not be empty!")
     @ApiModelProperty(name = "password", required = true)
     private String password;
-    @NotEmpty(message = "fullName can not be empty!")
-    @ApiModelProperty(name = "fullName", required = true)
-    private String fullName;
     @NotEmpty(message = "phone can not be empty!")
     @ApiModelProperty(name = "phone", required = true)
     private String phone;

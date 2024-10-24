@@ -23,7 +23,7 @@ public class TestStep extends Auditable<String>{
     private String data;
     @Column(name = "expected_result")
     private String expectedResult;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
