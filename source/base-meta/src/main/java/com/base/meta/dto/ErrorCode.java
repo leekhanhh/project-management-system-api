@@ -57,6 +57,7 @@ public class ErrorCode {
      */
     public static final String GROUP_ERROR_NAME_EXIST = "ERROR-GROUP-000";
     public static final String GROUP_ERROR_NOT_FOUND = "ERROR-GROUP-001";
+    public static final String GROUP_ERROR_KIND_EXIST = "ERROR-GROUP-002";
 
     /**
      * User error code

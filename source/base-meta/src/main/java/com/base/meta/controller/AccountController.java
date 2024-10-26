@@ -6,6 +6,7 @@ import com.base.meta.dto.account.AccountDto;
 import com.base.meta.dto.account.ForgetPasswordDto;
 import com.base.meta.dto.account.RequestForgetPasswordForm;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.account.CreateAccountAdminForm;
 import com.base.meta.form.account.ForgetPasswordForm;
 import com.base.meta.form.account.UpdateAccountAdminForm;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
@@ -55,6 +57,27 @@ public class AccountController extends ABasicController {
 
     @Autowired
     BaseMetaApiService baseMetaApiService;
+    @PostConstruct
+    public void initializeAdminAccount(){
+        log.info("Initialize admin account");
+        Account account = accountRepository.findAccountByUsername("admin");
+        if (account != null) {
+            log.info("Admin account is existed");
+        }
+        if(account == null) {
+            account = new Account();
+            account.setUsername("admin");
+            account.setPassword(passwordEncoder.encode("leekhan12345"));
+            account.setFullName("Lý Hồng Khanh");
+            account.setKind(BaseMetaConstant.USER_KIND_ADMIN);
+            account.setEmail("leekhan101102@gmail.com");
+            account.setPhone("0824704448");
+            account.setIsSuperAdmin(true);
+            account.setGroup(groupRepository.findById(400L).orElse(null));
+            account.setFlag(1);
+            accountRepository.save(account);
+        }
+    }
 
     @PostMapping(value = "/create-admin", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ACC_C_AD')")
@@ -123,7 +146,7 @@ public class AccountController extends ABasicController {
 
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ACC_V')")
+    @PreAuthorize("hasRole('ACC_V_AD')")
     public ApiResponse<Account> getAccount(@PathVariable("id") Long id) {
         ApiResponse<Account> apiMessageDto = new ApiResponse<>();
         Account account = accountRepository.findById(id).orElse(null);
@@ -136,7 +159,7 @@ public class AccountController extends ABasicController {
     }
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ACC_D')")
+    @PreAuthorize("hasRole('ACC_D_AD')")
     public ApiResponse<String> deleteAccount(@PathVariable("id") Long id) {
         ApiResponse<String> apiMessageDto = new ApiResponse<>();
         Account account = accountRepository.findById(id).orElse(null);
@@ -170,6 +193,9 @@ public class AccountController extends ABasicController {
 
     @PutMapping(value = "/update-profile-admin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<String> updateProfileAdmin(final HttpServletRequest request, @Valid @RequestBody UpdateProfileAdminForm updateProfileAdminForm, BindingResult bindingResult) {
+        if (!isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed update!");
+        }
 
         ApiResponse<String> apiMessageDto = new ApiResponse<>();
         long id = getCurrentUser();
@@ -262,8 +288,11 @@ public class AccountController extends ABasicController {
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ACC_L')")
+    @PreAuthorize("hasRole('ACC_L_AD')")
     public ApiResponse<ResponseListDto<AccountDto>> listAccount(AccountCriteria accountCriteria, Pageable pageable) {
+        if (!isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed view!");
+        }
         ApiResponse<ResponseListDto<AccountDto>> apiMessageDto = new ApiResponse<>();
         Page<Account> page = accountRepository.findAll(accountCriteria.getSpecification(), pageable);
         ResponseListDto<AccountDto> responseListDto = new ResponseListDto(accountMapper.fromEntityToAccountDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());

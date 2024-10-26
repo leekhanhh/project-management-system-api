@@ -1074,7 +1074,7 @@
             <column name="username" value="admin"/>
             <column name="phone" value="0824704448"/>
             <column name="email" value="leekhan101102@gmail.com"/>
-            <column name="password" value="{bcrypt}$2y$10$Tud6v8TZW0shJOU/ymcOKec3Y09AQ5AFdShDRt8QtGyexDCSRRhX"/>
+            <column name="password" value="{bcrypt}$2b$12$qkZVLW/thVBgP2e7fyIuzOrdeflD.MLKxRUOtplvJhu9AGLtynr22"/>
             <column name="full_name" value="Lý Hồng Khanh"/>
             <column name="is_super_admin" value="1"/>
             <column name="group_id" valueNumeric="400"/>

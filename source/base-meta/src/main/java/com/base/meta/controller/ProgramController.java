@@ -47,7 +47,7 @@ public class ProgramController extends ABasicController{
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('PRO_C')")
+    @PreAuthorize("hasRole('PG_C')")
     public ApiMessageDto<String> createProgram(@Valid @RequestBody CreateProgramForm createProgramForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
 
@@ -114,7 +114,7 @@ public class ProgramController extends ABasicController{
 
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('PRO_U')")
+    @PreAuthorize("hasRole('PG_U')")
     public ApiMessageDto<ProgramDto> updateProgram(@Valid @RequestBody UpdateProgramForm updateProgramForm, BindingResult bindingResult) {
         ApiMessageDto<ProgramDto> apiMessageDto = new ApiMessageDto<>();
         Program program = programRepository.findFirstById(updateProgramForm.getId());
@@ -186,7 +186,7 @@ public class ProgramController extends ABasicController{
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('PRO_D')")
+    @PreAuthorize("hasRole('PG_D')")
     public ApiMessageDto<String> deleteProgram(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         Program program = programRepository.findById(id).orElse(null);

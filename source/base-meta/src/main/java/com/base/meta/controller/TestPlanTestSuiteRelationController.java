@@ -71,7 +71,7 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
 
     @PutMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('TPTSR_U')")
+    @PreAuthorize("hasRole('TPTSR_D')")
     public ApiMessageDto<String> deleteTestPlanTestSuiteRelation(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if (!isTester()) {

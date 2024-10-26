@@ -84,7 +84,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
     public AccountForTokenDto getAccountByUsername(String username) {
         try {
             String query = "SELECT id, kind, username, email, full_name, is_super_admin " +
-                    "FROM " + TablePrefix.PREFIX_TABLE + "account WHERE username = ? and status = 1 limit 1;";
+                    "FROM " + TablePrefix.PREFIX_TABLE + "account WHERE username = ? and flag = 1 limit 1;";
             log.debug(query);
             List<AccountForTokenDto> dto = jdbcTemplate.query(query, new Object[]{username}, new BeanPropertyRowMapper<>(AccountForTokenDto.class));
             if (dto.size() > 0) return dto.get(0);

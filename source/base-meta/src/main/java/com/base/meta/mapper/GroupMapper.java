@@ -23,7 +23,7 @@ public interface GroupMapper {
     @Mapping(source = "description", target = "description")
     @Mapping(source = "kind", target = "kind")
     @Mapping(source = "isSystemRole", target = "isSystemRole")
-    @Mapping(source = "permissions", target = "permissions", qualifiedByName = "fromEntityToPermissionDtoShortList")
+    @Mapping(source = "permissions", target = "permissions", qualifiedByName= "fromEntityToPermissionDtoShortList")
     @Mapping(source = "createdDate", target = "createdDate")
     @Mapping(source = "modifiedDate", target = "modifiedDate")
     @Mapping(source = "flag", target = "flag")
