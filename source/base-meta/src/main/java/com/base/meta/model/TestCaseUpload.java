@@ -31,7 +31,7 @@ public class TestCaseUpload extends Auditable<String>{
     private String testStepsExpectedResult;
     @Column(name = "test_steps_actual_result")
     private String testStepsActualResult;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "program_id")
     private Program program;
 }

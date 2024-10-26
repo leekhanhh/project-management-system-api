@@ -57,6 +57,10 @@ public class GroupController extends ABasicController {
         if (group != null) {
             throw new BadRequestException("Group name is exist!", ErrorCode.GROUP_ERROR_NAME_EXIST);
         }
+        group = groupRepository.findFirstByKind(createGroupForm.getKind());
+        if (group != null) {
+            throw new BadRequestException("Group kind is exist!", ErrorCode.GROUP_ERROR_KIND_EXIST);
+        }
         group = groupMapper.fromCreateGroupFormToEntity(createGroupForm);
         List<Permission> permissions = new ArrayList<>();
         for (long permissionId : createGroupForm.getPermissions()) {
@@ -107,37 +111,36 @@ public class GroupController extends ABasicController {
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('GR_V')")
-    public ApiMessageDto<Group> get(@PathVariable("id") Long id) {
+    public ApiMessageDto<GroupDto> get(@PathVariable("id") Long id) {
         if (!isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed to get!");
         }
-        ApiMessageDto<Group> apiMessageDto = new ApiMessageDto<>();
+        ApiMessageDto<GroupDto> apiMessageDto = new ApiMessageDto<>();
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             throw new NotFoundException("Group not found!", ErrorCode.GROUP_ERROR_NOT_FOUND);
         }
-        apiMessageDto.setData(group);
+        apiMessageDto.setData(groupMapper.fromEntityToGroupDto(group));
         apiMessageDto.setMessage("Get group success.");
         return apiMessageDto;
     }
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('GR_L')")
-    public ApiMessageDto<ResponseListDto<Group>> list(@RequestParam(required = true)  int kind, Pageable pageable) {
+    public ApiMessageDto<ResponseListDto<GroupDto>> list(GroupCriteria groupCriteria, Pageable pageable) {
         if (!isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed list group!");
         }
-        ApiMessageDto<ResponseListDto<Group>> apiMessageDto = new ApiMessageDto<>();
-        Page<Group> groups = groupRepository
-                .findAllByKind(kind, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(new Sort.Order(Sort.Direction.DESC, "created_date"))));
-        ResponseListDto<Group> responseListDto = new ResponseListDto(groups.getContent(), groups.getTotalElements(), groups.getTotalPages());
+        ApiMessageDto<ResponseListDto<GroupDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<Group> groups = groupRepository.findAll(groupCriteria.getSpecification(), pageable);
+        ResponseListDto<GroupDto> responseListDto = new ResponseListDto(groupMapper.fromEntityToGroupDtoList(groups.getContent()), groups.getTotalElements(), groups.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List group success.");
         return apiMessageDto;
     }
 
     @PutMapping(value = "/add-permission", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('GR_U')")
+    @PreAuthorize("hasRole('GR_AP')")
     @Transactional
     public ApiMessageDto<String> addPermission(@Valid @RequestBody AddPermissionForm addPermissionForm, BindingResult bindingResult) {
         if (!isSuperAdmin()) {
@@ -162,7 +165,7 @@ public class GroupController extends ABasicController {
     }
 
     @DeleteMapping(value = "/remove-permission", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('GR_U')")
+    @PreAuthorize("hasRole('GR_RP')")
     @Transactional
     public ApiMessageDto<String> removePermission(@Valid @RequestBody AddPermissionForm addPermissionForm, BindingResult bindingResult) {
         if (!isSuperAdmin()) {

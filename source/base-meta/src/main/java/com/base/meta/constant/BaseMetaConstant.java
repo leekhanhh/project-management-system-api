@@ -7,8 +7,9 @@ public class BaseMetaConstant {
 
 
     public static final Integer USER_KIND_ADMIN = 1;
-    public static final Integer USER_KIND_DEV = 2;
-    public static final Integer USER_KIND_TESTER = 3;
+    public static final Integer USER_KIND_PM = 2;
+    public static final Integer USER_KIND_DEV = 3;
+    public static final Integer USER_KIND_TESTER = 4;
 
     public static final Integer STATUS_ACTIVE = 1;
     public static final Integer STATUS_PENDING = 0;

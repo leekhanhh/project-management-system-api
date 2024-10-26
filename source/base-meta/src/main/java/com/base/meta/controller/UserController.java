@@ -12,15 +12,9 @@ import com.base.meta.form.user.UpdateUserProfileForm;
 import com.base.meta.form.user.CreateUserForm;
 import com.base.meta.mapper.AccountMapper;
 import com.base.meta.mapper.UserMapper;
-import com.base.meta.model.Account;
-import com.base.meta.model.Category;
-import com.base.meta.model.Group;
-import com.base.meta.model.User;
+import com.base.meta.model.*;
 import com.base.meta.model.criteria.UserCriteria;
-import com.base.meta.repository.AccountRepository;
-import com.base.meta.repository.CategoryRepository;
-import com.base.meta.repository.GroupRepository;
-import com.base.meta.repository.UserRepository;
+import com.base.meta.repository.*;
 import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +49,8 @@ public class UserController extends ABasicController {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
+    ProjectMemberRepository projectMemberRepository;
+    @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     DataSource dataSource;
@@ -88,6 +84,7 @@ public class UserController extends ABasicController {
         account.setGroup(group);
         account.setStatus(status);
         account.setPosition(position);
+        account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
         account.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
         if (createUserForm.getKind()==2)
         {
@@ -193,8 +190,10 @@ public class UserController extends ABasicController {
             //delete old image
             baseMetaApiService.deleteFile(user.getAccount().getAvatarPath());
         }
-
         userMapper.updateUserProfileFromEntity(updateuserProfileForm, user);
+        Account account = user.getAccount();
+        account.setFullName(updateuserProfileForm.getFirstName() + " " + updateuserProfileForm.getLastName());
+        accountRepository.save(account);
         userRepository.save(user);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Update user profile success.");
@@ -203,13 +202,21 @@ public class UserController extends ABasicController {
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('US_D')")
-    public ApiMessageDto<String> deleteuser(@PathVariable("id") Long id) {
+    public ApiMessageDto<String> deleteUser(@PathVariable("id") Long id) {
         if (!isSuperAdmin()) {
             throw new BadRequestException("Only super admin can delete user!", ErrorCode.USER_ERROR_UNAUTHORIZED);
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("user not found!", ErrorCode.USER_ERROR_NOT_FOUND));
-        userRepository.deleteById(id);
+
+        ProjectMember projectMember = projectMemberRepository.findByAccountId(id);
+        if (projectMember != null)
+        {
+            throw new BadRequestException("Can not delete user attending in project!", ErrorCode.USER_ERROR_IN_PROJECT);
+        }
+        userRepository.delete(user);
+        accountRepository.delete(user.getAccount());
+        //already delete user mapping in the ProjectMember table in liquibase onDeleteCascade constraint
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Delete user success.");
         return apiMessageDto;

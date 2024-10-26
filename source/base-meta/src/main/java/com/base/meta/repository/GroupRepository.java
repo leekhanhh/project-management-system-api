@@ -12,8 +12,5 @@ import org.springframework.data.repository.query.Param;
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
     Group findFirstByName(String name);
 
-    @Query(value = "SELECT *  FROM " + TablePrefix.PREFIX_TABLE + "group g where g.is_system_role = cast(0 as bit) and g.kind = :kind", nativeQuery = true)
-    Page<Group> findAllByKind(@Param("kind") int kind, Pageable pageable);
-
     Group findFirstByKind(int kind);
 }

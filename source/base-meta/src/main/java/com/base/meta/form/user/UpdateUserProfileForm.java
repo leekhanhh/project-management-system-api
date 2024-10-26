@@ -26,9 +26,6 @@ public class UpdateUserProfileForm {
     @NotEmpty(message = "lastname can not be empty!")
     @ApiModelProperty(name = "lastName", required = true)
     private String lastName;
-    @NotEmpty(message = "fullName cant not be empty!")
-    @ApiModelProperty(name = "fullName", required = true)
-    private String fullName;
     @NotEmpty(message = "phone cant not be empty!")
     @ApiModelProperty(name = "phone", required = true)
     private String phone;

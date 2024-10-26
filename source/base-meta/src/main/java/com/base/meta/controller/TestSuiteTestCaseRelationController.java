@@ -41,7 +41,7 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
     @Autowired
     TestCaseRepository testCaseRepository;
 
-    @PostMapping(value = "/add-testcase", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TSTCR_C')")
     public ApiMessageDto<String> createTestSuiteTestCaseRelation(@Valid @RequestBody CreateTestSuiteTestCaseRelationForm createTestSuiteTestCaseRelationForm, BindingResult bindingResult) {

@@ -20,10 +20,10 @@ public class TestSuite extends Auditable<String>{
     private Long id;
     private String name;
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "test_plan_id")
     private TestPlan testPlan;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "account_id")
     private Account account;
 }

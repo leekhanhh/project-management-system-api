@@ -43,9 +43,9 @@ public interface UserMapper {
     void updateUserFromEntity(UpdateUserForm updateUserForm, @MappingTarget User user);
 
     @Mapping(target = "account.email", source = "email")
-    @Mapping(target = "account.fullName", source = "fullName")
     @Mapping(target = "account.phone", source = "phone")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
+    @BeanMapping(ignoreByDefault = true)
     void updateUserProfileFromEntity(UpdateUserProfileForm updateUserProfileForm, @MappingTarget User user);
 }

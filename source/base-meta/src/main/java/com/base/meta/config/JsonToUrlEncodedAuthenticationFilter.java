@@ -34,20 +34,29 @@ public class JsonToUrlEncodedAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Token request content type: {}", request.getContentType());
-        if (Objects.equals(request.getServletPath(), "/api/token") && request.getContentType() != null && request.getContentType().contains(MediaType.APPLICATION_JSON_VALUE)) {
 
+        // Check if the request is for the token endpoint and is of type JSON
+        if ("/api/token".equals(request.getServletPath()) &&
+                MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
+
+            // Read the JSON request body
             byte[] json = ByteStreams.toByteArray(request.getInputStream());
 
+            // Convert JSON to Map
             Map<String, String> jsonMap = new ObjectMapper().readValue(json, Map.class);
-            Map<String, String[]> parameters =
-                    jsonMap.entrySet().stream()
-                            .collect(Collectors.toMap(
-                                    Map.Entry::getKey,
-                                    e -> new String[]{e.getValue()})
-                            );
+
+            // Convert the Map to String[] parameters for the HttpServletRequest
+            Map<String, String[]> parameters = jsonMap.entrySet().stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            e -> new String[]{e.getValue()}
+                    ));
+
+            // Wrap the original request with the new parameters
             HttpServletRequest requestWrapper = new RequestWrapper(request, parameters);
-            filterChain.doFilter(requestWrapper, response);
+            filterChain.doFilter(requestWrapper, response); // Continue with the wrapped request
         } else {
+            // Proceed with the original request if it doesn't match the condition
             filterChain.doFilter(request, response);
         }
     }

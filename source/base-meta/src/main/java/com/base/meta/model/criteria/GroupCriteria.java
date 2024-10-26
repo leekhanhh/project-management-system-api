@@ -18,7 +18,7 @@ public class GroupCriteria implements Serializable {
     private Long id;
     private String name;
     @NotNull(message = "kind cannot be null!")
-    private int kind;
+    private Integer kind;
     private Boolean isSystemRole;
     private Integer status;
 
@@ -41,7 +41,9 @@ public class GroupCriteria implements Serializable {
                 if (getStatus() != null) {
                     predicates.add(cb.equal(root.get("status"), getStatus()));
                 }
-                predicates.add(cb.equal(root.get("kind"), getKind()));
+                if (getKind() != null) {
+                    predicates.add(cb.equal(root.get("kind"), getKind()));
+                }
                 query.orderBy(cb.desc(root.get("createdDate")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

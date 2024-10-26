@@ -57,6 +57,7 @@ public class ErrorCode {
      */
     public static final String GROUP_ERROR_NAME_EXIST = "ERROR-GROUP-000";
     public static final String GROUP_ERROR_NOT_FOUND = "ERROR-GROUP-001";
+    public static final String GROUP_ERROR_KIND_EXIST = "ERROR-GROUP-002";
 
     /**
      * User error code
@@ -72,6 +73,7 @@ public class ErrorCode {
     public static final String USER_ERROR_BUSY = "ERROR-USER-011";
     public static final String USER_ERROR_ON_SITE_PATERNITY = "ERROR-USER-012";
     public static final String USER_ERROR_RETIRED = "ERROR-USER-013";
+    public static final String USER_ERROR_IN_PROJECT = "ERROR-USER-014";
 
 
     /**

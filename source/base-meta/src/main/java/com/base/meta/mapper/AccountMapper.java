@@ -15,7 +15,6 @@ public interface AccountMapper {
     @Mapping(source = "username", target = "username")
     @Mapping(source = "phone", target = "phone")
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "fullName", target = "fullName")
     @Mapping(source = "flag", target = "flag")
     @Mapping(source = "avatarPath", target = "avatarPath")
     @Mapping(source = "memberStatusCategoryId", target = "status.id")

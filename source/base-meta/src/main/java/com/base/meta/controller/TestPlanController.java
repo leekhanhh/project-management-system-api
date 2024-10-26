@@ -41,7 +41,7 @@ public class TestPlanController extends ABasicController{
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('TC_C')")
+    @PreAuthorize("hasRole('TP_C')")
     public ApiMessageDto<String> createTestPlan(@Valid @RequestBody CreateTestPlanForm createTestPlanForm, BindingResult bindingResult){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
@@ -74,7 +74,7 @@ public class TestPlanController extends ABasicController{
 
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('TC_U')")
+    @PreAuthorize("hasRole('TP_U')")
     public ApiMessageDto<String> updateTestPlan(@Valid @RequestBody UpdateTestPlanForm updateTestPlanForm, BindingResult bindingResult){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
@@ -101,7 +101,7 @@ public class TestPlanController extends ABasicController{
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    @PreAuthorize("hasRole('TC_D')")
+    @PreAuthorize("hasRole('TP_D')")
     public ApiMessageDto<String> deleteTestPlan(@PathVariable Long id){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
