@@ -14,6 +14,7 @@ import com.base.meta.model.Category;
 import com.base.meta.model.criteria.CategoryCriteria;
 import com.base.meta.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,10 +78,6 @@ public class CategoryController extends ABasicController{
     @Transactional
     public ApiMessageDto<Long> createCategory(@Valid @RequestBody CreateCategoryForm createCategoryForm, BindingResult bindingResult) {
         ApiMessageDto<Long> apiMessageDto = new ApiMessageDto<>();
-        Category checkKind = categoryRepository.findFirstByKind(createCategoryForm.getCategoryKind());
-        if (checkKind != null) {
-            throw new BadRequestException("[Category] Kind not found!", ErrorCode.CATEGORY_ERROR_KIND_EXIST);
-        }
         Category category = categoryRepository.findByNameAndKind(createCategoryForm.getCategoryName(), createCategoryForm.getCategoryKind());
         if (category != null) {
             throw new BadRequestException("[Category] Category name exist in kind!", ErrorCode.CATEGORY_ERROR_NAME_EXIST_IN_KIND);
@@ -93,9 +90,9 @@ public class CategoryController extends ABasicController{
             }
             category.setParentCategory(parentCategory);
         }
-        Category checkCode = categoryRepository.findByCode(createCategoryForm.getCategoryCode());
-        if (checkCode != null) {
-            throw new BadRequestException("[Category] Category code exist!", ErrorCode.CATEGORY_ERROR_CODE_EXIST);
+        Category checkCode = categoryRepository.findFirstByCode(createCategoryForm.getCategoryCode());
+        if (checkCode != null && checkCode.getParentCategory() == null && !StringUtils.equals("", createCategoryForm.getCategoryCode())) {
+            throw new BadRequestException("[Category] Code exist in kind!", ErrorCode.CATEGORY_ERROR_CODE_EXIST);
         }
         categoryRepository.save(category);
         apiMessageDto.setData(category.getId());

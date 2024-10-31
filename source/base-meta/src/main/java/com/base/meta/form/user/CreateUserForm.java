@@ -1,5 +1,7 @@
 package com.base.meta.form.user;
 
+import com.base.meta.validation.NumberField;
+import com.base.meta.validation.UserKind;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -20,6 +22,7 @@ public class CreateUserForm {
     private String password;
     @NotEmpty(message = "phone can not be empty!")
     @ApiModelProperty(name = "phone", required = true)
+    @NumberField
     private String phone;
     @ApiModelProperty(name = "avatarPath")
     private String avatarPath;
@@ -30,6 +33,7 @@ public class CreateUserForm {
     private Long memberPositionCategoryId;
     @NotNull(message = "user kind can not be null!")
     @ApiModelProperty(name = "kind", required = true)
+    @UserKind
     private Integer kind;
     @NotEmpty(message = "firstname can not be empty!")
     @ApiModelProperty(name = "firstName", required = true)

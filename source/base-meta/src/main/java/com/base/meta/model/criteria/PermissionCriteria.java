@@ -49,7 +49,7 @@ public class PermissionCriteria implements Serializable {
                     predicates.add(cb.equal(root.get("showMenu"), getShowMenu()));
                 }
                 if (getStatus() != null) {
-                    predicates.add(cb.equal(root.get("status"), getStatus()));
+                    predicates.add(cb.equal(root.get("flag"), getStatus()));
                 }
                 query.orderBy(cb.desc(root.get("createdDate")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));

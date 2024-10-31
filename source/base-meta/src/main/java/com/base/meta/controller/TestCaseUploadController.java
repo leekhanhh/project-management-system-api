@@ -24,10 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -89,7 +86,7 @@ public class TestCaseUploadController extends ABasicController{
 //        return apiMessageDto;
 //    }
 
-    @PostMapping(value="/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value="/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TCU_D')")
     public ApiMessageDto<String> deleteTestCaseUpload(Long id) {
@@ -106,7 +103,7 @@ public class TestCaseUploadController extends ABasicController{
         return apiMessageDto;
     }
 
-    @PostMapping(value="/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<TestCaseUploadDto> getTestCaseUpload(Long id) {
         ApiMessageDto<TestCaseUploadDto> apiMessageDto = new ApiMessageDto<>();
         TestCaseUpload testCaseUpload = testCaseUploadRepository.findById(id).orElse(null);
@@ -118,7 +115,7 @@ public class TestCaseUploadController extends ABasicController{
         return apiMessageDto;
     }
 
-    @PostMapping(value="/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestCaseUploadDto>> listTestCaseUpload(TestCaseUploadCriteria testCaseUploadCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestCaseUploadDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestCaseUpload> testCaseUploadPage = testCaseUploadRepository.findAll(testCaseUploadCriteria.getSpecification(), pageable);

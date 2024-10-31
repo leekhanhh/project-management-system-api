@@ -1,6 +1,7 @@
 package com.base.meta.form.account;
 
 import com.base.meta.model.Category;
+import com.base.meta.validation.NumberField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class CreateAccountAdminForm {
     @Email
     private String email;
     @ApiModelProperty(name = "phone")
+    @NumberField
     private String phone;
     @NotEmpty(message = "password cant not be empty")
     @ApiModelProperty(name = "password", required = true)

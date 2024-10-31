@@ -24,9 +24,8 @@ public interface UserMapper {
 //    @Mapping(source = "tenantId", target = "tenantId")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
-    @Mapping(source = "account.group", target = "group")
     @Mapping(source = "flag", target = "flag")
-    @Mapping(source = "account", target = "accountDto", qualifiedByName = "fromAccountToAutoCompleteDto")
+    @Mapping(source = "account", target = "account", qualifiedByName = "fromAccountToAutoCompleteDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToUserDto")
     UserDto fromEntityToUserDto(User user);
@@ -38,7 +37,7 @@ public interface UserMapper {
     @Mapping(target = "account.phone", source = "phone")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
-    @Mapping(target = "flag", source = "status")
+    @Mapping(target = "account.flag", source = "flag")
     @BeanMapping(ignoreByDefault = true)
     void updateUserFromEntity(UpdateUserForm updateUserForm, @MappingTarget User user);
 

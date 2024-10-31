@@ -41,7 +41,7 @@ public class RequirementCriteria implements Serializable {
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("devision")), "%" + getDevision().toLowerCase() + "%");
                 }
                 if (getStatus() != null) {
-                    return criteriaBuilder.equal(root.get("status"), getStatus());
+                    return criteriaBuilder.equal(root.get("flag"), getStatus());
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

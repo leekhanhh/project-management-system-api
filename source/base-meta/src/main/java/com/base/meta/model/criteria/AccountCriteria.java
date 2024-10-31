@@ -40,7 +40,7 @@ public class AccountCriteria implements Serializable {
                     predicates.add(cb.equal(root.get("kind"), getKind()));
                 }
                 if (getStatus() != null) {
-                    predicates.add(cb.equal(root.get("status"), getStatus()));
+                    predicates.add(cb.equal(root.get("flag"), getStatus()));
                 }
                 if (!StringUtils.isEmpty(getUsername())) {
                     predicates.add(cb.like(cb.lower(root.get("username")), "%" + getUsername().toLowerCase() + "%"));

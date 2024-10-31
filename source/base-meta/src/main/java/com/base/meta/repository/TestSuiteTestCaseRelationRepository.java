@@ -12,7 +12,7 @@ import java.util.Map;
 public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestSuiteTestCaseRelation, Long>, JpaSpecificationExecutor<TestSuiteTestCaseRelation> {
     TestSuiteTestCaseRelation findByTestSuiteIdAndTestCaseId(Long testSuiteId, Long testCaseId);
     @Query("SELECT t.testSuite.id, COUNT(t) FROM TestSuiteTestCaseRelation t WHERE t.testSuite.id IN :testSuiteIds GROUP BY t.testSuite.id")
-    Map<Long, Integer> countTestSuiteTestCaseRelationsByTestSuiteIds(@Param("testSuiteIds") List<Long> testSuiteIds);
+    List<Object[]> countTestSuiteTestCaseRelationsByTestSuiteIds(@Param("testSuiteIds") List<Long> testSuiteIds);
 
     @Query("SELECT count(t) FROM TestSuiteTestCaseRelation t WHERE t.testSuite.id = :testSuiteId")
     Integer countByTestSuiteId(@Param("testSuiteId") Long testSuiteId);

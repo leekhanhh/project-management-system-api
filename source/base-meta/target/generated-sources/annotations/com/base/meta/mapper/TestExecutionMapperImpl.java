@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-26T14:24:02+0700",
+    date = "2024-10-30T12:32:44+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -151,14 +151,12 @@ public class TestExecutionMapperImpl implements TestExecutionMapper {
         if ( requirement.getCreatedDate() != null ) {
             requirementDto.setCreatedDate( LocalDateTime.ofInstant( requirement.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        if ( requirement.getId() != null ) {
-            requirementDto.setId( Long.parseLong( requirement.getId() ) );
-        }
-        requirementDto.setName( requirement.getName() );
+        requirementDto.setId( requirement.getId() );
+        requirementDto.setName( categoryToCategoryDto( requirement.getName() ) );
         requirementDto.setDescription( requirement.getDescription() );
         requirementDto.setDevision( categoryToCategoryDto( requirement.getDevision() ) );
         requirementDto.setDetailClassification( categoryToCategoryDto( requirement.getDetailClassification() ) );
-        requirementDto.setAcceptance( categoryToCategoryDto( requirement.getAcceptance() ) );
+        requirementDto.setAcceptance( requirement.getAcceptance() );
         requirementDto.setProject( projectMapper.fromEntityToProjectDto( requirement.getProject() ) );
 
         return requirementDto;

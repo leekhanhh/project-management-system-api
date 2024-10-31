@@ -14,7 +14,7 @@ import java.util.List;
         uses = {TestCaseMapper.class, TestSuiteMapper.class, CategoryMapper.class, TestExecutionTurnMapper.class})
 public interface TestCaseExecutionMapper {
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "testExecutionTurn", target = "testExecutionTurn")
+    @Mapping(source = "testExecutionTurn", target = "testExecutionTurn", qualifiedByName = "fromEntityToAutoCompleteTestExecutionTurnDto")
     @Mapping(source = "testCase", target = "testCase", qualifiedByName = "fromEntityToTestCaseDtoAutoComplete")
     @Mapping(source = "testSuite", target = "testSuite", qualifiedByName = "fromEntityToTestSuiteDtoAutoComplete")
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")

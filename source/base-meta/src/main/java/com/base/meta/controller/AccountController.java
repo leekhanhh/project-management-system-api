@@ -57,27 +57,6 @@ public class AccountController extends ABasicController {
 
     @Autowired
     BaseMetaApiService baseMetaApiService;
-    @PostConstruct
-    public void initializeAdminAccount(){
-        log.info("Initialize admin account");
-        Account account = accountRepository.findAccountByUsername("admin");
-        if (account != null) {
-            log.info("Admin account is existed");
-        }
-        if(account == null) {
-            account = new Account();
-            account.setUsername("admin");
-            account.setPassword(passwordEncoder.encode("leekhan12345"));
-            account.setFullName("Lý Hồng Khanh");
-            account.setKind(BaseMetaConstant.USER_KIND_ADMIN);
-            account.setEmail("leekhan101102@gmail.com");
-            account.setPhone("0824704448");
-            account.setIsSuperAdmin(true);
-            account.setGroup(groupRepository.findById(400L).orElse(null));
-            account.setFlag(1);
-            accountRepository.save(account);
-        }
-    }
 
     @PostMapping(value = "/create-admin", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('ACC_C_AD')")

@@ -23,8 +23,8 @@ public interface ProgramMapper {
     Program fromCreateProgramFormToEntity(CreateProgramForm createProgramForm);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "project", target = "project")
-    @Mapping(source = "requirement", target = "requirement")
+    @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToAutoCompleteProjectDto")
+    @Mapping(source = "requirement", target = "requirement", qualifiedByName = "fromEntityToAutoCompleteRequirementDto")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "startDate", target = "startDate")

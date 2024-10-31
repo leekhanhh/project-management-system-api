@@ -49,12 +49,8 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_C')")
     public ApiMessageDto<String> createRequirement(@Valid @RequestBody CreateRequirementForm createRequirementForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isSuperAdmin()) {
+        if (!isPM() && !isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed create!");
-        }
-        Requirement requirement = requirementRepository.findFirstByName(createRequirementForm.getName());
-        if (requirement != null) {
-            throw new BadRequestException("Requirement name is existed!", ErrorCode.REQUIREMENT_ERROR_NAME_EXISTED);
         }
         Project project = projectRepository.findById(createRequirementForm.getProjectId()).orElse(null);
         if (project == null) {
@@ -64,16 +60,16 @@ public class RequirementController extends ABasicController {
         Category devision = categoryRepository.findById(createRequirementForm.getDevisionId()).orElseThrow(()
                 -> new NotFoundException("Devision is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        Category acceptance = categoryRepository.findById(createRequirementForm.getAcceptanceId()).orElseThrow(()
-                -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+        Category name = categoryRepository.findById(createRequirementForm.getNameId()).orElseThrow(()
+                -> new NotFoundException("Name is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
         Category detailClassification = categoryRepository.findById(createRequirementForm.getClassificationId()).orElseThrow(()
                 -> new NotFoundException("Classification is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        requirement = requirementMapper.fromCreateRequirementFormToEntity(createRequirementForm);
+        Requirement requirement = requirementMapper.fromCreateRequirementFormToEntity(createRequirementForm);
         requirement.setProject(project);
         requirement.setDevision(devision);
-        requirement.setAcceptance(acceptance);
+        requirement.setName(name);
         requirement.setDetailClassification(detailClassification);
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Create a new requirement success.");
@@ -85,7 +81,7 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_U')")
     public ApiMessageDto<String> updateRequirement(@Valid @RequestBody UpdateRequirementForm updateRequirementForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isSuperAdmin()) {
+        if (!isPM() && !isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed update!");
         }
         Requirement requirement = requirementRepository.findFirstById(updateRequirementForm.getId());
@@ -95,7 +91,7 @@ public class RequirementController extends ABasicController {
         Category devision = categoryRepository.findById(updateRequirementForm.getDevisionId()).orElseThrow(()
                 -> new NotFoundException("Devision is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        Category acceptance = categoryRepository.findById(updateRequirementForm.getAcceptanceId()).orElseThrow(()
+        Category name = categoryRepository.findById(updateRequirementForm.getNameId()).orElseThrow(()
                 -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
         Category detailClassification = categoryRepository.findById(updateRequirementForm.getDetailClassificationId()).orElseThrow(()
@@ -103,7 +99,7 @@ public class RequirementController extends ABasicController {
 
         requirementMapper.fromUpdateRequirementFormToEntity(updateRequirementForm, requirement);
         requirement.setDevision(devision);
-        requirement.setAcceptance(acceptance);
+        requirement.setName(name);
         requirement.setDetailClassification(detailClassification);
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Update a requirement success.");
@@ -115,7 +111,7 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_D')")
     public ApiMessageDto<String> deleteRequirement(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isSuperAdmin()) {
+        if (!isPM() && !isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         Requirement requirement = requirementRepository.findById(id).orElse(null);

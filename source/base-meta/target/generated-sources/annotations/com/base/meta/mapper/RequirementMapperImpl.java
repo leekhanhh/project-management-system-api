@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-26T14:24:02+0700",
+    date = "2024-10-30T12:32:44+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -32,7 +32,7 @@ public class RequirementMapperImpl implements RequirementMapper {
         Requirement requirement = new Requirement();
 
         requirement.setDescription( createRequirementForm.getDescription() );
-        requirement.setName( createRequirementForm.getName() );
+        requirement.setAcceptance( createRequirementForm.getAcceptance() );
 
         return requirement;
     }
@@ -45,14 +45,12 @@ public class RequirementMapperImpl implements RequirementMapper {
 
         RequirementDto requirementDto = new RequirementDto();
 
-        requirementDto.setAcceptance( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getAcceptance() ) );
-        requirementDto.setName( requirement.getName() );
+        requirementDto.setAcceptance( requirement.getAcceptance() );
+        requirementDto.setName( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getName() ) );
         requirementDto.setDescription( requirement.getDescription() );
         requirementDto.setProject( projectMapper.fromEntityToProjectDto( requirement.getProject() ) );
         requirementDto.setDetailClassification( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getDetailClassification() ) );
-        if ( requirement.getId() != null ) {
-            requirementDto.setId( Long.parseLong( requirement.getId() ) );
-        }
+        requirementDto.setId( requirement.getId() );
         requirementDto.setDevision( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getDevision() ) );
 
         return requirementDto;
@@ -81,8 +79,8 @@ public class RequirementMapperImpl implements RequirementMapper {
         if ( updateRequirementForm.getDescription() != null ) {
             requirement.setDescription( updateRequirementForm.getDescription() );
         }
-        if ( updateRequirementForm.getName() != null ) {
-            requirement.setName( updateRequirementForm.getName() );
+        if ( updateRequirementForm.getAcceptance() != null ) {
+            requirement.setAcceptance( updateRequirementForm.getAcceptance() );
         }
     }
 
@@ -94,11 +92,10 @@ public class RequirementMapperImpl implements RequirementMapper {
 
         RequirementDto requirementDto = new RequirementDto();
 
-        requirementDto.setName( requirement.getName() );
+        requirementDto.setAcceptance( requirement.getAcceptance() );
+        requirementDto.setName( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getName() ) );
         requirementDto.setDescription( requirement.getDescription() );
-        if ( requirement.getId() != null ) {
-            requirementDto.setId( Long.parseLong( requirement.getId() ) );
-        }
+        requirementDto.setId( requirement.getId() );
 
         return requirementDto;
     }

@@ -1,5 +1,6 @@
 package com.base.meta.form.account;
 
+import com.base.meta.validation.NumberField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class UpdateAccountAdminForm {
     @ApiModelProperty(name = "email")
     private String email;
     @ApiModelProperty(name = "phone")
+    @NumberField
     private String phone;
     @ApiModelProperty(name = "password")
     private String password;

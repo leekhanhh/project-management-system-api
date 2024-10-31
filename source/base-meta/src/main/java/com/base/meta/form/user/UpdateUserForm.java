@@ -1,5 +1,6 @@
 package com.base.meta.form.user;
 
+import com.base.meta.validation.NumberField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -14,8 +15,8 @@ public class UpdateUserForm {
     @NotEmpty(message = "fullName cant not be empty!")
     @ApiModelProperty(name = "fullName", required = true)
     private String fullName;
-    @NotEmpty(message = "phone cant not be empty!")
     @ApiModelProperty(name = "phone", required = true)
+    @NumberField
     private String phone;
     @ApiModelProperty(name = "member status")
     private Long memberStatusCategoryId;
@@ -32,5 +33,5 @@ public class UpdateUserForm {
     private String logoPath;
     @NotNull(message = "status cant not be null!")
     @ApiModelProperty(name = "status", required = true)
-    private Integer status;
+    private Integer flag;
 }

@@ -151,8 +151,14 @@ public class TestSuiteController extends ABasicController{
                 .map(TestSuiteDto::getId)
                 .collect(Collectors.toList());
 
-        Map<Long, Integer> testCaseCounts = testSuiteTestCaseRelationRepository
+        List<Object[]> testCaseCountList = testSuiteTestCaseRelationRepository
                 .countTestSuiteTestCaseRelationsByTestSuiteIds(testSuiteIds);
+
+        Map<Long, Integer> testCaseCounts = testCaseCountList.stream()
+                .collect(Collectors.toMap(
+                        result -> (Long) result[0],
+                        result -> ((Number) result[1]).intValue()
+                ));
 
         testSuiteDtoPage.getContent().forEach(testSuiteDto -> {
             Integer testCaseCount = testCaseCounts.getOrDefault(testSuiteDto.getId(), 0);

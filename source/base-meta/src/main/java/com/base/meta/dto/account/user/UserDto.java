@@ -12,6 +12,6 @@ public class UserDto {
     private Group group;
     private String status;
     private String position;
-    private AccountDto accountDto;
+    private AccountDto account;
     private Integer flag;
 }

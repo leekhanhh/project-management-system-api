@@ -1,11 +1,9 @@
-2024.10.26 14:35:32.434 [INFO] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2024.10.26 14:35:32.789 [INFO] com.base.meta.BaseMetaApplication: The following profiles are active: local
-2024.10.26 14:35:36.858 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024.10.26 14:35:38.849 [DEBUG] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Filter 'jsonToUrlEncodedAuthenticationFilter' configured for use
-2024.10.26 14:35:38.990 [WARN] org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter: Unable to create an RSA verifier from verifierKey (ignoreable if using MAC)
-2024.10.26 14:35:39.150 [INFO] com.base.meta.controller.AccountController: Initialize admin account
-2024.10.26 14:35:40.632 [INFO] com.base.meta.controller.AccountController: Admin account is existed
-2024.10.26 14:35:43.227 [WARN] org.springframework.cloud.netflix.archaius.ArchaiusAutoConfiguration: No spring.application.name found, defaulting to 'application'
-2024.10.26 14:35:43.231 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
-2024.10.26 14:35:43.238 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
-2024.10.26 14:35:45.142 [INFO] com.base.meta.BaseMetaApplication: Started BaseMetaApplication in 13.177 seconds (JVM running for 14.7)
+2024.10.31 21:29:55.550 [INFO] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor: Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024.10.31 21:29:55.803 [INFO] com.base.meta.BaseMetaApplication: The following profiles are active: local
+2024.10.31 21:29:58.161 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024.10.31 21:30:00.404 [DEBUG] com.base.meta.config.JsonToUrlEncodedAuthenticationFilter: Filter 'jsonToUrlEncodedAuthenticationFilter' configured for use
+2024.10.31 21:30:00.504 [WARN] org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter: Unable to create an RSA verifier from verifierKey (ignoreable if using MAC)
+2024.10.31 21:30:02.413 [WARN] org.springframework.cloud.netflix.archaius.ArchaiusAutoConfiguration: No spring.application.name found, defaulting to 'application'
+2024.10.31 21:30:02.416 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
+2024.10.31 21:30:02.423 [WARN] com.netflix.config.sources.URLConfigurationSource: No URLs will be polled as dynamic configuration sources.
+2024.10.31 21:30:04.466 [INFO] com.base.meta.BaseMetaApplication: Started BaseMetaApplication in 9.19 seconds (JVM running for 10.55)

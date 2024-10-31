@@ -48,7 +48,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_C')")
     public ApiMessageDto<String> createProject(@Valid @RequestBody CreateProjectForm createProjectForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isSuperAdmin()){
+        if(!isPM() && !isSuperAdmin()){
             throw new UnauthorizationException("Not allowed create!");
         }
         Project project = projectRepository.findFirstByName(createProjectForm.getName());
@@ -82,7 +82,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_U')")
     public ApiMessageDto<String> updateProject(@Valid @RequestBody UpdateProjectForm updateProjectForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isSuperAdmin()){
+        if(!isPM() && !isSuperAdmin()){
             throw new UnauthorizationException("Not allowed update!");
         }
         Project project = projectRepository.findById(updateProjectForm.getId()).orElse(null);
@@ -90,7 +90,7 @@ public class ProjectController extends ABasicController{
             throw new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST);
         }
         Project projectCheck = projectRepository.findFirstByName(updateProjectForm.getName());
-        if(project != null && !projectCheck.getId().equals(project.getId())){
+        if(projectCheck != null && !projectCheck.getId().equals(project.getId())){
             throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
         }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateProjectForm.getStartDate(), updateProjectForm.getEndDate())) {
@@ -114,7 +114,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_D')")
     public ApiMessageDto<String> deleteProject(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isSuperAdmin()) {
+        if (!isPM() && !isSuperAdmin()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         Project project = projectRepository.findById(id).orElse(null);

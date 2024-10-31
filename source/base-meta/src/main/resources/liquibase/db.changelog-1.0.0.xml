@@ -141,7 +141,7 @@
             <column name="name" type="VARCHAR(255)"/>
             <column name="program_category" type="VARCHAR(255)"/>
             <column name="project_id" type="BIGINT"/>
-            <column name="requirement_id" type="VARCHAR(255)"/>
+            <column name="requirement_id" type="BIGINT"/>
             <column name="start_date" type="datetime"/>
             <column name="end_date" type="datetime"/>
             <column name="dev_account_id" type="BIGINT"/>
@@ -226,11 +226,11 @@
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-9">
         <createTable tableName="db_project_management_requirement">
-            <column name="id" type="VARCHAR(255)">
+            <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="db_project_management_requirementPK"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="acceptance_category_id" type="BIGINT"/>
+            <column name="acceptance" type="BIGINT"/>
+            <column name="name_category_id" type="BIGINT"/>
             <column name="detail_classification_category_id" type="BIGINT"/>
             <column name="devision_category_id" type="BIGINT"/>
             <column name="project_id" type="BIGINT">
@@ -867,7 +867,7 @@
                                  referencedColumnNames="id" referencedTableName="db_project_management_test_case" validate="true" onDelete="CASCADE"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-63">
-        <addForeignKeyConstraint baseColumnNames="acceptance_category_id" baseTableName="db_project_management_requirement" constraintName="FKj7l4qdprsvuun3pl1sp7yaim6" deferrable="false" initiallyDeferred="false"
+        <addForeignKeyConstraint baseColumnNames="name_category_id" baseTableName="db_project_management_requirement" constraintName="FKj7l4qdprsvuun3pl1sp7yaim6" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-64">
@@ -1145,5 +1145,8 @@
             <column name="group_id" valueNumeric="400"/>
             <column name="permission_id" valueNumeric="3"/>
         </insert>
+    </changeSet>
+    <changeSet id="1729698209024-96" author="GIGABYTE (generated)">
+        <modifyDataType tableName="db_project_management_requirement" columnName="acceptance" newDataType="VARCHAR(255)"/>
     </changeSet>
 </databaseChangeLog>

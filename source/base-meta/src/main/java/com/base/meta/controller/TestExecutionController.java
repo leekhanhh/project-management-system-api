@@ -52,7 +52,7 @@ public class TestExecutionController extends ABasicController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TE_C')")
-    public ApiMessageDto<String> createTestExecution(@Valid CreateTestExecutionForm createTestExecutionForm, BindingResult bindingResult) {
+    public ApiMessageDto<String> createTestExecution(@Valid @RequestBody CreateTestExecutionForm createTestExecutionForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if (!isTester()) {
             throw new UnauthorizationException("Not allowed create!");
