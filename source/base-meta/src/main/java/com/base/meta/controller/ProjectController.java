@@ -61,15 +61,15 @@ public class ProjectController extends ABasicController{
         if (project != null) {
             throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
         }
-        if(!baseMetaApiService.checkEndDateIsAfterNow(createProjectForm.getEndDate())){
-            throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-        }
+//        if(!baseMetaApiService.checkEndDateIsAfterNow(createProjectForm.getEndDate())){
+//            throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
+//        }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectForm.getStartDate(), createProjectForm.getEndDate())) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
-        if (!baseMetaApiService.checkStartDateIsAfterNow(createProjectForm.getStartDate())) {
-            throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-        }
+//        if (!baseMetaApiService.checkStartDateIsAfterNow(createProjectForm.getStartDate())) {
+//            throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
+//        }
         project = projectMapper.fromCreateProjectFormToEntity(createProjectForm);
         project.setStatus(status);
         projectRepository.save(project);

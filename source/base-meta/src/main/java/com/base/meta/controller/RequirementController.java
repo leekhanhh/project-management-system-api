@@ -49,7 +49,7 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_C')")
     public ApiMessageDto<String> createRequirement(@Valid @RequestBody CreateRequirementForm createRequirementForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed create!");
         }
         Project project = projectRepository.findById(createRequirementForm.getProjectId()).orElse(null);
@@ -81,7 +81,7 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_U')")
     public ApiMessageDto<String> updateRequirement(@Valid @RequestBody UpdateRequirementForm updateRequirementForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed update!");
         }
         Requirement requirement = requirementRepository.findFirstById(updateRequirementForm.getId());
@@ -111,7 +111,7 @@ public class RequirementController extends ABasicController {
     @PreAuthorize("hasRole('RQ_D')")
     public ApiMessageDto<String> deleteRequirement(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         Requirement requirement = requirementRepository.findById(id).orElse(null);

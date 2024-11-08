@@ -61,6 +61,7 @@ public class TestDefectController extends ABasicController {
         testDefect.setTestStepExecution(testStepExecution);
         testDefect.setAssignedDeveloper(account);
         testDefect.setStatus(category);
+        testDefectRepository.save(testDefect);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create a new Test Defect successfully.");
         return apiMessageDto;

@@ -1,9 +1,6 @@
 package com.base.meta.model.criteria;
 
-import com.base.meta.model.Account;
-import com.base.meta.model.Category;
-import com.base.meta.model.TestDefect;
-import com.base.meta.model.TestStepExecution;
+import com.base.meta.model.*;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +17,11 @@ public class TestDefectCriteria implements Serializable {
     private Long statusId;
     private String assignedDeveloperName;
     private Long testStepExecutionId;
+    private Long testCaseProjectId;
+    private Long testCaseProgramId;
+    private Long testExecutionId;
+    private Long testCaseId;
+    private Long testStepId;
 
     public Specification<TestDefect> getSpecification() {
         return new Specification<TestDefect>() {
@@ -44,6 +46,38 @@ public class TestDefectCriteria implements Serializable {
                 if(getTestStepExecutionId() != null) {
                     Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
                     predicateList.add(criteriaBuilder.equal(join.get("id"), getTestStepExecutionId()));
+                }
+                if(getTestCaseProjectId() != null) {
+                    Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
+                    Join<TestCaseExecution, TestStepExecution> joinTestStep = join.join("testCaseExecution", JoinType.INNER);
+                    Join<TestCase, TestCaseExecution> joinTestCase = joinTestStep.join("testCase", JoinType.INNER);
+                    Join<Program, TestCase> joinProgram = joinTestCase.join("program", JoinType.INNER);
+                    Join<Project, Program> joinProject = joinProgram.join("project", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(joinProject.get("id"), getTestCaseProjectId()));
+                }
+                if (getTestCaseProgramId() != null) {
+                    Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
+                    Join<TestCaseExecution, TestStepExecution> joinTestStep = join.join("testCaseExecution", JoinType.INNER);
+                    Join<TestCase, TestCaseExecution> joinTestCase = joinTestStep.join("testCase", JoinType.INNER);
+                    Join<Program, TestCase> joinProgram = joinTestCase.join("program", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(joinProgram.get("id"), getTestCaseProgramId()));
+                }
+                if(getTestExecutionId() != null) {
+                    Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
+                    Join<TestCaseExecution, TestStepExecution> joinTestStep = join.join("testCaseExecution", JoinType.INNER);
+                    Join<TestExecution, TestCaseExecution> joinTestExecution = joinTestStep.join("testExecutionTurn", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(joinTestExecution.get("id"), getTestExecutionId()));
+                }
+                if(getTestCaseId() != null) {
+                    Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
+                    Join<TestCaseExecution, TestStepExecution> joinTestStep = join.join("testCaseExecution", JoinType.INNER);
+                    Join<TestCase, TestCaseExecution> joinTestCase = joinTestStep.join("testCase", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(joinTestCase.get("id"), getTestCaseId()));
+                }
+                if(getTestStepId() != null) {
+                    Join<TestStepExecution, TestDefect> join = root.join("testStepExecution", JoinType.INNER);
+                    Join<TestStep, TestStepExecution> joinTestStep = join.join("testStep", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(joinTestStep.get("id"), getTestStepId()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

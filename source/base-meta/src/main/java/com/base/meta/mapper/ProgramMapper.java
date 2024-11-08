@@ -56,7 +56,7 @@ public interface ProgramMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
-    @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToAutoCompleteProjectDto")
+    @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToProjectAutoCompleteDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToAutoCompleteProgramDto")
     ProgramDto fromEntityToAutoCompleteProgramDto(Program program);

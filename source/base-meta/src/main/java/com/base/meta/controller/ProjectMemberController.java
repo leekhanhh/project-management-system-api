@@ -53,7 +53,7 @@ public class ProjectMemberController extends ABasicController{
     @Transactional
     public ApiMessageDto<String> createProjectMember(@Valid @RequestBody CreateProjectMemberForm createProjectMemberForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isPM() && !isSuperAdmin()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allowed create!");
         }
         Project project = projectRepository.findById(createProjectMemberForm.getProjectId()).orElse(null);
@@ -87,7 +87,7 @@ public class ProjectMemberController extends ABasicController{
     @Transactional
     public ApiMessageDto<String> updateProjectMember(@Valid @RequestBody UpdateProjectMemberForm updateProjectMemberForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isPM() && !isSuperAdmin()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allowed update!");
         }
         ProjectMember projectMember = projectMemberRepository.findById(updateProjectMemberForm.getId()).orElse(null);
@@ -105,7 +105,7 @@ public class ProjectMemberController extends ABasicController{
     @PreAuthorize("hasRole('PM_D')")
     public ApiMessageDto<String> deleteProjectMember(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         ProjectMember projectMember = projectMemberRepository.findById(id).orElse(null);

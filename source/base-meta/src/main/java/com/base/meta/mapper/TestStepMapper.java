@@ -3,7 +3,6 @@ package com.base.meta.mapper;
 import com.base.meta.dto.teststep.TestStepDto;
 import com.base.meta.form.teststep.CreateTestStepForm;
 import com.base.meta.form.teststep.UpdateTestStepForm;
-import com.base.meta.model.TestCase;
 import com.base.meta.model.TestStep;
 import org.mapstruct.*;
 
@@ -12,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = {TestCase.class})
+        uses = {TestCaseMapper.class})
 public interface TestStepMapper {
     @Mapping(source = "stepNumber", target = "stepNumber")
     @Mapping(source = "action", target = "action")
@@ -44,6 +43,7 @@ public interface TestStepMapper {
     @Mapping(source = "stepNumber", target = "stepNumber")
     @Mapping(source = "data", target = "data")
     @Mapping(source = "expectedResult", target = "expectedResult")
-    @Named("fromEntityToAutoComplete")
+    @BeanMapping(ignoreByDefault = true)
+    @Named("fromEntityToAutoCompleteTestStepDto")
     TestStepDto fromEntityToAutoComplete(TestStep testStep);
 }

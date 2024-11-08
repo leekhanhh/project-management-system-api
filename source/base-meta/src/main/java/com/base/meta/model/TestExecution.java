@@ -34,6 +34,6 @@ public class TestExecution extends Auditable<String>{
     @JoinColumn(name = "account_id")
     private Account assignedDeveloper;
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "program_id")
     private Program program;
 }

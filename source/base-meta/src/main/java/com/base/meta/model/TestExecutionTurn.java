@@ -2,7 +2,6 @@ package com.base.meta.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,7 +18,6 @@ public class TestExecutionTurn extends Auditable<String>{
     @GeneratedValue(generator = "IdGenerator")
     @GenericGenerator(name = "IdGenerator", strategy = "com.base.meta.service.id.IdGenerator")
     private Long id;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "turn_number")
     private Integer turnNumber;
     @Column(name = "start_date")

@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-30T12:32:44+0700",
+    date = "2024-11-06T17:26:56+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -383,6 +383,7 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
             testExecutionTurnDto.setCreatedDate( LocalDateTime.ofInstant( testExecutionTurn.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
         testExecutionTurnDto.setId( testExecutionTurn.getId() );
+        testExecutionTurnDto.setTurnNumber( testExecutionTurn.getTurnNumber() );
         testExecutionTurnDto.setActualStartDate( testExecutionTurn.getActualStartDate() );
         testExecutionTurnDto.setActualEndDate( testExecutionTurn.getActualEndDate() );
         testExecutionTurnDto.setAssignedDeveloper( accountToAccountDto( testExecutionTurn.getAssignedDeveloper() ) );

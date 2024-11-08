@@ -17,7 +17,7 @@ public interface TestStepExecutionMapper {
     void mappingUpdateTestStepExecutionFormToEntity(UpdateTestStepExecutionForm updateTestStepExecutionForm, @MappingTarget TestStepExecution testStepExecution);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "testStep", target = "testStep", qualifiedByName = "fromEntityToAutoComplete")
+    @Mapping(source = "testStep", target = "testStep", qualifiedByName = "fromEntityToAutoCompleteTestStepDto")
     @Mapping(source = "testCaseExecution", target = "testCaseExecution", qualifiedByName = "fromEntityToTestCaseExecutionDto")
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "isDefected", target = "isDefected")

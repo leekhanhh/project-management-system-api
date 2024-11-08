@@ -13,6 +13,7 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {AccountMapper.class, TestExecutionMapper.class})
 public interface TestExecutionTurnMapper {
+    @Mapping(source = "turnNumber", target = "turnNumber")
     @Mapping(source = "planStartDate", target = "planStartDate")
     @Mapping(source = "planEndDate", target = "planEndDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
@@ -21,6 +22,7 @@ public interface TestExecutionTurnMapper {
     TestExecutionTurn fromCreateTestExecutionTurnFormToEntity(CreateTestExecutionTurnForm createTestExecutionTurnForm);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "turnNumber", target = "turnNumber")
     @Mapping(source = "planStartDate", target = "startDate")
     @Mapping(source = "planEndDate", target = "endDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
@@ -34,6 +36,7 @@ public interface TestExecutionTurnMapper {
     @IterableMapping(qualifiedByName = "fromEntityToDto", elementTargetType = TestExecutionTurnDto.class)
     List<TestExecutionTurnDto> fromEntitiesToDtos(List<TestExecutionTurn> testExecutionTurns);
 
+    @Mapping(source = "turnNumber", target = "turnNumber")
     @Mapping(source = "planStartDate", target = "planStartDate")
     @Mapping(source = "planEndDate", target = "planEndDate")
     @Mapping(source = "actualStartDate", target = "actualStartDate")
@@ -42,6 +45,7 @@ public interface TestExecutionTurnMapper {
     void updateTestExecutionTurnFromToEntity(UpdateTestExecutionTurnForm updateTestExecutionTurnForm, @MappingTarget TestExecutionTurn testExecutionTurn);
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "turnNumber", target = "turnNumber")
     @Mapping(source = "planStartDate", target = "startDate")
     @Mapping(source = "planEndDate", target = "endDate")
     @BeanMapping(ignoreByDefault = true)

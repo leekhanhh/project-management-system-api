@@ -1,8 +1,8 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.testdefectfixedresult.TestDefectFixedResultDto;
-import com.base.meta.form.test.defect.fixed.result.CreateTestDefectFixedResultForm;
-import com.base.meta.form.test.defect.fixed.result.UpdateTestDefectFixedResultForm;
+import com.base.meta.form.testdefectfixedresult.CreateTestDefectFixedResultForm;
+import com.base.meta.form.testdefectfixedresult.UpdateTestDefectFixedResultForm;
 import com.base.meta.model.TestDefectFixedResult;
 import org.mapstruct.*;
 
