@@ -23,5 +23,6 @@ public class TestDefectComment extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account sender;
+    private String title;
     private String comment;
 }

@@ -13,6 +13,6 @@ import java.util.Optional;
 
 public interface TestStepExecutionRepository extends JpaRepository<TestStepExecution, Long>, JpaSpecificationExecutor<TestStepExecution> {
     Optional<TestStepExecution> findFirstById(Long id);
-    @Query("SELECT count(t) FROM TestStepExecution t WHERE t.isDefected = true")
-    Integer countByIsDefected();
+    @Query("SELECT count(t) FROM TestStepExecution t WHERE t.isDefected = true AND t.testCaseExecution.testExecutionTurn.id = :testExecutionTurnId")
+    Integer countByIsDefected(@Param("testExecutionTurnId") Long testExecutionTurnId);
 }

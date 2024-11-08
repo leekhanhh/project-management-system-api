@@ -15,7 +15,7 @@ import java.util.List;
 
 @Data
 public class ProgramCriteria implements Serializable {
-    private String programName;
+    private String name;
     private Date startDate;
     private Date endDate;
     private Long programTypeId;
@@ -32,8 +32,8 @@ public class ProgramCriteria implements Serializable {
             @Override
             public Predicate toPredicate(Root<Program> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if (!StringUtils.isEmpty(getProgramName())) {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("programName")), "%" + getProgramName().toLowerCase() + "%"));
+                if (!StringUtils.isEmpty(getName())) {
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + getName().toLowerCase() + "%"));
                 }
                 if (getStartDate() != null) {
                     predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), getStartDate()));

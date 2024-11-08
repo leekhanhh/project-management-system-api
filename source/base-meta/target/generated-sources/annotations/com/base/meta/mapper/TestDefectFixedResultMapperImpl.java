@@ -1,8 +1,8 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.testdefectfixedresult.TestDefectFixedResultDto;
-import com.base.meta.form.test.defect.fixed.result.CreateTestDefectFixedResultForm;
-import com.base.meta.form.test.defect.fixed.result.UpdateTestDefectFixedResultForm;
+import com.base.meta.form.testdefectfixedresult.CreateTestDefectFixedResultForm;
+import com.base.meta.form.testdefectfixedresult.UpdateTestDefectFixedResultForm;
 import com.base.meta.model.TestDefectFixedResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-30T12:32:44+0700",
+    date = "2024-11-06T17:26:55+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component

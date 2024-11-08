@@ -10,8 +10,8 @@ import com.base.meta.form.testsuite.CreateTestSuiteForm;
 import com.base.meta.form.testsuite.UpdateTestSuiteForm;
 import com.base.meta.mapper.TestSuiteMapper;
 import com.base.meta.model.Account;
-import com.base.meta.model.Project;
 import com.base.meta.model.TestPlan;
+import com.base.meta.model.TestPlanTestSuiteRelation;
 import com.base.meta.model.TestSuite;
 import com.base.meta.model.criteria.TestSuiteCriteria;
 import com.base.meta.repository.*;
@@ -47,6 +47,8 @@ public class TestSuiteController extends ABasicController{
     ProjectRepository projectRepository;
     @Autowired
     TestSuiteTestCaseRelationRepository testSuiteTestCaseRelationRepository;
+    @Autowired
+    TestPlanTestSuiteRelationRepository testPlanTestSuiteRelationRepository;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -70,7 +72,11 @@ public class TestSuiteController extends ABasicController{
         TestSuite testSuite = testSuiteMapper.fromCreateTestSuiteFormToEntity(createTestSuiteForm);
         testSuite.setTestPlan(testPlan);
         testSuite.setAccount(account);
+        TestPlanTestSuiteRelation testPlanTestSuiteRelation = new TestPlanTestSuiteRelation();
+        testPlanTestSuiteRelation.setTestPlan(testPlan);
+        testPlanTestSuiteRelation.setTestSuite(testSuite);
         testSuiteRepository.save(testSuite);
+        testPlanTestSuiteRelationRepository.save(testPlanTestSuiteRelation);
         apiMessageDto.setMessage("Create test suite success.");
         return apiMessageDto;
     }

@@ -44,7 +44,7 @@ public class TestPlanController extends ABasicController{
     @PreAuthorize("hasRole('TP_C')")
     public ApiMessageDto<String> createTestPlan(@Valid @RequestBody CreateTestPlanForm createTestPlanForm, BindingResult bindingResult){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isTester()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allow create test plan");
         }
 
@@ -57,10 +57,10 @@ public class TestPlanController extends ABasicController{
         if (testPlan != null) {
             throw new BadRequestException("Test plan name is existed!", ErrorCode.TEST_PLAN_ERROR_NAME_EXISTED);
         }
-
-        if(createTestPlanForm.getStartDate().before(new Date()) || createTestPlanForm.getEndDate().before(new Date())){
-            throw new BadRequestException("Start date and end date must not before present!", ErrorCode.TEST_PLAN_ERROR_DATE_INVALID);
-        }
+//
+//        if(createTestPlanForm.getStartDate().before(new Date()) || createTestPlanForm.getEndDate().before(new Date())){
+//            throw new BadRequestException("Start date and end date must not before present!", ErrorCode.TEST_PLAN_ERROR_DATE_INVALID);
+//        }
 
         if(createTestPlanForm.getStartDate().after(createTestPlanForm.getEndDate())){
             throw new BadRequestException("Start date must be before end date!", ErrorCode.TEST_PLAN_ERROR_DATE_INVALID);
@@ -77,7 +77,7 @@ public class TestPlanController extends ABasicController{
     @PreAuthorize("hasRole('TP_U')")
     public ApiMessageDto<String> updateTestPlan(@Valid @RequestBody UpdateTestPlanForm updateTestPlanForm, BindingResult bindingResult){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isTester()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allow update test plan");
         }
 
@@ -104,7 +104,7 @@ public class TestPlanController extends ABasicController{
     @PreAuthorize("hasRole('TP_D')")
     public ApiMessageDto<String> deleteTestPlan(@PathVariable Long id){
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isTester()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allow delete test plan");
         }
         TestPlan testPlan = testPlanRepository.findById(id).orElse(null);

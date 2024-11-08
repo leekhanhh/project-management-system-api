@@ -188,4 +188,9 @@ public class ErrorCode {
      */
     public static final String TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED = "ERROR-TEST-SUITE-EXECUTION-000";
     public static final String TEST_SUITE_EXECUTION_ERROR_NOT_EXIST = "ERROR-TEST-SUITE-EXECUTION-001";
+
+    /**
+     * Test defect comment error code
+     */
+    public static final String TEST_DEFECT_COMMENT_ERROR_NOT_EXIST = "ERROR-TEST-DEFECT-COMMENT-000";
 }

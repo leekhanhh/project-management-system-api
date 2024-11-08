@@ -2,6 +2,8 @@ package com.base.meta.controller;
 
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
+import com.base.meta.dto.ResponseListDto;
+import com.base.meta.dto.testsuiteexecution.TestSuiteExecutionDto;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testsuiteexecution.CreateTestSuiteExecutionForm;
@@ -11,12 +13,15 @@ import com.base.meta.model.Category;
 import com.base.meta.model.TestExecutionTurn;
 import com.base.meta.model.TestSuite;
 import com.base.meta.model.TestSuiteExecution;
+import com.base.meta.model.criteria.TestSuiteExecutionCriteria;
 import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.TestExecutionTurnRepository;
 import com.base.meta.repository.TestSuiteExecutionRepository;
 import com.base.meta.repository.TestSuiteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,5 +104,38 @@ public class TestSuiteExecutionController extends ABasicController {
         return apiMessageDto;
     }
 
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TSUE_D')")
+    public ApiMessageDto<String> deleteTestSuiteExecution(@PathVariable Long id) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        TestSuiteExecution testSuiteExecution = testSuiteExecutionRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Test suite execution not found.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_NOT_EXIST));
+        testSuiteExecutionRepository.delete(testSuiteExecution);
+        apiMessageDto.setMessage("Test suite execution deleted successfully.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<TestSuiteExecutionDto> getTestSuiteExecution(@PathVariable Long id) {
+        ApiMessageDto<TestSuiteExecutionDto> apiMessageDto = new ApiMessageDto<>();
+        TestSuiteExecution testSuiteExecution = testSuiteExecutionRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Test suite execution not found.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_NOT_EXIST));
+        TestSuiteExecutionDto testSuiteExecutionDto = testSuiteExecutionMapper.fromEntityToTestSuiteExecutionDto(testSuiteExecution);
+        apiMessageDto.setData(testSuiteExecutionDto);
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<ResponseListDto<TestSuiteExecutionDto>> listTestSuiteExecution(TestSuiteExecutionCriteria testSuiteExecutionCriteria, Pageable pageable) {
+        ApiMessageDto<ResponseListDto<TestSuiteExecutionDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<TestSuiteExecution> testSuiteExecutionPage = testSuiteExecutionRepository.findAll(testSuiteExecutionCriteria.getSpecification(), pageable);
+        ResponseListDto<TestSuiteExecutionDto> responseListDto = new ResponseListDto(testSuiteExecutionMapper.fromEntityToTestSuiteExecutionDtoList(testSuiteExecutionPage.getContent()), testSuiteExecutionPage.getTotalElements(), testSuiteExecutionPage.getTotalPages());
+        apiMessageDto.setData(responseListDto);
+        return apiMessageDto;
+    }
 
 }

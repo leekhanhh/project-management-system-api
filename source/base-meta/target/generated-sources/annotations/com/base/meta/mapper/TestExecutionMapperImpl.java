@@ -2,12 +2,14 @@ package com.base.meta.mapper;
 
 import com.base.meta.dto.category.CategoryDto;
 import com.base.meta.dto.program.ProgramDto;
+import com.base.meta.dto.project.ProjectDto;
 import com.base.meta.dto.requirement.RequirementDto;
 import com.base.meta.dto.testexecution.TestExecutionDto;
 import com.base.meta.form.testexecution.CreateTestExecutionForm;
 import com.base.meta.form.testexecution.UpdateTestExecutionForm;
 import com.base.meta.model.Category;
 import com.base.meta.model.Program;
+import com.base.meta.model.Project;
 import com.base.meta.model.Requirement;
 import com.base.meta.model.TestExecution;
 import java.text.SimpleDateFormat;
@@ -21,14 +23,12 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-30T12:32:44+0700",
+    date = "2024-11-06T17:26:55+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class TestExecutionMapperImpl implements TestExecutionMapper {
 
-    @Autowired
-    private ProjectMapper projectMapper;
     @Autowired
     private AccountMapper accountMapper;
 
@@ -137,6 +137,30 @@ public class TestExecutionMapperImpl implements TestExecutionMapper {
         return categoryDto;
     }
 
+    protected ProjectDto projectToProjectDto(Project project) {
+        if ( project == null ) {
+            return null;
+        }
+
+        ProjectDto projectDto = new ProjectDto();
+
+        projectDto.setFlag( project.getFlag() );
+        if ( project.getModifiedDate() != null ) {
+            projectDto.setModifiedDate( LocalDateTime.ofInstant( project.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
+        if ( project.getCreatedDate() != null ) {
+            projectDto.setCreatedDate( LocalDateTime.ofInstant( project.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
+        projectDto.setId( project.getId() );
+        projectDto.setName( project.getName() );
+        projectDto.setDescription( project.getDescription() );
+        projectDto.setStartDate( project.getStartDate() );
+        projectDto.setEndDate( project.getEndDate() );
+        projectDto.setStatus( categoryToCategoryDto( project.getStatus() ) );
+
+        return projectDto;
+    }
+
     protected RequirementDto requirementToRequirementDto(Requirement requirement) {
         if ( requirement == null ) {
             return null;
@@ -157,7 +181,7 @@ public class TestExecutionMapperImpl implements TestExecutionMapper {
         requirementDto.setDevision( categoryToCategoryDto( requirement.getDevision() ) );
         requirementDto.setDetailClassification( categoryToCategoryDto( requirement.getDetailClassification() ) );
         requirementDto.setAcceptance( requirement.getAcceptance() );
-        requirementDto.setProject( projectMapper.fromEntityToProjectDto( requirement.getProject() ) );
+        requirementDto.setProject( projectToProjectDto( requirement.getProject() ) );
 
         return requirementDto;
     }
@@ -177,7 +201,7 @@ public class TestExecutionMapperImpl implements TestExecutionMapper {
             programDto.setCreatedDate( LocalDateTime.ofInstant( program.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
         programDto.setId( program.getId() );
-        programDto.setProject( projectMapper.fromEntityToProjectDto( program.getProject() ) );
+        programDto.setProject( projectToProjectDto( program.getProject() ) );
         programDto.setRequirement( requirementToRequirementDto( program.getRequirement() ) );
         programDto.setName( program.getName() );
         programDto.setDescription( program.getDescription() );

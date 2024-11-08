@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-30T12:32:44+0700",
+    date = "2024-11-06T17:26:56+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -32,6 +32,7 @@ public class TestExecutionTurnMapperImpl implements TestExecutionTurnMapper {
         TestExecutionTurn testExecutionTurn = new TestExecutionTurn();
 
         testExecutionTurn.setActualEndDate( createTestExecutionTurnForm.getActualEndDate() );
+        testExecutionTurn.setTurnNumber( createTestExecutionTurnForm.getTurnNumber() );
         testExecutionTurn.setActualStartDate( createTestExecutionTurnForm.getActualStartDate() );
         testExecutionTurn.setPlanStartDate( createTestExecutionTurnForm.getPlanStartDate() );
         testExecutionTurn.setPlanEndDate( createTestExecutionTurnForm.getPlanEndDate() );
@@ -50,6 +51,7 @@ public class TestExecutionTurnMapperImpl implements TestExecutionTurnMapper {
         testExecutionTurnDto.setActualEndDate( testExecutionTurn.getActualEndDate() );
         testExecutionTurnDto.setEndDate( testExecutionTurn.getPlanEndDate() );
         testExecutionTurnDto.setTestExecution( testExecutionMapper.fromEntityToTestExecutionDtoAutoComplete( testExecutionTurn.getTestExecution() ) );
+        testExecutionTurnDto.setTurnNumber( testExecutionTurn.getTurnNumber() );
         testExecutionTurnDto.setActualStartDate( testExecutionTurn.getActualStartDate() );
         testExecutionTurnDto.setAssignedDeveloper( accountMapper.fromAccountToDto( testExecutionTurn.getAssignedDeveloper() ) );
         testExecutionTurnDto.setId( testExecutionTurn.getId() );
@@ -81,6 +83,9 @@ public class TestExecutionTurnMapperImpl implements TestExecutionTurnMapper {
         if ( updateTestExecutionTurnForm.getActualEndDate() != null ) {
             testExecutionTurn.setActualEndDate( updateTestExecutionTurnForm.getActualEndDate() );
         }
+        if ( updateTestExecutionTurnForm.getTurnNumber() != null ) {
+            testExecutionTurn.setTurnNumber( updateTestExecutionTurnForm.getTurnNumber() );
+        }
         if ( updateTestExecutionTurnForm.getActualStartDate() != null ) {
             testExecutionTurn.setActualStartDate( updateTestExecutionTurnForm.getActualStartDate() );
         }
@@ -101,6 +106,7 @@ public class TestExecutionTurnMapperImpl implements TestExecutionTurnMapper {
         TestExecutionTurnDto testExecutionTurnDto = new TestExecutionTurnDto();
 
         testExecutionTurnDto.setEndDate( testExecutionTurn.getPlanEndDate() );
+        testExecutionTurnDto.setTurnNumber( testExecutionTurn.getTurnNumber() );
         testExecutionTurnDto.setId( testExecutionTurn.getId() );
         testExecutionTurnDto.setStartDate( testExecutionTurn.getPlanStartDate() );
 

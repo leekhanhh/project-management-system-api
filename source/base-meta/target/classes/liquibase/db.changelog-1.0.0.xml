@@ -1149,4 +1149,12 @@
     <changeSet id="1729698209024-96" author="GIGABYTE (generated)">
         <modifyDataType tableName="db_project_management_requirement" columnName="acceptance" newDataType="VARCHAR(255)"/>
     </changeSet>
+    <changeSet id="1729698209024-97" author="GIGABYTE (generated)">
+        <addColumn tableName="db_project_management_test_defect_comment">
+            <column name="title" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1729698209024-98" author="GIGABYTE (generated)">
+        <renameColumn tableName="db_project_management_test_execution" oldColumnName="project_id" newColumnName="program_id" columnDataType="BIGINT"/>
+    </changeSet>
 </databaseChangeLog>

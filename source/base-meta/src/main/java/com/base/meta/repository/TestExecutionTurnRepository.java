@@ -20,6 +20,6 @@ public interface TestExecutionTurnRepository extends JpaRepository<TestExecution
     TestExecutionTurn findFirstByTurnNumber(Integer turnNumber);
     TestExecutionTurn findFirstById(Long id);
 
-
-
+    @Query("SELECT t.isDefected, COUNT(t) FROM TestStepExecution t WHERE t.testCaseExecution.testExecutionTurn.id = :testExecutionTurnId")
+    Integer countTestDefectsByTestExecutionTurnId(Long testExecutionTurnId);
 }

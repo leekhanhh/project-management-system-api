@@ -11,6 +11,7 @@ import java.util.Date;
 @Data
 public class TestExecutionTurnDto extends ABasicAdminDto {
     private Long id;
+    private Integer turnNumber;
     private Date startDate;
     private Date endDate;
     private Date actualStartDate;
@@ -19,10 +20,8 @@ public class TestExecutionTurnDto extends ABasicAdminDto {
     private TestExecutionDto testExecution;
     private Integer testDefectCount;
     private Integer totalCasesCount;
-//    private Integer notExecutedCasesCount;
-//    private Integer waitingCasesCount;
-//    private Integer inProgressCasesCount;
-//    private Integer completedCasesCount;
-//    private BigDecimal completedCaseRatio;
-//    private BigDecimal progressRatio;
+    private Integer notExecutedCasesCount;
+    private Integer waitingCasesCount;
+    private Integer inProgressCasesCount;
+    private Integer completedCasesCount;
 }
