@@ -43,7 +43,7 @@ public class TestStepController extends ABasicController{
     @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TST_C')")
-    public ApiMessageDto<TestStepDto> createTestStep(@Valid CreateTestStepForm createTestStepForm, BindingResult bindingResult) {
+    public ApiMessageDto<TestStepDto> createTestStep(@Valid @RequestBody CreateTestStepForm createTestStepForm, BindingResult bindingResult) {
         ApiMessageDto<TestStepDto> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
             throw new UnauthorizationException("Not allowed create!");
@@ -67,7 +67,7 @@ public class TestStepController extends ABasicController{
     @PutMapping(value="/update", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TST_U')")
-    public ApiMessageDto<TestStepDto> updateTestStep(@Valid UpdateTestStepForm updateTestStepForm, BindingResult bindingResult) {
+    public ApiMessageDto<TestStepDto> updateTestStep(@Valid @RequestBody UpdateTestStepForm updateTestStepForm, BindingResult bindingResult) {
         ApiMessageDto<TestStepDto> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
             throw new UnauthorizationException("Not allowed update!");

@@ -21,6 +21,14 @@ public class CategoryTypeValidation implements ConstraintValidator<CategoryType,
         if (categoryKind == null && allowNull) {
             return true;
         }
-        return Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_TYPE_PROGRAM);
+        return Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_ACCOUNT)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_PROJECT)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_REQUIREMENT)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_PROGRAM)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_TEST_EXECUTION)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_TEST_SUITE_EXECUTION)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_TEST_CASE_EXECUTION)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_TEST_STEP_EXECUTION)
+                || Objects.equals(categoryKind, BaseMetaConstant.CATEGORY_KIND_TEST_DEFECT);
     }
 }

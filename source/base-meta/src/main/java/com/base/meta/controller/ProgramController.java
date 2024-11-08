@@ -6,6 +6,7 @@ import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.program.ProgramDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
+import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.program.CreateProgramForm;
 import com.base.meta.form.program.UpdateProgramForm;
 import com.base.meta.mapper.ProgramMapper;
@@ -24,12 +25,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/program")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
-public class ProgramController extends ABasicController{
+public class ProgramController extends ABasicController {
     @Autowired
     ProgramRepository programRepository;
     @Autowired
@@ -50,6 +53,9 @@ public class ProgramController extends ABasicController{
     @PreAuthorize("hasRole('PG_C')")
     public ApiMessageDto<String> createProgram(@Valid @RequestBody CreateProgramForm createProgramForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isPM() && !isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed create!");
+        }
 
         Project project = projectRepository.findFirstById(createProgramForm.getProjectId());
         if (project == null) {
@@ -90,7 +96,7 @@ public class ProgramController extends ABasicController{
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if(!baseMetaApiService.checkEndDateIsAfterNow(createProgramForm.getEndDate())){
+        if (!baseMetaApiService.checkEndDateIsAfterNow(createProgramForm.getEndDate())) {
             throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
         }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProgramForm.getStartDate(), createProgramForm.getEndDate())) {
@@ -99,6 +105,7 @@ public class ProgramController extends ABasicController{
         if (!baseMetaApiService.checkStartDateIsAfterNow(createProgramForm.getStartDate())) {
             throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
         }
+
         program = programMapper.fromCreateProgramFormToEntity(createProgramForm);
         program.setProject(project);
         program.setRequirement(requirement);
@@ -117,6 +124,9 @@ public class ProgramController extends ABasicController{
     @PreAuthorize("hasRole('PG_U')")
     public ApiMessageDto<ProgramDto> updateProgram(@Valid @RequestBody UpdateProgramForm updateProgramForm, BindingResult bindingResult) {
         ApiMessageDto<ProgramDto> apiMessageDto = new ApiMessageDto<>();
+        if (!isPM() && !isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed update!");
+        }
         Program program = programRepository.findFirstById(updateProgramForm.getId());
         if (program == null) {
             throw new NotFoundException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
@@ -148,7 +158,7 @@ public class ProgramController extends ABasicController{
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if(!baseMetaApiService.checkStartDateIsBeforeEndDate(updateProgramForm.getStartDate(), updateProgramForm.getEndDate())){
+        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateProgramForm.getStartDate(), updateProgramForm.getEndDate())) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
@@ -188,6 +198,9 @@ public class ProgramController extends ABasicController{
     @Transactional
     @PreAuthorize("hasRole('PG_D')")
     public ApiMessageDto<String> deleteProgram(@PathVariable Long id) {
+        if (!isPM() && !isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         Program program = programRepository.findById(id).orElse(null);
         if (program == null) {

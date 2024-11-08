@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 public class RequirementDto extends ABasicAdminDto {
     private Long id;
-    private String name;
+    private CategoryDto name;
     private String description;
     private CategoryDto devision;
     private CategoryDto detailClassification;
-    private CategoryDto acceptance;
+    private String acceptance;
     private ProjectDto project;
 }

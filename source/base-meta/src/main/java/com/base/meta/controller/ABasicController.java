@@ -49,6 +49,14 @@ public class ABasicController {
         return null;
     }
 
+    public boolean isPM() {
+        BaseMetaJwt baseMetaJwt = userService.getAddInfoFromToken();
+        if (baseMetaJwt != null) {
+            return Objects.equals(baseMetaJwt.getUserKind(), BaseMetaConstant.USER_KIND_PM);
+        }
+        return false;
+    }
+
     public boolean isDev() {
         BaseMetaJwt baseMetaJwt = userService.getAddInfoFromToken();
         if (baseMetaJwt != null) {

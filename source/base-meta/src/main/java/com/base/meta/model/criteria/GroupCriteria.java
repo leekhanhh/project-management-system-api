@@ -39,7 +39,7 @@ public class GroupCriteria implements Serializable {
                     predicates.add(cb.equal(root.get("isSystemRole"), getIsSystemRole()));
                 }
                 if (getStatus() != null) {
-                    predicates.add(cb.equal(root.get("status"), getStatus()));
+                    predicates.add(cb.equal(root.get("flag"), getStatus()));
                 }
                 if (getKind() != null) {
                     predicates.add(cb.equal(root.get("kind"), getKind()));

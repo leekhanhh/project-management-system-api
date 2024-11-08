@@ -5,7 +5,6 @@ import com.base.meta.form.user.CreateUserForm;
 import com.base.meta.form.user.UpdateUserForm;
 import com.base.meta.form.user.UpdateUserProfileForm;
 import com.base.meta.model.Account;
-import com.base.meta.model.Group;
 import com.base.meta.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-26T14:24:03+0700",
+    date = "2024-10-30T12:40:38+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -50,8 +49,7 @@ public class UserMapperImpl implements UserMapper {
         userDto.setFirstName( user.getFirstName() );
         userDto.setLastName( user.getLastName() );
         userDto.setFlag( user.getFlag() );
-        userDto.setGroup( userAccountGroup( user ) );
-        userDto.setAccountDto( accountMapper.fromAccountToDto( user.getAccount() ) );
+        userDto.setAccount( accountMapper.fromAccountToDto( user.getAccount() ) );
 
         return userDto;
     }
@@ -80,14 +78,11 @@ public class UserMapperImpl implements UserMapper {
             user.setAccount( new Account() );
         }
         updateUserFormToAccount( updateUserForm, user.getAccount() );
-        if ( updateUserForm.getFirstName() != null ) {
-            user.setFirstName( updateUserForm.getFirstName() );
-        }
         if ( updateUserForm.getLastName() != null ) {
             user.setLastName( updateUserForm.getLastName() );
         }
-        if ( updateUserForm.getStatus() != null ) {
-            user.setFlag( updateUserForm.getStatus() );
+        if ( updateUserForm.getFirstName() != null ) {
+            user.setFirstName( updateUserForm.getFirstName() );
         }
     }
 
@@ -109,21 +104,6 @@ public class UserMapperImpl implements UserMapper {
         }
     }
 
-    private Group userAccountGroup(User user) {
-        if ( user == null ) {
-            return null;
-        }
-        Account account = user.getAccount();
-        if ( account == null ) {
-            return null;
-        }
-        Group group = account.getGroup();
-        if ( group == null ) {
-            return null;
-        }
-        return group;
-    }
-
     protected void updateUserFormToAccount(UpdateUserForm updateUserForm, Account mappingTarget) {
         if ( updateUserForm == null ) {
             return;
@@ -131,6 +111,9 @@ public class UserMapperImpl implements UserMapper {
 
         if ( updateUserForm.getFullName() != null ) {
             mappingTarget.setFullName( updateUserForm.getFullName() );
+        }
+        if ( updateUserForm.getFlag() != null ) {
+            mappingTarget.setFlag( updateUserForm.getFlag() );
         }
         if ( updateUserForm.getPhone() != null ) {
             mappingTarget.setPhone( updateUserForm.getPhone() );

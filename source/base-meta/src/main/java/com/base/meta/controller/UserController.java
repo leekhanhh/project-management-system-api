@@ -86,11 +86,16 @@ public class UserController extends ABasicController {
         account.setPosition(position);
         account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
         account.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
+        account.setFlag(1);
         if (createUserForm.getKind()==2)
+        {
+            account.setKind(BaseMetaConstant.USER_KIND_PM);
+        }
+        if(createUserForm.getKind()==3)
         {
             account.setKind(BaseMetaConstant.USER_KIND_DEV);
         }
-        if(createUserForm.getKind()==3)
+        if (createUserForm.getKind()==4)
         {
             account.setKind(BaseMetaConstant.USER_KIND_TESTER);
         }

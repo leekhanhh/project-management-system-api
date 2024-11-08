@@ -1,16 +1,10 @@
 package com.base.meta.mapper;
 
-import com.base.meta.dto.category.CategoryDto;
 import com.base.meta.dto.program.ProgramDto;
-import com.base.meta.dto.requirement.RequirementDto;
 import com.base.meta.form.program.CreateProgramForm;
 import com.base.meta.form.program.UpdateProgramForm;
-import com.base.meta.model.Category;
 import com.base.meta.model.Program;
-import com.base.meta.model.Requirement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -19,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-10-26T14:24:02+0700",
+    date = "2024-10-30T12:32:44+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -31,6 +25,8 @@ public class ProgramMapperImpl implements ProgramMapper {
     private CategoryMapper categoryMapper;
     @Autowired
     private ProjectMapper projectMapper;
+    @Autowired
+    private RequirementMapper requirementMapper;
 
     @Override
     public Program fromCreateProgramFormToEntity(CreateProgramForm createProgramForm) {
@@ -65,7 +61,7 @@ public class ProgramMapperImpl implements ProgramMapper {
         programDto.setTester( accountMapper.fromAccountToDto( program.getAssignedTester() ) );
         programDto.setProject( projectMapper.fromEntityToProjectDto( program.getProject() ) );
         programDto.setDescription( program.getDescription() );
-        programDto.setRequirement( requirementToRequirementDto( program.getRequirement() ) );
+        programDto.setRequirement( requirementMapper.fromEntityToAutoCompleteRequirementDto( program.getRequirement() ) );
         programDto.setProgramCategory( program.getProgramCategory() );
         programDto.setName( program.getName() );
         programDto.setDeveloper( accountMapper.fromAccountToDto( program.getAssignedDeveloper() ) );
@@ -134,51 +130,5 @@ public class ProgramMapperImpl implements ProgramMapper {
         }
 
         return programDto;
-    }
-
-    protected CategoryDto categoryToCategoryDto(Category category) {
-        if ( category == null ) {
-            return null;
-        }
-
-        CategoryDto categoryDto = new CategoryDto();
-
-        categoryDto.setFlag( category.getFlag() );
-        if ( category.getModifiedDate() != null ) {
-            categoryDto.setModifiedDate( LocalDateTime.ofInstant( category.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
-        if ( category.getCreatedDate() != null ) {
-            categoryDto.setCreatedDate( LocalDateTime.ofInstant( category.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
-        categoryDto.setId( category.getId() );
-
-        return categoryDto;
-    }
-
-    protected RequirementDto requirementToRequirementDto(Requirement requirement) {
-        if ( requirement == null ) {
-            return null;
-        }
-
-        RequirementDto requirementDto = new RequirementDto();
-
-        requirementDto.setFlag( requirement.getFlag() );
-        if ( requirement.getModifiedDate() != null ) {
-            requirementDto.setModifiedDate( LocalDateTime.ofInstant( requirement.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
-        if ( requirement.getCreatedDate() != null ) {
-            requirementDto.setCreatedDate( LocalDateTime.ofInstant( requirement.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
-        if ( requirement.getId() != null ) {
-            requirementDto.setId( Long.parseLong( requirement.getId() ) );
-        }
-        requirementDto.setName( requirement.getName() );
-        requirementDto.setDescription( requirement.getDescription() );
-        requirementDto.setDevision( categoryToCategoryDto( requirement.getDevision() ) );
-        requirementDto.setDetailClassification( categoryToCategoryDto( requirement.getDetailClassification() ) );
-        requirementDto.setAcceptance( categoryToCategoryDto( requirement.getAcceptance() ) );
-        requirementDto.setProject( projectMapper.fromEntityToProjectDto( requirement.getProject() ) );
-
-        return requirementDto;
     }
 }

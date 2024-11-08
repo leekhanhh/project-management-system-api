@@ -55,9 +55,6 @@ public class TestCaseController extends ABasicController{
             throw new BadRequestException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
         }
 
-        if (testCaseRepository.findFirstByName(createTestCaseForm.getName()) != null) {
-            throw new BadRequestException("Test case name is existed!", ErrorCode.TEST_CASE_ERROR_NAME_EXISTED);
-        }
         TestCase testCase = testCaseMapper.fromCreateTestCaseFormToEntity(createTestCaseForm);
         testCase.setProgram(program);
         testCaseRepository.save(testCase);
@@ -76,9 +73,6 @@ public class TestCaseController extends ABasicController{
         TestCase testCase = testCaseRepository.findById(updateTestCaseForm.getId()).orElse(null);
         if (testCase == null) {
             throw new BadRequestException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
-        }
-        if (testCaseRepository.findFirstByName(updateTestCaseForm.getName()) != null) {
-            throw new BadRequestException("Test case name is existed!", ErrorCode.TEST_CASE_ERROR_NAME_EXISTED);
         }
         testCaseMapper.fromUpdateTestCaseFormToEntity(updateTestCaseForm, testCase);
         testCaseRepository.save(testCase);

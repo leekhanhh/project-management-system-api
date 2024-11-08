@@ -41,13 +41,20 @@ public class CategoryCriteria implements Serializable {
                     predicates.add(cb.like(cb.lower(root.get("name")), "%" + getName().toLowerCase() + "%"));
                 }
                 if (getFlag() != null) {
-                    predicates.add(cb.equal(root.get("status"), getFlag()));
+                    predicates.add(cb.equal(root.get("flag"), getFlag()));
                 }
                 if (getParentId() != null) {
                     Join<Category, Category> parentCategory = root.join("parentCategory", JoinType.INNER);
                     predicates.add(cb.equal(parentCategory.get("id"), getParentId()));
                 } else {
-                    if (getKind() != null && getKind().equals(BaseMetaConstant.CATEGORY_TYPE_PROGRAM)) {
+                    if (getKind() != null && (getKind().equals(BaseMetaConstant.CATEGORY_KIND_PROJECT)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_REQUIREMENT)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_PROGRAM)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_EXECUTION)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_SUITE_EXECUTION)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_CASE_EXECUTION)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_STEP_EXECUTION)
+                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_DEFECT))) {
                         predicates.add(cb.isNull(root.get("parentCategory")));
                     }
                 }

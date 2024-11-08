@@ -28,6 +28,7 @@ public interface ProjectMapper {
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
     @BeanMapping(ignoreByDefault = true)
+    @Named("fromEntityToProjectDto")
     ProjectDto fromEntityToProjectDto(Project project);
 
     @IterableMapping(elementTargetType = ProjectDto.class, qualifiedByName = "fromEntityToProjectDto")

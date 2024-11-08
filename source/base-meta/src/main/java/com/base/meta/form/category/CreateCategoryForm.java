@@ -20,8 +20,7 @@ public class CreateCategoryForm {
     @ApiModelProperty(name = "categoryName", required = true)
     @NotEmpty(message = "categoryName cannot be null")
     private String categoryName;
-    @ApiModelProperty(name = "categoryCode", required = true)
-    @NotEmpty(message = "categoryCode cannot be null")
+    @ApiModelProperty(name = "categoryCode")
     private String categoryCode;
     @ApiModelProperty(name = "categoryDescription", required = true)
     @NotEmpty(message = "categoryDescription cannot be null")

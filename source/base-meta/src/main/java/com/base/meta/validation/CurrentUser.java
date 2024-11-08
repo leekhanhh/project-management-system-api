@@ -1,6 +1,5 @@
 package com.base.meta.validation;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;

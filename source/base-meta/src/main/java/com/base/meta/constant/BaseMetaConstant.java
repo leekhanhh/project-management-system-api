@@ -78,7 +78,15 @@ public class BaseMetaConstant {
     /*
     Category topic
      */
-    public static final String CATEGORY_TYPE_PROGRAM = "1";
+    public static final Integer CATEGORY_TYPE_PROJECT = 1;
+    public static final Integer CATEGORY_TYPE_ACCOUNT = 2;
+    public static final Integer CATEGORY_TYPE_REQUIREMENT = 3;
+    public static final Integer CATEGORY_TYPE_PROGRAM = 4;
+    public static final Integer CATEGORY_TYPE_TEST_EXECUTION = 5;
+    public static final Integer CATEGORY_TYPE_TEST_SUITE_EXECUTION = 6;
+    public static final Integer CATEGORY_TYPE_TEST_CASE_EXECUTION = 7;
+    public static final Integer CATEGORY_TYPE_TEST_STEP_EXECUTION = 8;
+    public static final Integer CATEGORY_TYPE_TEST_DEFECT = 9;
 
     /*
     Category kind

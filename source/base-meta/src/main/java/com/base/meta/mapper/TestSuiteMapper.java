@@ -22,8 +22,8 @@ public interface TestSuiteMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "testPlan", target = "testPlan")
-    @Mapping(source = "account", target = "account")
+    @Mapping(source = "testPlan", target = "testPlan", qualifiedByName = "fromEntityToTestPlanDto")
+    @Mapping(source = "account", target = "account", qualifiedByName = "fromEntityToAccountAutoCompleteDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestSuiteDto")
     TestSuiteDto fromEntityToTestSuiteDto(TestSuite testSuite);

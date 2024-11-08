@@ -17,15 +17,15 @@ public class Requirement extends Auditable<String> {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "com.base.meta.service.id.IdGenerator")
     @GeneratedValue(generator = "idGenerator")
-    private String id;
-    private String name;
+    private Long id;
+    private String acceptance;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "devision_category_id")
     private Category devision;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "acceptance_category_id")
-    private Category acceptance;
+    @JoinColumn(name = "name_category_id")
+    private Category name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "detail_classification_category_id")
     private Category detailClassification;

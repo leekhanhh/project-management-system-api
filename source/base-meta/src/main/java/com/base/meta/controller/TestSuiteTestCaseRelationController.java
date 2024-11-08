@@ -64,10 +64,10 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
         if (testSuiteTestCaseRelation != null) {
             throw new BadRequestException("Test suite and test case already exist.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
         }
-
-        testSuiteTestCaseRelation.setTestSuite(testSuite);
-        testSuiteTestCaseRelation.setTestCase(testCase);
-        testSuiteTestCaseRelationRepository.save(testSuiteTestCaseRelation);
+        TestSuiteTestCaseRelation newTestSuiteTestCaseRelation = new TestSuiteTestCaseRelation();
+        newTestSuiteTestCaseRelation.setTestSuite(testSuite);
+        newTestSuiteTestCaseRelation.setTestCase(testCase);
+        testSuiteTestCaseRelationRepository.save(newTestSuiteTestCaseRelation);
 
         apiMessageDto.setMessage("Create test suite test case relation success.");
         return apiMessageDto;

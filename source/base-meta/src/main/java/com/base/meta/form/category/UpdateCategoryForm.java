@@ -18,7 +18,6 @@ public class UpdateCategoryForm {
     @NotEmpty(message = "categoryName cannot be null")
     private String categoryName;
     @ApiModelProperty(name = "categoryCode", required = true)
-    @NotEmpty(message = "categoryCode cannot be null")
     private String categoryCode;
     @ApiModelProperty(name = "categoryDescription", required = true)
     @NotEmpty(message = "categoryDescription cannot be null")
