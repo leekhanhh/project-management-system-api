@@ -6,6 +6,7 @@ import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testplan.TestPlanDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testplan.CreateTestPlanForm;
 import com.base.meta.form.testplan.UpdateTestPlanForm;
 import com.base.meta.mapper.TestPlanMapper;
@@ -137,5 +138,22 @@ public class TestPlanController extends ABasicController{
         apiMessageDto.setMessage("List test plans success.");
         return apiMessageDto;
     }
-    
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TP_UF')")
+    public ApiMessageDto<String> updateFlagTestPlan(@RequestBody ModifyFlagForm modifyFlagForm){
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(!isPM()){
+            throw new UnauthorizationException("Not allow delete test plan");
+        }
+        TestPlan testPlan = testPlanRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (testPlan == null) {
+            throw new BadRequestException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
+        }
+        testPlan.setFlag(modifyFlagForm.getFlag());
+        testPlanRepository.save(testPlan);
+        apiMessageDto.setMessage("Update test plan flag success.");
+        return apiMessageDto;
+    }
 }

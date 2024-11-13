@@ -65,13 +65,12 @@ public class ProjectMemberController extends ABasicController{
         if (account == null) {
             throw new NotFoundException("Account is not existed!", ErrorCode.USER_ERROR_NOT_FOUND);
         }
-
-        if (createProjectMemberForm.getOnBoardedDate() != null && !baseMetaApiService.checkEndDateIsAfterNow(createProjectMemberForm.getOnBoardedDate())) {
-            throw new BadRequestException("On boarded date must be after now!", ErrorCode.ERROR_DATE_INVALID);
+        if(!baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectMemberForm.getOnBoardedDate(), createProjectMemberForm.getOffBoardedDate())){
+            throw new BadRequestException("Onboarded date must be before offboarded date!", ErrorCode.PROJECT_MEMBER_ERROR_ONBOARDED_DATE_AFTER_OFFBOARDED_DATE);
         }
 
-        if (createProjectMemberForm.getOffBoardedDate() != null && !baseMetaApiService.checkEndDateIsAfterNow(createProjectMemberForm.getOffBoardedDate())) {
-            throw new BadRequestException("Off boarded date must be after now!", ErrorCode.ERROR_DATE_INVALID);
+        if(!(account.getStatus().getCode().equals(BaseMetaConstant.USER_STATUS_AVAILABLE) && account.getStatus().getKind().equals(BaseMetaConstant.CATEGORY_KIND_ACCOUNT))){
+            throw new BadRequestException("Account is not available!", ErrorCode.USER_ERROR_NOT_AVAILABLE);
         }
 
         ProjectMember projectMember = projectMemberMapper.fromCreateProjectMemberFormToEntity(createProjectMemberForm);

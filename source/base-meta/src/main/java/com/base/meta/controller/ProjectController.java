@@ -7,6 +7,7 @@ import com.base.meta.dto.project.ProjectDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.project.CreateProjectForm;
 import com.base.meta.form.project.UpdateProjectForm;
 import com.base.meta.mapper.ProjectMapper;
@@ -48,7 +49,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_C')")
     public ApiMessageDto<String> createProject(@Valid @RequestBody CreateProjectForm createProjectForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isPM() && !isSuperAdmin()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allowed create!");
         }
         Project project = projectRepository.findFirstByName(createProjectForm.getName());
@@ -82,7 +83,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_U')")
     public ApiMessageDto<String> updateProject(@Valid @RequestBody UpdateProjectForm updateProjectForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if(!isPM() && !isSuperAdmin()){
+        if(!isPM()){
             throw new UnauthorizationException("Not allowed update!");
         }
         Project project = projectRepository.findById(updateProjectForm.getId()).orElse(null);
@@ -114,7 +115,7 @@ public class ProjectController extends ABasicController{
     @PreAuthorize("hasRole('PJ_D')")
     public ApiMessageDto<String> deleteProject(@PathVariable Long id) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         Project project = projectRepository.findById(id).orElse(null);
@@ -123,6 +124,25 @@ public class ProjectController extends ABasicController{
         }
         projectRepository.delete(project);
         apiMessageDto.setMessage("Delete project success.");
+        return apiMessageDto;
+    }
+
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('PJ_UF')")
+    public ApiMessageDto<String> updateFlagProject(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isPM()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        Project project = projectRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (project == null) {
+            throw new BadRequestException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST);
+        }
+        project.setFlag(modifyFlagForm.getFlag());
+        projectRepository.save(project);
+        apiMessageDto.setMessage("Update project flag success.");
         return apiMessageDto;
     }
 

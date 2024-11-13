@@ -42,7 +42,7 @@ public class TestExecutionCriteria implements Serializable {
                 }
                 if (getAssignedDeveloperName() != null) {
                     Join<Account, TestExecution> assignedDeveloper = root.join("assignedDeveloper");
-                    predicates.add(criteriaBuilder.equal(assignedDeveloper.get("id"), getAssignedDeveloperName()));
+                    predicates.add(criteriaBuilder.equal(assignedDeveloper.get("fullName"), getAssignedDeveloperName()));
                 }
                 if (getProjectId() != null) {
                     Join<Project, TestExecution> project = root.join("project");

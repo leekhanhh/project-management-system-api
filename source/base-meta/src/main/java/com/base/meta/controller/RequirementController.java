@@ -7,6 +7,7 @@ import com.base.meta.dto.requirement.RequirementDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.requirement.CreateRequirementForm;
 import com.base.meta.form.requirement.UpdateRequirementForm;
 import com.base.meta.mapper.RequirementMapper;
@@ -120,6 +121,24 @@ public class RequirementController extends ABasicController {
         }
         requirementRepository.delete(requirement);
         apiMessageDto.setMessage("Delete a requirement success.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('RQ_UF')")
+    public ApiMessageDto<String> updateFlagRequirement(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isPM()) {
+            throw new UnauthorizationException("Not allowed update!");
+        }
+        Requirement requirement = requirementRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (requirement == null) {
+            throw new BadRequestException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
+        }
+        requirement.setFlag(modifyFlagForm.getFlag());
+        requirementRepository.save(requirement);
+        apiMessageDto.setMessage("Update a requirement flag success.");
         return apiMessageDto;
     }
 

@@ -5,6 +5,7 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testdefect.TestDefectDto;
 import com.base.meta.exception.NotFoundException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testdefect.CreateTestDefectForm;
 import com.base.meta.form.testdefect.UpdateTestDefectForm;
 import com.base.meta.mapper.TestDefectMapper;
@@ -128,6 +129,20 @@ public class TestDefectController extends ABasicController {
         testDefectRepository.delete(testDefect);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Delete a Test Defect successfully.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TDE_UF')")
+    public ApiMessageDto<String> updateFlagTestDefect(@RequestBody ModifyFlagForm modifyFlagForm) {
+        TestDefect testDefect = testDefectRepository.findFirstById(modifyFlagForm.getObjectId()).orElseThrow(
+                () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
+        );
+        testDefect.setFlag(modifyFlagForm.getFlag());
+        testDefectRepository.save(testDefect);
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setMessage("Update a Test Defect Flag successfully.");
         return apiMessageDto;
     }
 }

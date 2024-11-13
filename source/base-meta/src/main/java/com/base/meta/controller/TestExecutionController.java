@@ -156,16 +156,6 @@ public class TestExecutionController extends ABasicController {
     public ApiMessageDto<ResponseListDto<TestExecutionDto>> listTestExecution(TestExecutionCriteria testExecutionCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestExecutionDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestExecutionDto> testExecutionPage = testExecutionRepository.findAll(testExecutionCriteria.getSpecification(), pageable).map(testExecutionMapper::fromEntityToTestExecutionDto);
-
-        List<Long> testSuiteIds = testExecutionPage.getContent()
-                .stream().map(TestExecutionDto::getId)
-                .collect(Collectors.toList());
-        Map<Long, Integer> testExecutionTurnCountMap = testExecutionTurnRepository.countTestExecutionTurnByTestExecutionIds(testSuiteIds);
-        testExecutionPage.getContent().forEach(testExecutionDto -> {
-            Integer testExecutionTurnCount = testExecutionTurnCountMap.getOrDefault(testExecutionDto.getId(), 0);
-            testExecutionDto.setTestExecutionTurnCount(testExecutionTurnCount);
-        });
-
         ResponseListDto<TestExecutionDto> responseListDto = new ResponseListDto(testExecutionPage.getContent(), testExecutionPage.getTotalElements(), testExecutionPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("Get list test execution successfully!");
