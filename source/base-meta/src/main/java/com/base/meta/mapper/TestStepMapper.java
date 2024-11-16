@@ -3,6 +3,7 @@ package com.base.meta.mapper;
 import com.base.meta.dto.teststep.TestStepDto;
 import com.base.meta.form.teststep.CreateTestStepForm;
 import com.base.meta.form.teststep.UpdateTestStepForm;
+import com.base.meta.model.TestCaseUpload;
 import com.base.meta.model.TestStep;
 import org.mapstruct.*;
 
@@ -46,4 +47,11 @@ public interface TestStepMapper {
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToAutoCompleteTestStepDto")
     TestStepDto fromEntityToAutoComplete(TestStep testStep);
+
+    @Mapping(source = "testStepsAction", target = "action")
+    @Mapping(source = "testStepsData", target = "data")
+    @Mapping(source = "testStepsExpectedResult", target = "expectedResult")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @BeanMapping(ignoreByDefault = true)
+    TestStep fromCreateTestStepFromTestCaseUpload(TestCaseUpload testCaseUpload);
 }

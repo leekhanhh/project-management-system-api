@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = {ProjectMapper.class, AccountMapper.class})
+        uses = {ProjectMapper.class, AccountMapper.class, ProgramMapper.class, CategoryMapper.class})
 public interface TestExecutionMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "detail", target = "detail")

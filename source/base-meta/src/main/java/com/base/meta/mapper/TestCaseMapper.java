@@ -4,6 +4,7 @@ import com.base.meta.dto.testcase.TestCaseDto;
 import com.base.meta.form.testcase.CreateTestCaseForm;
 import com.base.meta.form.testcase.UpdateTestCaseForm;
 import com.base.meta.model.TestCase;
+import com.base.meta.model.TestCaseUpload;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -44,4 +45,11 @@ public interface TestCaseMapper {
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestCaseDtoAutoComplete")
     TestCaseDto fromEntityToTestCaseDtoAutoComplete(TestCase testCase);
+
+    @Mapping(source = "testCaseName", target = "name")
+    @Mapping(source = "testCasePrecondition", target = "precondition")
+    @Mapping(source = "testCaseMenuPath", target = "menuPath")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @BeanMapping(ignoreByDefault = true)
+    TestCase fromCreateTestCaseFromTestCaseUpload(TestCaseUpload testCaseUpload);
 }

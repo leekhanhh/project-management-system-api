@@ -7,6 +7,7 @@ import com.base.meta.dto.teststep.TestStepDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.teststep.CreateTestStepForm;
 import com.base.meta.form.teststep.UpdateTestStepForm;
 import com.base.meta.mapper.TestStepMapper;
@@ -86,8 +87,8 @@ public class TestStepController extends ABasicController{
     @DeleteMapping(value="/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TST_D')")
-    public ApiMessageDto<Long> deleteTestStep(@PathVariable("id") Long id) {
-        ApiMessageDto<Long> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<String> deleteTestStep(@PathVariable("id") Long id) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
             throw new UnauthorizationException("Not allowed delete!");
         }
@@ -96,7 +97,6 @@ public class TestStepController extends ABasicController{
             throw new BadRequestException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST);
         }
         testStepRepository.delete(testStep);
-        apiMessageDto.setData(id);
         apiMessageDto.setMessage("Delete test step success.");
         return apiMessageDto;
     }
@@ -123,6 +123,21 @@ public class TestStepController extends ABasicController{
         return apiMessageDto;
     }
 
-
-
+    @PutMapping(value="/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TST_UF')")
+    public ApiMessageDto<String> updateFlagTestStep(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(!isTester()){
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        TestStep testStep = testStepRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (testStep == null) {
+            throw new BadRequestException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST);
+        }
+        testStep.setFlag(modifyFlagForm.getFlag());
+        testStepRepository.save(testStep);
+        apiMessageDto.setMessage("Update test step flag success.");
+        return apiMessageDto;
+    }
 }

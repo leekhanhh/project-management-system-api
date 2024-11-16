@@ -44,8 +44,8 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TPTSR_C')")
-    public ApiMessageDto<TestPlanTestSuiteRelationDto> createTestPlanTestSuiteRelation(@Valid @RequestBody CreateTestPlanTestSuiteRelationForm createTestPlanTestSuiteRelationForm, BindingResult bindingResult) {
-        ApiMessageDto<TestPlanTestSuiteRelationDto> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<String> createTestPlanTestSuiteRelation(@Valid @RequestBody CreateTestPlanTestSuiteRelationForm createTestPlanTestSuiteRelationForm, BindingResult bindingResult) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if (!isTester()) {
             throw new UnauthorizationException("You are not authorized to perform this action.");
         }
@@ -64,7 +64,6 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
         testPlanTestSuiteRelation.setTestPlan(testPlan);
         testPlanTestSuiteRelation.setTestSuite(testSuite);
         testPlanTestSuiteRelationRepository.save(testPlanTestSuiteRelation);
-        apiMessageDto.setData(testPlanTestSuiteRelationMapper.fromEntityToTestPlanTestSuiteRelationDto(testPlanTestSuiteRelation));
         apiMessageDto.setMessage("Create test plan test suite relation success.");
         return apiMessageDto;
     }

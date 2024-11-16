@@ -7,6 +7,7 @@ import com.base.meta.dto.program.ProgramDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.program.CreateProgramForm;
 import com.base.meta.form.program.UpdateProgramForm;
 import com.base.meta.mapper.ProgramMapper;
@@ -53,7 +54,7 @@ public class ProgramController extends ABasicController {
     @PreAuthorize("hasRole('PG_C')")
     public ApiMessageDto<String> createProgram(@Valid @RequestBody CreateProgramForm createProgramForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed create!");
         }
 
@@ -96,15 +97,9 @@ public class ProgramController extends ABasicController {
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-//        if (!baseMetaApiService.checkEndDateIsAfterNow(createProgramForm.getEndDate())) {
-//            throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProgramForm.getStartDate(), createProgramForm.getEndDate())) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
-//        if (!baseMetaApiService.checkStartDateIsAfterNow(createProgramForm.getStartDate())) {
-//            throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
 
         program = programMapper.fromCreateProgramFormToEntity(createProgramForm);
         program.setProject(project);
@@ -124,7 +119,7 @@ public class ProgramController extends ABasicController {
     @PreAuthorize("hasRole('PG_U')")
     public ApiMessageDto<ProgramDto> updateProgram(@Valid @RequestBody UpdateProgramForm updateProgramForm, BindingResult bindingResult) {
         ApiMessageDto<ProgramDto> apiMessageDto = new ApiMessageDto<>();
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed update!");
         }
         Program program = programRepository.findFirstById(updateProgramForm.getId());
@@ -198,7 +193,7 @@ public class ProgramController extends ABasicController {
     @Transactional
     @PreAuthorize("hasRole('PG_D')")
     public ApiMessageDto<String> deleteProgram(@PathVariable Long id) {
-        if (!isPM() && !isSuperAdmin()) {
+        if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
@@ -208,6 +203,24 @@ public class ProgramController extends ABasicController {
         }
         programRepository.delete(program);
         apiMessageDto.setMessage("Delete program success.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('PG_UF')")
+    public ApiMessageDto<String> updateFlagProgram(@RequestBody ModifyFlagForm modifyFlagForm) {
+        if (!isPM()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        Program program = programRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (program == null) {
+            throw new BadRequestException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
+        }
+        program.setFlag(modifyFlagForm.getFlag());
+        programRepository.save(program);
+        apiMessageDto.setMessage("Update program flag success.");
         return apiMessageDto;
     }
 

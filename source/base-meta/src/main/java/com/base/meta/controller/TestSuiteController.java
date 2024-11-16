@@ -6,6 +6,7 @@ import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testsuite.TestSuiteDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testsuite.CreateTestSuiteForm;
 import com.base.meta.form.testsuite.UpdateTestSuiteForm;
 import com.base.meta.mapper.TestSuiteMapper;
@@ -182,4 +183,21 @@ public class TestSuiteController extends ABasicController{
         return apiMessageDto;
     }
 
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TSU_UF')")
+    public ApiMessageDto<String> updateFlagTestSuite(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        TestSuite testSuite = testSuiteRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (testSuite == null) {
+            throw new BadRequestException("Test suite is not existed!", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST);
+        }
+        testSuite.setFlag(modifyFlagForm.getFlag());
+        testSuiteRepository.save(testSuite);
+        apiMessageDto.setMessage("Update test suite flag success.");
+        return apiMessageDto;
+    }
 }

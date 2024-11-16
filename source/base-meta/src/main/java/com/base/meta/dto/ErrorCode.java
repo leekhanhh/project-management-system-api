@@ -88,6 +88,7 @@ public class ErrorCode {
      * Project member error code
      */
     public static final String PROJECT_MEMBER_ERROR_NOT_EXIST = "ERROR-PROJECT-MEMBER-000";
+    public static final String PROJECT_MEMBER_ERROR_ONBOARDED_DATE_AFTER_OFFBOARDED_DATE = "ERROR-PROJECT-MEMBER-001";
 
     /**
      * Requirement error code

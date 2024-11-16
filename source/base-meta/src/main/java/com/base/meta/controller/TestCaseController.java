@@ -6,6 +6,7 @@ import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testcase.TestCaseDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testcase.CreateTestCaseForm;
 import com.base.meta.form.testcase.UpdateTestCaseForm;
 import com.base.meta.mapper.TestCaseMapper;
@@ -101,7 +102,10 @@ public class TestCaseController extends ABasicController{
     public ApiMessageDto<ResponseListDto<TestCaseDto>> listTestCase(TestCaseCriteria testCaseCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestCaseDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestCase> testCasePage = testCaseRepository.findAll(testCaseCriteria.getSpecification(), pageable);
-        ResponseListDto<TestCaseDto> responseListDto = new ResponseListDto(testCaseMapper.fromEntityToTestCaseDtoList(testCasePage.getContent()), testCasePage.getTotalElements(), testCasePage.getTotalPages());
+        ResponseListDto responseListDto = new ResponseListDto(testCaseMapper.fromEntityToTestCaseDtoList(
+                testCasePage.getContent()),
+                testCasePage.getTotalElements(),
+                testCasePage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test cases success.");
         return apiMessageDto;
@@ -116,6 +120,24 @@ public class TestCaseController extends ABasicController{
         }
         apiMessageDto.setData(testCaseMapper.fromEntityToTestCaseDto(testCase));
         apiMessageDto.setMessage("Get test case success.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TC_UF')")
+    public ApiMessageDto<String> updateFlagTestCase(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(!isTester()){
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        TestCase testCase = testCaseRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (testCase == null) {
+            throw new BadRequestException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
+        }
+        testCase.setFlag(modifyFlagForm.getFlag());
+        testCaseRepository.save(testCase);
+        apiMessageDto.setMessage("Delete test case success.");
         return apiMessageDto;
     }
 

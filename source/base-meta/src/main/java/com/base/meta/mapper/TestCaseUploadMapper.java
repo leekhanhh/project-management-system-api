@@ -13,17 +13,6 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {ProjectMapper.class, ProgramMapper.class})
 public interface TestCaseUploadMapper {
-    @Mapping(source = "testCasePrecondition", target = "testCasePrecondition")
-    @Mapping(source = "testCaseName", target = "testCaseName")
-    @Mapping(source = "testCaseMenuPath", target = "testCaseMenuPath")
-    @Mapping(source = "testStepsAction", target = "testStepsAction")
-    @Mapping(source = "testStepsData", target = "testStepsData")
-    @Mapping(source = "testStepsExpectedResult", target = "testStepsExpectedResult")
-    @Mapping(source = "testStepsActualResult", target = "testStepsActualResult")
-    @Mapping(source = "programId", target = "program.id")
-    @BeanMapping(ignoreByDefault = true)
-    @Named("fromCreateTestCaseUploadFormToEntity")
-    TestCaseUpload fromCreateTestCaseUploadFormToEntity(CreateTestCaseUploadForm createTestCaseUploadForm);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "testCasePrecondition", target = "testCasePrecondition")
@@ -32,7 +21,6 @@ public interface TestCaseUploadMapper {
     @Mapping(source = "testStepsAction", target = "testStepsAction")
     @Mapping(source = "testStepsData", target = "testStepsData")
     @Mapping(source = "testStepsExpectedResult", target = "testStepsExpectedResult")
-    @Mapping(source = "testStepsActualResult", target = "testStepsActualResult")
     @Mapping(source = "program", target = "program", qualifiedByName = "fromEntityToAutoCompleteProgramDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromUpdateTestCaseUploadFormToEntity")
