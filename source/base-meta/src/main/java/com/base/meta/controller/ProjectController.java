@@ -127,7 +127,6 @@ public class ProjectController extends ABasicController{
         return apiMessageDto;
     }
 
-
     @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('PJ_UF')")

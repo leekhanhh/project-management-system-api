@@ -1157,4 +1157,10 @@
     <changeSet id="1729698209024-98" author="GIGABYTE (generated)">
         <renameColumn tableName="db_project_management_test_execution" oldColumnName="project_id" newColumnName="program_id" columnDataType="BIGINT"/>
     </changeSet>
+    <changeSet id="1729698209024-99" author="GIGABYTE (generated)">
+        <renameColumn tableName="db_project_management_test_case_upload" oldColumnName="test_case_description" newColumnName="test_steps_action" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+<!--    <changeSet id="1729698209024-100" author="GIGABYTE (generated)">-->
+<!--        <dropColumn tableName="db_project_management_test_case_upload" columnName="test_steps_actual_result"/>-->
+<!--    </changeSet>-->
 </databaseChangeLog>

@@ -14,6 +14,5 @@ public class TestCaseUploadDto extends ABasicAdminDto {
     private String testStepsAction;
     private String testStepsData;
     private String testStepsExpectedResult;
-    private String testStepsActualResult;
     private ProgramDto program;
 }

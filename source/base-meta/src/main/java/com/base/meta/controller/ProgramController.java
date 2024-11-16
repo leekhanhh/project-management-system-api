@@ -97,15 +97,9 @@ public class ProgramController extends ABasicController {
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-//        if (!baseMetaApiService.checkEndDateIsAfterNow(createProgramForm.getEndDate())) {
-//            throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProgramForm.getStartDate(), createProgramForm.getEndDate())) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
-//        if (!baseMetaApiService.checkStartDateIsAfterNow(createProgramForm.getStartDate())) {
-//            throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
 
         program = programMapper.fromCreateProgramFormToEntity(createProgramForm);
         program.setProject(project);

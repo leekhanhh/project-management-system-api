@@ -102,7 +102,10 @@ public class TestCaseController extends ABasicController{
     public ApiMessageDto<ResponseListDto<TestCaseDto>> listTestCase(TestCaseCriteria testCaseCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestCaseDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestCase> testCasePage = testCaseRepository.findAll(testCaseCriteria.getSpecification(), pageable);
-        ResponseListDto<TestCaseDto> responseListDto = new ResponseListDto(testCaseMapper.fromEntityToTestCaseDtoList(testCasePage.getContent()), testCasePage.getTotalElements(), testCasePage.getTotalPages());
+        ResponseListDto responseListDto = new ResponseListDto(testCaseMapper.fromEntityToTestCaseDtoList(
+                testCasePage.getContent()),
+                testCasePage.getTotalElements(),
+                testCasePage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test cases success.");
         return apiMessageDto;
