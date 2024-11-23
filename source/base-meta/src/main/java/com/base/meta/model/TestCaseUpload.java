@@ -23,12 +23,12 @@ public class TestCaseUpload extends Auditable<String>{
     private String testCaseName;
     @Column(name = "test_case_menu_path")
     private String testCaseMenuPath;
-    @Column(name = "test_steps_action")
-    private String testStepsAction;
-    @Column(name = "test_steps_data")
-    private String testStepsData;
-    @Column(name = "test_steps_expected_result")
-    private String testStepsExpectedResult;
+    @Column(name = "test_step_action")
+    private String testStepAction;
+    @Column(name = "test_step_data")
+    private String testStepData;
+    @Column(name = "test_step_expected_result")
+    private String testStepExpectedResult;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "program_id")
     private Program program;

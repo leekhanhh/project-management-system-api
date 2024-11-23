@@ -24,4 +24,5 @@ public class TestExecutionTurnDto extends ABasicAdminDto {
     private Integer waitingCasesCount;
     private Integer inProgressCasesCount;
     private Integer completedCasesCount;
+    private String displayId;
 }

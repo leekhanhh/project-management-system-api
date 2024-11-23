@@ -26,5 +26,8 @@ public class TestStepExecution extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category status;
+    @Column(name = "is_defected")
     private Boolean isDefected = false;
+    @Column(name = "display_id")
+    private String displayId;
 }

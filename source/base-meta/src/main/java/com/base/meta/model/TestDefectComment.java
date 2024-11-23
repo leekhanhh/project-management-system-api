@@ -2,6 +2,7 @@ package com.base.meta.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,13 +17,14 @@ public class TestDefectComment extends Auditable<String> {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "com.base.meta.service.id.IdGenerator")
     @GeneratedValue(generator = "idGenerator")
+    @JsonProperty("id")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_step_execution_id")
+    @JoinColumn(name = "test_defect_id")
     private TestDefect testDefect;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account sender;
-    private String title;
+    @JsonProperty("comment")
     private String comment;
 }

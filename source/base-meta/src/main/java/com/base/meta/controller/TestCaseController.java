@@ -11,12 +11,12 @@ import com.base.meta.form.testcase.CreateTestCaseForm;
 import com.base.meta.form.testcase.UpdateTestCaseForm;
 import com.base.meta.mapper.TestCaseMapper;
 import com.base.meta.model.Program;
-import com.base.meta.model.Project;
 import com.base.meta.model.TestCase;
 import com.base.meta.model.criteria.TestCaseCriteria;
 import com.base.meta.repository.ProgramRepository;
 import com.base.meta.repository.ProjectRepository;
 import com.base.meta.repository.TestCaseRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,11 +28,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/v1/test-case")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestCaseController extends ABasicController{
+    private static final String PREFIX_ENTITY = "TC";
     @Autowired
     TestCaseRepository testCaseRepository;
     @Autowired
@@ -41,12 +45,17 @@ public class TestCaseController extends ABasicController{
     ProjectRepository projectRepository;
     @Autowired
     ProgramRepository programRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TC_C')")
     public ApiMessageDto<String> createTestCase(@Valid @RequestBody CreateTestCaseForm createTestCaseForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(bindingResult.hasErrors()){
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), ErrorCode.TEST_CASE_ERROR_INVALID);
+        }
         if(!isTester()){
             throw new UnauthorizationException("Not allowed create!");
         }
@@ -58,6 +67,7 @@ public class TestCaseController extends ABasicController{
 
         TestCase testCase = testCaseMapper.fromCreateTestCaseFormToEntity(createTestCaseForm);
         testCase.setProgram(program);
+        testCase.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testCaseRepository.save(testCase);
         apiMessageDto.setMessage("Create a new test case success.");
         return apiMessageDto;
@@ -68,6 +78,9 @@ public class TestCaseController extends ABasicController{
     @PreAuthorize("hasRole('TC_U')")
     public ApiMessageDto<String> updateTestCase(@Valid @RequestBody UpdateTestCaseForm updateTestCaseForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(bindingResult.hasErrors()){
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), ErrorCode.TEST_CASE_ERROR_INVALID);
+        }
         if(!isTester()){
             throw new UnauthorizationException("Not allowed update!");
         }
@@ -140,5 +153,4 @@ public class TestCaseController extends ABasicController{
         apiMessageDto.setMessage("Delete test case success.");
         return apiMessageDto;
     }
-
 }

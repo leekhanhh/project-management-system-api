@@ -12,6 +12,7 @@ import com.base.meta.mapper.TestStepMapper;
 import com.base.meta.model.*;
 import com.base.meta.model.criteria.TestCaseUploadCriteria;
 import com.base.meta.repository.*;
+import com.base.meta.service.BaseMetaApiService;
 import com.base.meta.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/test-case-upload")
@@ -106,9 +104,6 @@ public class TestCaseUploadController extends ABasicController {
             try {
                 List<TestCaseUpload> testCaseUploads = excelService.mapExcelToData(file.getInputStream());
                 for (TestCaseUpload testCaseUpload : testCaseUploads) {
-                    if (testCaseUpload.getProgram() == null) {
-                        throw new BadRequestException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
-                    }
                     TestCase testCase = testCaseRepository.findFirstByName(testCaseUpload.getTestCaseName());
 
                     if (testCase == null) {
@@ -122,14 +117,16 @@ public class TestCaseUploadController extends ABasicController {
                     testCaseUploadRepository.save(testCaseUpload);
                 }
                 apiMessageDto.setMessage("Uploaded the file successfully: " + file.getOriginalFilename());
-                return apiMessageDto;
             } catch (Exception e) {
                 log.error(e.toString());
                 apiMessageDto.setMessage("Could not upload the file: " + file.getOriginalFilename() + "!");
                 return apiMessageDto;
             }
         }
-        apiMessageDto.setMessage("Please upload an excel file " + file.getOriginalFilename() + " !");
+        else {
+            apiMessageDto.setMessage("Please upload an excel file!");
+            return apiMessageDto;
+        }
         return apiMessageDto;
     }
 

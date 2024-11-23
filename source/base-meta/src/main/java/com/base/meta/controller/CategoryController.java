@@ -13,6 +13,7 @@ import com.base.meta.mapper.CategoryMapper;
 import com.base.meta.model.Category;
 import com.base.meta.model.criteria.CategoryCriteria;
 import com.base.meta.repository.CategoryRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Objects;
 
 @RestController
@@ -33,10 +35,13 @@ import java.util.Objects;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class CategoryController extends ABasicController{
+    private static final String PREFIX_ENTITY = "CATE";
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
     CategoryMapper categoryMapper;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('CATE_L')")
@@ -94,6 +99,7 @@ public class CategoryController extends ABasicController{
         if (checkCode != null && checkCode.getParentCategory() == null && !StringUtils.equals("", createCategoryForm.getCategoryCode())) {
             throw new BadRequestException("[Category] Code exist in kind!", ErrorCode.CATEGORY_ERROR_CODE_EXIST);
         }
+        category.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         categoryRepository.save(category);
         apiMessageDto.setData(category.getId());
         apiMessageDto.setMessage("Create a new category success.");

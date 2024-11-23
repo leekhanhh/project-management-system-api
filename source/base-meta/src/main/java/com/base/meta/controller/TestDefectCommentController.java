@@ -15,12 +15,16 @@ import com.base.meta.model.criteria.TestDefectCommentCriteria;
 import com.base.meta.repository.AccountRepository;
 import com.base.meta.repository.TestDefectCommentRepository;
 import com.base.meta.repository.TestDefectRepository;
-import com.base.meta.service.fcmservice.FCMService;
+import com.base.meta.service.NotificationService;
+import com.base.meta.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +46,16 @@ public class TestDefectCommentController extends ABasicController{
     @Autowired
     TestDefectRepository testDefectRepository;
     @Autowired
-    FCMService fcmService;
+    SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+    @Autowired
+    RedisService redisService;
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    NotificationService notificationService;
+
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -60,7 +73,14 @@ public class TestDefectCommentController extends ABasicController{
         testDefectComment.setTestDefect(testDefect);
         testDefectComment.setSender(account);
         testDefectCommentRepository.save(testDefectComment);
-        fcmService.pushNotification(createTestDefectCommentForm);
+
+        messagingTemplate.convertAndSend("/topic/test-defect-comment", testDefectComment.getComment());
+        String message = "New comment from " + account.getUsername() + " on test defect " + testDefect.getName();
+        rabbitTemplate.convertAndSend("commentQueue", message);
+        redisService.saveMessageToRedis(message);
+        redisTemplate.opsForList().leftPush("comment_messages", message);
+        log.info("Sending message to queue: {}", message);
+        //messagingTemplate.convertAndSendToUser("/topic/messages", account.getUsername(), createTestDefectCommentForm.getComment());
         apiMessageDto.setMessage("Create test defect comment successfully!");
         return apiMessageDto;
     }

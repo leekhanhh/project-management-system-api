@@ -32,4 +32,5 @@ public class AccountDto extends ABasicAdminDto {
     @ApiModelProperty(name = "avatar")
     private String avatar;
     private Boolean isSuperAdmin;
+    private String displayId;
 }

@@ -2,6 +2,7 @@ package com.base.meta.form.user;
 
 import com.base.meta.validation.NumberField;
 import com.base.meta.validation.UserKind;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -17,9 +18,6 @@ public class CreateUserForm {
     @Email
     @ApiModelProperty(name = "email", required = true)
     private String email;
-    @NotEmpty(message = "password can not be empty!")
-    @ApiModelProperty(name = "password", required = true)
-    private String password;
     @NotEmpty(message = "phone can not be empty!")
     @ApiModelProperty(name = "phone", required = true)
     @NumberField

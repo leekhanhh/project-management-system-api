@@ -12,4 +12,5 @@ public class CategoryDto extends ABasicAdminDto {
     private String categoryDescription;
     private Integer categoryOrdering;
     private Long parentId;
+    private String displayId;
 }

@@ -11,8 +11,8 @@ public class TestCaseUploadDto extends ABasicAdminDto {
     private String testCasePrecondition;
     private String testCaseName;
     private String testCaseMenuPath;
-    private String testStepsAction;
-    private String testStepsData;
-    private String testStepsExpectedResult;
+    private String testStepAction;
+    private String testStepData;
+    private String testStepExpectedResult;
     private ProgramDto program;
 }

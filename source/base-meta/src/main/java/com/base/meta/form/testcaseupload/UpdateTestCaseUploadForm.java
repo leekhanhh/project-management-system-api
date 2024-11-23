@@ -19,14 +19,12 @@ public class UpdateTestCaseUploadForm {
     @ApiModelProperty(name = "test case menu path", required = true)
     private String testCaseMenuPath;
     @ApiModelProperty(name = "test steps action", required = true)
-    private String testStepsAction;
+    private String testStepAction;
     @ApiModelProperty(name = "test steps data", required = true)
     @NotEmpty(message = "test steps data cannot be null")
-    private String testStepsData;
+    private String testStepData;
     @ApiModelProperty(name = "test steps expected result", required = true)
-    private String testStepsExpectedResult;
-    @ApiModelProperty(name = "test steps actual result", required = true)
-    private String testStepsActualResult;
+    private String testStepExpectedResult;
     @ApiModelProperty(name = "program id", required = true)
     private Long programId;
 }

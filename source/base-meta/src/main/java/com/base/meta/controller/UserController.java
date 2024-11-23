@@ -16,6 +16,7 @@ import com.base.meta.model.*;
 import com.base.meta.model.criteria.UserCriteria;
 import com.base.meta.repository.*;
 import com.base.meta.service.BaseMetaApiService;
+import com.base.meta.utils.RandomPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,8 @@ public class UserController extends ABasicController {
     @Autowired
     DataSource dataSource;
     @Autowired
+    RandomPasswordUtils randomPasswordUtils;
+    @Autowired
     BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +88,7 @@ public class UserController extends ABasicController {
         account.setStatus(status);
         account.setPosition(position);
         account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
-        account.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
+        account.setPassword(passwordEncoder.encode(randomPasswordUtils.createPassword()));
         account.setFlag(1);
         if (createUserForm.getKind()==2)
         {
@@ -104,7 +107,7 @@ public class UserController extends ABasicController {
         accountRepository.save(account);
         userRepository.save(user);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        apiMessageDto.setMessage("Create user success.");
+        apiMessageDto.setMessage("Create user success. Password: " + account.getPassword());
         return apiMessageDto;
     }
 

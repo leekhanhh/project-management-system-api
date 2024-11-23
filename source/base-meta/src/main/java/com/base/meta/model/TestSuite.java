@@ -26,4 +26,6 @@ public class TestSuite extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "account_id")
     private Account account;
+    @Column(name = "display_id")
+    private String displayId;
 }

@@ -13,4 +13,5 @@ public class TestStepDto extends ABasicAdminDto {
     private String data;
     private String expectedResult;
     private TestCaseDto testCase;
+    private String displayId;
 }

@@ -35,6 +35,7 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestSuiteExecutionController extends ABasicController {
+    private static final String PREFIX_ENTITY = "TSUE";
     @Autowired
     TestSuiteExecutionRepository testSuiteExecutionRepository;
     @Autowired

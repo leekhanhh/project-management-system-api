@@ -13,4 +13,5 @@ public class TestDefectFixedResultDto extends ABasicAdminDto {
     private String description;
     private Date fixedDate;
     private String remark;
+    private String displayId;
 }

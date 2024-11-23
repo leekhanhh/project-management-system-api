@@ -34,4 +34,6 @@ public class Group extends Auditable<String> {
             inverseJoinColumns = @JoinColumn(name = "permission_id",
                     referencedColumnName = "id"))
     private List<Permission> permissions = new ArrayList<>();
+    @Column(name = "display_id")
+    private String displayId;
 }

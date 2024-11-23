@@ -31,4 +31,6 @@ public class TestDefect extends Auditable<String>{
     private Account assignedDeveloper;
     private String description;
     private Boolean sendEmailNotification = true;
+    @Column(name = "display_id")
+    private String displayId;
 }

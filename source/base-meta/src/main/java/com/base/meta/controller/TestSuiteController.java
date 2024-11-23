@@ -16,6 +16,7 @@ import com.base.meta.model.TestPlanTestSuiteRelation;
 import com.base.meta.model.TestSuite;
 import com.base.meta.model.criteria.TestSuiteCriteria;
 import com.base.meta.repository.*;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestSuiteController extends ABasicController{
+    private static final String PREFIX_ENTITY = "TSU";
     @Autowired
     TestSuiteRepository testSuiteRepository;
     @Autowired
@@ -50,6 +53,8 @@ public class TestSuiteController extends ABasicController{
     TestSuiteTestCaseRelationRepository testSuiteTestCaseRelationRepository;
     @Autowired
     TestPlanTestSuiteRelationRepository testPlanTestSuiteRelationRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -73,6 +78,7 @@ public class TestSuiteController extends ABasicController{
         TestSuite testSuite = testSuiteMapper.fromCreateTestSuiteFormToEntity(createTestSuiteForm);
         testSuite.setTestPlan(testPlan);
         testSuite.setAccount(account);
+        testSuite.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         TestPlanTestSuiteRelation testPlanTestSuiteRelation = new TestPlanTestSuiteRelation();
         testPlanTestSuiteRelation.setTestPlan(testPlan);
         testPlanTestSuiteRelation.setTestSuite(testSuite);

@@ -12,6 +12,7 @@ import com.base.meta.model.criteria.PermissionCriteria;
 import com.base.meta.repository.GroupRepository;
 import com.base.meta.repository.PermissionRepository;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,18 +25,22 @@ import org.springframework.web.bind.annotation.*;
 import com.base.meta.dto.ErrorCode;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/permission")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class PermissionController extends ABasicController {
+    private static final String PREFIX_ENTITY = "PER";
     @Autowired
     PermissionRepository permissionRepository;
     @Autowired
     PermissionMapper permissionMapper;
     @Autowired
     GroupRepository groupRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('PER_C')")
@@ -51,6 +56,7 @@ public class PermissionController extends ABasicController {
             throw new BadRequestException("Permission code is existed!", ErrorCode.PERMISSION_ERROR_CODE_EXIST);
         }
         permission = permissionMapper.fromCreatePermissionFormToEntity(createPermissionForm);
+        permission.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         permissionRepository.save(permission);
         apiMessageDto.setMessage("Create a new permission success.");
         return apiMessageDto;

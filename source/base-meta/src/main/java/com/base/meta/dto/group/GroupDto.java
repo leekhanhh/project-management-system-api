@@ -22,4 +22,5 @@ public class GroupDto extends ABasicAdminDto {
     private Boolean isSystemRole;
     @ApiModelProperty(name = "permissions")
     private List<PermissionDto> permissions;
+    private String displayId;
 }

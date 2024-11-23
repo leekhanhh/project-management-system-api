@@ -30,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestExecutionTurnController extends ABasicController {
+    private static final String PREFIX_ENTITY = "TET";
     @Autowired
     TestExecutionTurnRepository testExecutionTurnRepository;
     @Autowired
@@ -108,6 +110,7 @@ public class TestExecutionTurnController extends ABasicController {
         testExecutionTurn = testExecutionTurnMapper.fromCreateTestExecutionTurnFormToEntity(createTestExecutionTurnForm);
         testExecutionTurn.setAssignedDeveloper(assignedDeveloper);
         testExecutionTurn.setTestExecution(testExecution);
+        testExecutionTurn.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testExecutionTurnRepository.save(testExecutionTurn);
         apiMessageDto.setMessage("Create test execution turn successfully");
         return apiMessageDto;

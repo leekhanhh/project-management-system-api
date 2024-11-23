@@ -29,4 +29,6 @@ public class Project extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category status;
+    @Column(name = "display_id")
+    private String displayId;
 }

@@ -16,6 +16,7 @@ import com.base.meta.model.Project;
 import com.base.meta.model.ProjectMember;
 import com.base.meta.model.criteria.ProjectMemberCriteria;
 import com.base.meta.repository.AccountRepository;
+import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.ProjectMemberRepository;
 import com.base.meta.repository.ProjectRepository;
 import com.base.meta.service.BaseMetaApiService;
@@ -46,6 +47,8 @@ public class ProjectMemberController extends ABasicController{
     @Autowired
     AccountRepository accountRepository;
     @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
     BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -53,6 +56,9 @@ public class ProjectMemberController extends ABasicController{
     @Transactional
     public ApiMessageDto<String> createProjectMember(@Valid @RequestBody CreateProjectMemberForm createProjectMemberForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if(bindingResult.hasErrors()){
+            throw new BadRequestException(bindingResult.getFieldError().getDefaultMessage(), ErrorCode.PROJECT_MEMBER_ERROR_INVALID);
+        }
         if(!isPM()){
             throw new UnauthorizationException("Not allowed create!");
         }
@@ -74,9 +80,14 @@ public class ProjectMemberController extends ABasicController{
         }
 
         ProjectMember projectMember = projectMemberMapper.fromCreateProjectMemberFormToEntity(createProjectMemberForm);
+
+        account.setStatus(categoryRepository.findFirstByCodeAndKind(String.valueOf(BaseMetaConstant.USER_STATUS_BUSY), BaseMetaConstant.CATEGORY_KIND_ACCOUNT));
+        accountRepository.save(account);
+
         projectMember.setProject(project);
         projectMember.setAccount(account);
         projectMemberRepository.save(projectMember);
+
         apiMessageDto.setMessage("Create project member success.");
         return apiMessageDto;
     }
@@ -107,10 +118,13 @@ public class ProjectMemberController extends ABasicController{
         if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
-        ProjectMember projectMember = projectMemberRepository.findById(id).orElse(null);
-        if (projectMember == null) {
-            throw new BadRequestException("Project member is not existed!", ErrorCode.PROJECT_MEMBER_ERROR_NOT_EXIST);
-        }
+        ProjectMember projectMember = projectMemberRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Project member is not existed!", ErrorCode.PROJECT_MEMBER_ERROR_NOT_EXIST));
+
+        Account account = projectMember.getAccount();
+        account.setStatus(categoryRepository.findFirstByCodeAndKind(String.valueOf(BaseMetaConstant.USER_STATUS_AVAILABLE), BaseMetaConstant.CATEGORY_KIND_ACCOUNT));
+        accountRepository.save(account);
+
         projectMemberRepository.delete(projectMember);
         apiMessageDto.setMessage("Delete project member success.");
         return apiMessageDto;

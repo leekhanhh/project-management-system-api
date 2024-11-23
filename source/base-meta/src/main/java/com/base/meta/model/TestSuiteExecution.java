@@ -27,4 +27,6 @@ public class TestSuiteExecution extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_execution_turn_id")
     private TestExecutionTurn testExecutionTurn;
+    @Column(name = "display_id")
+    private String displayId;
 }

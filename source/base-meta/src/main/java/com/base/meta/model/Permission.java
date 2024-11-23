@@ -29,4 +29,6 @@ public class Permission extends Auditable<String> {
     @Column(name = "permission_code")
     private String permissionCode;
     private Integer kind;
+    @Column(name = "display_id")
+    private String displayId;
 }

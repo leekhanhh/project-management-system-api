@@ -15,6 +15,7 @@ import com.base.meta.repository.AccountRepository;
 import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.TestDefectRepository;
 import com.base.meta.repository.TestStepExecutionRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,12 +27,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/test-defect")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestDefectController extends ABasicController {
+    private static final String PREFIX_ENTITY = "TDE";
     @Autowired
     TestDefectRepository testDefectRepository;
     @Autowired
@@ -42,6 +45,8 @@ public class TestDefectController extends ABasicController {
     AccountRepository accountRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -62,6 +67,7 @@ public class TestDefectController extends ABasicController {
         testDefect.setTestStepExecution(testStepExecution);
         testDefect.setAssignedDeveloper(account);
         testDefect.setStatus(category);
+        testDefect.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testDefectRepository.save(testDefect);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create a new Test Defect successfully.");

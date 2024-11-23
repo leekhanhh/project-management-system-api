@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface TestPlanRepository extends JpaRepository<TestPlan,Long>, JpaSpecificationExecutor<TestPlan> {
     TestPlan findFirstById(Long id);
     TestPlan findFirstByName(String name);
+    TestPlan findFirstByNameAndProgramId(String name, Long programId);
 }

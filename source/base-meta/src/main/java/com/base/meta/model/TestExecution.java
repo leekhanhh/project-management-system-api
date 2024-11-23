@@ -36,4 +36,6 @@ public class TestExecution extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "program_id")
     private Program program;
+    @Column(name = "display_id")
+    private String displayId;
 }

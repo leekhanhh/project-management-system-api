@@ -14,4 +14,5 @@ public class TestSuiteDto extends ABasicAdminDto {
     private Integer testCaseCount;
     private TestPlanDto testPlan;
     private AccountDto account;
+    private String displayId;
 }

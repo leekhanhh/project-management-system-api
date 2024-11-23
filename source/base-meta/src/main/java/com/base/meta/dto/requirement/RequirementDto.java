@@ -14,4 +14,5 @@ public class RequirementDto extends ABasicAdminDto {
     private CategoryDto detailClassification;
     private String acceptance;
     private ProjectDto project;
+    private String displayId;
 }

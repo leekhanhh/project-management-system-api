@@ -21,7 +21,10 @@ public class TestDefectFixedResult extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_defect_id")
     private TestDefect testDefect;
+    @Column(name = "action_start_date")
     private Date actionStartDate;
     private String description;
     private String remark;
+    @Column(name = "display_id")
+    private String displayId;
 }

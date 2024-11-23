@@ -26,5 +26,6 @@ public class TestStep extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
-
+    @Column(name = "display_id")
+    private String displayId;
 }

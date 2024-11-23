@@ -21,4 +21,6 @@ public class ProjectDto extends ABasicAdminDto {
     private Date endDate;
     @ApiModelProperty(name = "status")
     private CategoryDto status;
+    @ApiModelProperty(name = "displayId")
+    private String displayId;
 }

@@ -22,4 +22,5 @@ public class PermissionDto extends ABasicAdminDto {
     private String permissionCode;
     @ApiModelProperty(name = "kind")
     private Integer kind;
+    private String displayId;
 }

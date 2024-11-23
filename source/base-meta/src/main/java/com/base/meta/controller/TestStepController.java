@@ -16,6 +16,7 @@ import com.base.meta.model.TestStep;
 import com.base.meta.model.criteria.TestStepCriteria;
 import com.base.meta.repository.TestCaseRepository;
 import com.base.meta.repository.TestStepRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 
 @RestController
@@ -34,33 +36,35 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestStepController extends ABasicController{
+    private static final String PREFIX_ENTITY = "TST";
     @Autowired
     TestStepRepository testStepRepository;
     @Autowired
     TestStepMapper testStepMapper;
     @Autowired
     TestCaseRepository testCaseRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TST_C')")
-    public ApiMessageDto<TestStepDto> createTestStep(@Valid @RequestBody CreateTestStepForm createTestStepForm, BindingResult bindingResult) {
-        ApiMessageDto<TestStepDto> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<String> createTestStep(@Valid @RequestBody CreateTestStepForm createTestStepForm, BindingResult bindingResult) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
             throw new UnauthorizationException("Not allowed create!");
         }
-        TestCase testCase = testCaseRepository.findById(createTestStepForm.getTestCaseId()).orElse(null);
-        if (testCase == null) {
-            throw new NotFoundException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
-        }
+        TestCase testCase = testCaseRepository.findById(createTestStepForm.getTestCaseId()).orElseThrow(()
+                -> new NotFoundException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST));
+
         if(testStepRepository.findFirstByTestCaseAndStepNumber(testCase.getId(), createTestStepForm.getStepNumber()) != null){
             throw new BadRequestException("Step number is existed!", ErrorCode.TEST_STEP_ERROR_STEP_NUMBER_EXISTED);
         }
 
         TestStep testStep = testStepMapper.fromCreateTestStepFormToEntity(createTestStepForm);
         testStep.setTestCase(testCase);
+        testStep.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testStepRepository.save(testStep);
-        apiMessageDto.setData(testStepMapper.fromEntityToTestStepDto(testStep));
         apiMessageDto.setMessage("Create test step success.");
         return apiMessageDto;
     }
@@ -68,8 +72,8 @@ public class TestStepController extends ABasicController{
     @PutMapping(value="/update", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @PreAuthorize("hasRole('TST_U')")
-    public ApiMessageDto<TestStepDto> updateTestStep(@Valid @RequestBody UpdateTestStepForm updateTestStepForm, BindingResult bindingResult) {
-        ApiMessageDto<TestStepDto> apiMessageDto = new ApiMessageDto<>();
+    public ApiMessageDto<String> updateTestStep(@Valid @RequestBody UpdateTestStepForm updateTestStepForm, BindingResult bindingResult) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(!isTester()){
             throw new UnauthorizationException("Not allowed update!");
         }
@@ -79,7 +83,6 @@ public class TestStepController extends ABasicController{
         }
         testStepMapper.updateTestStepFromEntity(updateTestStepForm, testStep);
         testStepRepository.save(testStep);
-        apiMessageDto.setData(testStepMapper.fromEntityToTestStepDto(testStep));
         apiMessageDto.setMessage("Update test step success.");
         return apiMessageDto;
     }
@@ -131,10 +134,8 @@ public class TestStepController extends ABasicController{
         if(!isTester()){
             throw new UnauthorizationException("Not allowed delete!");
         }
-        TestStep testStep = testStepRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
-        if (testStep == null) {
-            throw new BadRequestException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST);
-        }
+        TestStep testStep = testStepRepository.findById(modifyFlagForm.getObjectId()).orElseThrow(()
+                -> new NotFoundException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST));
         testStep.setFlag(modifyFlagForm.getFlag());
         testStepRepository.save(testStep);
         apiMessageDto.setMessage("Update test step flag success.");

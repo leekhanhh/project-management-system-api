@@ -21,9 +21,9 @@ public interface TestCaseRepository extends JpaRepository<TestCase, Long> , JpaS
 
     @Query("SELECT " +
             "COUNT(tc.id) AS totalCases, " +
-            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Not-Executed' AND c.kind = '7') THEN 1 ELSE 0 END) AS notExecuted, " +
-            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Waiting' AND c.kind = '7') THEN 1 ELSE 0 END) AS waiting, " +
-            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Completed' AND c.kind = '7') THEN 1 ELSE 0 END) AS completed " +
+            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Not-Executed' AND c.kind = 7) THEN 1 ELSE 0 END) AS notExecuted, " +
+            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Waiting' AND c.kind = 7) THEN 1 ELSE 0 END) AS waiting, " +
+            "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Completed' AND c.kind = 7) THEN 1 ELSE 0 END) AS completed " +
             "FROM TestCase tc " +
             "INNER JOIN tc.program p " +
             "INNER JOIN TestExecution te ON te.program.id = p.id " +

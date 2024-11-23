@@ -17,5 +17,5 @@ public class TestDefectDto extends ABasicAdminDto {
     private CategoryDto status;
     private AccountDto assignedDeveloper;
     private TestStepExecutionDto testStepExecution;
-
+    private String displayId;
 }

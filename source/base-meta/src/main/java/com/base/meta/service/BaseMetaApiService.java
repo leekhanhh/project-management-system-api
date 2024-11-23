@@ -1,21 +1,28 @@
 package com.base.meta.service;
 
 import com.base.meta.model.Permission;
+import com.base.meta.model.TestCaseUpload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
 public class BaseMetaApiService {
     @Autowired
     BaseMetaOTPService baseMetaOTPService;
-
     @Autowired
     CommonAsyncService commonAsyncService;
+    @Autowired
+    ExcelService excelService;
+    private final AtomicInteger orderStt = new AtomicInteger(0);
+    private String currentDate = getFormattedDate(new Date());
 
     private Map<String, Long> storeQRCodeRandom = new ConcurrentHashMap<>();
 
@@ -23,7 +30,6 @@ public class BaseMetaApiService {
         //call to mediaService for delete
 
     }
-
 
     public String getOTPForgetPassword() {
         return baseMetaOTPService.generate(4);
@@ -37,6 +43,25 @@ public class BaseMetaApiService {
         commonAsyncService.sendEmail(email, msg, subject, html);
     }
 
+    public String generateDisplayId(String prefix, Date date){
+        StringBuilder displayId = new StringBuilder();
+        displayId.append(prefix);
+        displayId.append("_");
+        displayId.append(date.toString());
+        displayId.append("_");
+        String formattedDate = getFormattedDate(date);
+        if (!formattedDate.equals(currentDate)) {
+            currentDate = formattedDate;
+            orderStt.set(0);
+        }
+        String formattedOrderStt = String.format("%04d", orderStt.incrementAndGet());
+        displayId.append(formattedOrderStt);
+        return displayId.toString();
+    }
+    private String getFormattedDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyy");
+        return sdf.format(date);
+    }
     public String convertGroupToUri(List<Permission> permissions) {
         if (permissions != null) {
             StringBuilder builderPermission = new StringBuilder();
@@ -73,12 +98,6 @@ public class BaseMetaApiService {
 
     public Boolean checkStartDateIsBeforeEndDate(Date startDate, Date endDate) {
         return startDate.compareTo(endDate) < 0;
-    }
-    public Boolean checkStartDateIsAfterNow(Date startDate) {
-        return startDate.compareTo(new Date()) >= 0;
-    }
-    public Boolean checkEndDateIsAfterNow(Date endDate) {
-        return endDate.compareTo(new Date()) >= 0;
     }
 
 

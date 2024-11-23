@@ -13,7 +13,7 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {AccountMapper.class, TestDefectMapper.class})
 public interface TestDefectCommentMapper {
-    @Mapping(source = "title", target = "title")
+
     @Mapping(source = "comment", target = "comment")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromCreateTestDefectCommentFormToEntity")
@@ -25,7 +25,7 @@ public interface TestDefectCommentMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "testDefect", target = "testDefect", qualifiedByName = "fromEntityToDtoAutoComplete")
-    @Mapping(source = "title", target = "title")
+
     @Mapping(source = "comment", target = "comment")
     @Mapping(source = "sender", target = "sender", qualifiedByName = "fromAccountToAutoCompleteDto")
     @BeanMapping(ignoreByDefault = true)

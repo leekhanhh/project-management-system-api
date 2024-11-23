@@ -32,4 +32,6 @@ public class TestCaseExecution extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_code_category_id")
     private Category testExecutionTypeCode;
+    @Column(name = "display_id")
+    private String displayId;
 }

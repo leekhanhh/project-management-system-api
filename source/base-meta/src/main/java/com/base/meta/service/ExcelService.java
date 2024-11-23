@@ -1,23 +1,21 @@
 package com.base.meta.service;
 
+import com.base.meta.dto.ErrorCode;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.mapper.TestCaseUploadMapper;
-import com.base.meta.model.TestCase;
+import com.base.meta.form.program.ProgramUploadForm;
 import com.base.meta.model.TestCaseUpload;
-import com.base.meta.model.TestStep;
 import com.base.meta.repository.AccountRepository;
 import com.base.meta.repository.ProgramRepository;
 import com.base.meta.repository.TestCaseRepository;
 import com.base.meta.repository.TestStepRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -29,7 +27,7 @@ public class ExcelService {
 
     private static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String[] TCUPHEADERS = {"Program ID", "Member ID", "Test Case Name", "Test Case Pre-condition", "Test Case Menu Path", "Test Step Action", "Test Step Data", "Test Step Expected Result"};
-    private static final String[] PGUPHEADERS = {"Program ID", "Program Name", "Category", "Type", "Requirement ID", "Start Date", "End Date", "Description"};
+    private static final String[] PGUPHEADERS = {"Project ID", "Program Name", "Category", "Type", "Requirement ID", "Start Date", "End Date", "Description"};
     final ProgramRepository programRepository;
     final TestCaseRepository testCaseRepository;
     final TestStepRepository testStepRepository;
@@ -59,34 +57,91 @@ public class ExcelService {
                 && row.getCell(7).getStringCellValue().equals(TCUPHEADERS[7]);
     }
 
-    private Map<Integer, Consumer<Cell>> createCellMapping(TestCaseUpload testCaseUpload) {
-        return Map.of(
-                0, cell -> testCaseUpload.setProgram(programRepository.findFirstById(Long.parseLong(cell.getStringCellValue()))),
-                1, cell -> testCaseUpload.setCreatedBy(accountRepository.findFirstById(Long.parseLong(cell.getStringCellValue())).getUsername()),
-                2, cell -> testCaseUpload.setTestCaseName(cell.getStringCellValue()),
-                3, cell -> testCaseUpload.setTestCasePrecondition(cell.getStringCellValue()),
-                4, cell -> testCaseUpload.setTestCaseMenuPath(cell.getStringCellValue()),
-                5, cell -> testCaseUpload.setTestStepsAction(cell.getStringCellValue()),
-                6, cell -> testCaseUpload.setTestStepsData(cell.getStringCellValue()),
-                7, cell -> testCaseUpload.setTestStepsExpectedResult(cell.getStringCellValue())
-        );
+    private boolean validatePGUPHeaders(Row row) {
+        return row.getCell(0).getStringCellValue().equals(PGUPHEADERS[0])
+                && row.getCell(1).getStringCellValue().equals(PGUPHEADERS[1])
+                && row.getCell(2).getStringCellValue().equals(PGUPHEADERS[2])
+                && row.getCell(3).getStringCellValue().equals(PGUPHEADERS[3])
+                && row.getCell(4).getStringCellValue().equals(PGUPHEADERS[4])
+                && row.getCell(5).getStringCellValue().equals(PGUPHEADERS[5])
+                && row.getCell(6).getStringCellValue().equals(PGUPHEADERS[6])
+                && row.getCell(7).getStringCellValue().equals(PGUPHEADERS[7]);
     }
 
-    private TestCaseUpload createTestCaseUpload(Row row) {
+    private Map<Integer, Consumer<Cell>> createTCUPCellMapping(TestCaseUpload testCaseUpload){
+        Map<Integer, Consumer<Cell>> cellMapping = new HashMap<>();
+        cellMapping.put(0, cell -> testCaseUpload.setProgram(programRepository.findById(Long.valueOf(cell.getStringCellValue())).orElseThrow(()
+                -> new NotFoundException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST))));
+        cellMapping.put(1, cell -> testCaseUpload.setCreatedBy(accountRepository.findById(Long.valueOf(cell.getStringCellValue())).orElseThrow(()
+                -> new NotFoundException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND)).getUsername()));
+        cellMapping.put(2, cell -> testCaseUpload.setTestCaseName(cell.getStringCellValue()));
+        cellMapping.put(3, cell -> testCaseUpload.setTestCasePrecondition(cell.getStringCellValue()));
+        cellMapping.put(4, cell -> testCaseUpload.setTestCaseMenuPath(cell.getStringCellValue()));
+        cellMapping.put(5, cell -> testCaseUpload.setTestStepAction(cell.getStringCellValue()));
+        cellMapping.put(6, cell -> testCaseUpload.setTestStepData(cell.getStringCellValue()));
+        cellMapping.put(7, cell -> testCaseUpload.setTestStepExpectedResult(cell.getStringCellValue()));
+        return cellMapping;
+    }
+
+    private TestCaseUpload createTestCaseUpload(Row row) throws Exception {
         TestCaseUpload testCaseUpload = new TestCaseUpload();
+        try{
+            Map<Integer, Consumer<Cell>> cellMapping = createTCUPCellMapping(testCaseUpload);
 
-        Map<Integer, Consumer<Cell>> cellMapping = createCellMapping(testCaseUpload);
-
-        for (Map.Entry<Integer, Consumer<Cell>> entry : cellMapping.entrySet()) {
-            Cell cell = row.getCell(entry.getKey());
-            if (cell != null && cell.getCellType() == CellType.STRING) {
-                entry.getValue().accept(cell);
+            for (Map.Entry<Integer, Consumer<Cell>> entry : cellMapping.entrySet()) {
+                Cell cell = row.getCell(entry.getKey());
+                if (cell != null && cell.getCellType() == CellType.STRING) {
+                    entry.getValue().accept(cell);
+                }
             }
+        }catch (Exception e){
+            throw new Exception("Failed to parse Excel file.\nError: " + e.getMessage() + "\nAt row num: " + row.getRowNum());
         }
         return testCaseUpload;
     }
 
-    public List<TestCaseUpload> mapExcelToData(InputStream inputStream) {
+    private ProgramUploadForm createProgramUploadForm(Row row) throws Exception{
+        ProgramUploadForm programUploadForm = new ProgramUploadForm();
+        try {
+            programUploadForm.setProjectId(row.getCell(0).getStringCellValue());
+            programUploadForm.setProgramName(row.getCell(1).getStringCellValue());
+            programUploadForm.setProgramCategory(row.getCell(2).getStringCellValue());
+            programUploadForm.setProgramType(row.getCell(3).getStringCellValue());
+            programUploadForm.setRequirementId(row.getCell(4).getStringCellValue());
+            programUploadForm.setStartDate(row.getCell(5).getDateCellValue());
+            programUploadForm.setEndDate(row.getCell(6).getDateCellValue());
+            programUploadForm.setDescription(row.getCell(7).getStringCellValue());
+        }catch (Exception e){
+            throw new Exception("Failed to parse Excel file.\nError: " + e.getMessage() + "\nAt row num: " + row.getRowNum());
+        }
+        return programUploadForm;
+    }
+
+    public List<ProgramUploadForm> mapExcelToProgramData(InputStream inputStream) throws Exception{
+        List<ProgramUploadForm> programUploadForms = new ArrayList<>();
+
+        try (Workbook workbook = new XSSFWorkbook(inputStream)) {
+            for (Sheet sheet : workbook) {
+                for (Row row : sheet) {
+                    if (row.getRowNum() == 0) {
+                        if (!validatePGUPHeaders(row)) {
+                            throw new BadRequestException("Invalid Excel column format");
+                        }
+                        continue;
+                    }
+
+                    ProgramUploadForm programUploadForm = createProgramUploadForm(row);
+                    programUploadForms.add(programUploadForm);
+                }
+                log.info("Program Upload Form: " + programUploadForms);
+            }
+        } catch (IOException ex) {
+            throw new BadRequestException("Failed to parse Excel file.\nError: " + ex.getMessage());
+        }
+        return programUploadForms;
+    }
+
+    public List<TestCaseUpload> mapExcelToData(InputStream inputStream) throws Exception {
         List<TestCaseUpload> testCaseUploads = new ArrayList<>();
 
         try (Workbook workbook = new XSSFWorkbook(inputStream)) {
@@ -106,63 +161,7 @@ public class ExcelService {
         } catch (IOException ex) {
             throw new BadRequestException("Failed to parse Excel file.\nError: " + ex.getMessage());
         }
-
         return testCaseUploads;
-    }
-
-    public void exportTestCaseDataToExcelFile(Long testCaseId, String excelFilePath) {
-        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-            XSSFSheet sheet = workbook.createSheet("Test Case Data");
-
-            int rowCount = 0;
-            sheet.autoSizeColumn(0);
-            Row row = sheet.createRow(rowCount++);
-            Cell cell = row.createCell(0);
-            cell.setCellValue("Test Case Name");
-            cell = row.createCell(1);
-            cell.setCellValue("Test Case Precondition");
-            cell = row.createCell(2);
-            cell.setCellValue("Test Case Menu Path");
-
-            TestCase testcase = testCaseRepository.findById(testCaseId).orElseThrow(()
-                    -> new NotFoundException("Test case not found"));
-
-            row = sheet.createRow(rowCount++);
-            cell = row.createCell(0);
-            cell.setCellValue(testcase.getName());
-            cell = row.createCell(1);
-            cell.setCellValue(testcase.getPrecondition());
-            cell = row.createCell(2);
-            cell.setCellValue(testcase.getMenuPath());
-
-            List<TestStep> testSteps = testStepRepository.findAllByTestCaseId(testCaseId);
-
-            row = sheet.createRow(rowCount++);
-            cell = row.createCell(0);
-            cell.setCellValue("Test Step Action");
-            cell = row.createCell(1);
-            cell.setCellValue("Test Step Data");
-            cell = row.createCell(2);
-            cell.setCellValue("Test Step Expected Result");
-            cell = row.createCell(3);
-            cell.setCellValue("Test Step Actual Result");
-
-            for (TestStep testStep : testSteps) {
-                row = sheet.createRow(rowCount++);
-                cell = row.createCell(0);
-                cell.setCellValue(testStep.getAction());
-                cell = row.createCell(1);
-                cell.setCellValue(testStep.getData());
-                cell = row.createCell(2);
-                cell.setCellValue(testStep.getExpectedResult());
-            }
-
-            try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
-                workbook.write(outputStream);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to export data to Excel file", e);
-        }
     }
 }
 

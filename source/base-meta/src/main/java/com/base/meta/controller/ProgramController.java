@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -9,12 +10,14 @@ import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.program.CreateProgramForm;
+import com.base.meta.form.program.ProgramUploadForm;
 import com.base.meta.form.program.UpdateProgramForm;
 import com.base.meta.mapper.ProgramMapper;
 import com.base.meta.model.*;
 import com.base.meta.model.criteria.ProgramCriteria;
 import com.base.meta.repository.*;
 import com.base.meta.service.BaseMetaApiService;
+import com.base.meta.service.ExcelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +27,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,6 +40,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class ProgramController extends ABasicController {
+    private static final String PREFIX_ENTITY = "PG";
     @Autowired
     ProgramRepository programRepository;
     @Autowired
@@ -46,6 +53,8 @@ public class ProgramController extends ABasicController {
     ProjectRepository projectRepository;
     @Autowired
     RequirementRepository requirementRepository;
+    @Autowired
+    ExcelService excelService;
     @Autowired
     BaseMetaApiService baseMetaApiService;
 
@@ -109,6 +118,7 @@ public class ProgramController extends ABasicController {
         program.setAssignedTester(tester);
         program.setProgramType(programType);
         program.setProgramStatus(programStatus);
+        program.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         programRepository.save(program);
         apiMessageDto.setMessage("Create a new program success.");
         return apiMessageDto;
@@ -221,6 +231,72 @@ public class ProgramController extends ABasicController {
         program.setFlag(modifyFlagForm.getFlag());
         programRepository.save(program);
         apiMessageDto.setMessage("Update program flag success.");
+        return apiMessageDto;
+    }
+
+    @PostMapping(value = "/upload-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('PG_UPF')")
+    @Transactional
+    public ApiMessageDto<String> uploadProgramExcelFileToDb(@RequestParam("file") MultipartFile file) {
+        if (!isPM()) {
+            throw new UnauthorizationException("Not allowed upload!");
+        }
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (file.isEmpty()) {
+            apiMessageDto.setMessage("Please select a file to upload!");
+            return apiMessageDto;
+        }
+
+        if (excelService.hasExcelFormat(file)) {
+            try {
+                List<ProgramUploadForm> programUploadForms = excelService.mapExcelToProgramData(file.getInputStream());
+                for (ProgramUploadForm programUploadForm : programUploadForms) {
+                    StringBuilder message = new StringBuilder();
+                    Project project = projectRepository.findFirstById(Long.parseLong(programUploadForm.getProjectId()));
+                    if (project == null) {
+                        message.append("Project is not existed!").append("Project id: ").append(programUploadForm.getProjectId());
+                        throw new NotFoundException(message.toString(), ErrorCode.PROJECT_ERROR_NOT_EXIST);
+                    }
+                    Requirement requirement = requirementRepository.findFirstById(Long.parseLong(programUploadForm.getRequirementId()));
+                    if (requirement == null) {
+                        message.append("Requirement is not existed!").append(" Requirement id: ").append(programUploadForm.getRequirementId());
+                        throw new NotFoundException(message.toString(), ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
+                    }
+                    Program program = programRepository.findFirstByName(programUploadForm.getProgramName());
+                    if (program != null) {
+                        message.append("Program name is existed!").append(" Program name: ").append(programUploadForm.getProgramName());
+                        message.append("Project name: ").append(project.getName());
+                        throw new NotFoundException(message.toString(), ErrorCode.PROGRAM_ERROR_NAME_EXIST);
+                    }
+                    Boolean isStartDateBeforeEndDate = baseMetaApiService.checkStartDateIsBeforeEndDate(programUploadForm.getStartDate(), programUploadForm.getEndDate());
+                    if (!isStartDateBeforeEndDate) {
+                        message.append("Start date must be before end date!").append(" Start date: ").append(programUploadForm.getStartDate());
+                        throw new BadRequestException(message.toString(), ErrorCode.ERROR_DATE_INVALID);
+                    }
+                    Category programType = categoryRepository.findByNameAndKind(programUploadForm.getProgramType(), BaseMetaConstant.CATEGORY_KIND_PROGRAM);
+                    if (programType == null) {
+                        message.append("Program type is not existed!").append(" Program type: ").append(programUploadForm.getProgramType());
+                        message.append("Project id: ").append(programUploadForm.getProjectId());
+                        throw new NotFoundException(message.toString(), ErrorCode.CATEGORY_ERROR_NOT_FOUND);
+                    }
+                    program = new Program();
+                    program.setProject(project);
+                    program.setRequirement(requirement);
+                    program.setProgramCategory(programUploadForm.getProgramCategory());
+                    program.setProgramType(programType);
+                    program.setStartDate(programUploadForm.getStartDate());
+                    program.setEndDate(programUploadForm.getEndDate());
+                    program.setDescription(programUploadForm.getDescription());
+                    program.setName(programUploadForm.getProgramName());
+                    programRepository.save(program);
+                }
+                apiMessageDto.setMessage("Uploaded the file successfully: " + file.getOriginalFilename());
+            } catch (Exception e) {
+                throw new BadRequestException("Fail to parse Excel file!", e.getMessage());
+            }
+        } else {
+            throw new BadRequestException("Please upload an excel file!");
+        }
         return apiMessageDto;
     }
 

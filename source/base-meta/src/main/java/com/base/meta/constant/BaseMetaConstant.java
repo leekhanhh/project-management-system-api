@@ -96,6 +96,6 @@ public class BaseMetaConstant {
     public static final Integer STATUS_VALIDATION_COMPLETED = 3;
     public static final Integer STATUS_VALIDATION_CANCELLED = 4;
 
-
+    
 
 }

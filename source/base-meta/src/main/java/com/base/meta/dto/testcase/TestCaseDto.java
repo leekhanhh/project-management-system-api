@@ -11,4 +11,5 @@ public class TestCaseDto extends ABasicAdminDto {
     private String precondition;
     private String menuPath;
     private ProgramDto program;
+    private String displayId;
 }

@@ -20,6 +20,8 @@ public class TestDefectHistory extends Auditable<String>{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_defect_id")
     private TestDefect testDefect;
+    @Column(name = "history_content")
     private String historyContent;
-
+    @Column(name = "display_id")
+    private String displayId;
 }

@@ -89,6 +89,7 @@ public class ErrorCode {
      */
     public static final String PROJECT_MEMBER_ERROR_NOT_EXIST = "ERROR-PROJECT-MEMBER-000";
     public static final String PROJECT_MEMBER_ERROR_ONBOARDED_DATE_AFTER_OFFBOARDED_DATE = "ERROR-PROJECT-MEMBER-001";
+    public static final String PROJECT_MEMBER_ERROR_INVALID = "ERROR-PROJECT-MEMBER-002";
 
     /**
      * Requirement error code
@@ -116,6 +117,7 @@ public class ErrorCode {
      */
     public static final String TEST_CASE_ERROR_NAME_EXISTED = "ERROR-TEST-CASE-000";
     public static final String TEST_CASE_ERROR_NOT_EXIST = "ERROR-TEST-CASE-001";
+    public static final String TEST_CASE_ERROR_INVALID = "ERROR-TEST-CASE-002";
 
     /**
      * Test case upload error code
@@ -157,6 +159,7 @@ public class ErrorCode {
      */
     public static final String TEST_EXECUTION_ERROR_EXISTED = "ERROR-TEST-EXECUTION-000";
     public static final String TEST_EXECUTION_ERROR_NOT_EXIST = "ERROR-TEST-EXECUTION-001";
+    public static final String TEST_EXECUTION_ERROR_INVALID = "ERROR-TEST-EXECUTION-002";
 
     /**
      * Test execution turn error code

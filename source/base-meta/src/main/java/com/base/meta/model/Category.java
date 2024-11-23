@@ -28,4 +28,6 @@ public class Category extends Auditable<String> {
     private Category parentCategory;
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Category> categoryList;
+    @Column(name = "display_id")
+    private String displayId;
 }

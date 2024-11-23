@@ -13,4 +13,5 @@ public class TestPlanDto extends ABasicAdminDto {
     private String startDate;
     private String endDate;
     private ProgramDto program;
+    private String displayId;
 }

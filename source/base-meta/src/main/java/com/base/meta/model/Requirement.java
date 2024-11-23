@@ -32,4 +32,6 @@ public class Requirement extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id")
     private Project project;
+    @Column(name = "display_id")
+    private String displayId;
 }

@@ -13,4 +13,5 @@ public class TestSuiteExecutionDto extends ABasicAdminDto {
     private CategoryDto status;
     private TestSuiteDto testSuite;
     private TestExecutionTurnDto testExecutionTurn;
+    private String displayId;
 }

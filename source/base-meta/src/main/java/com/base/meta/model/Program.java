@@ -47,4 +47,6 @@ public class Program extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tester_account_id")
     private Account assignedTester;
+    @Column(name = "display_id")
+    private String displayId;
 }

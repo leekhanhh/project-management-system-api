@@ -19,6 +19,7 @@ import com.base.meta.model.criteria.RequirementCriteria;
 import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.ProjectRepository;
 import com.base.meta.repository.RequirementRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,12 +31,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/requirement")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class RequirementController extends ABasicController {
+    private static final String PREFIX_ENTITY = "RQ";
     @Autowired
     RequirementRepository requirementRepository;
     @Autowired
@@ -44,6 +47,8 @@ public class RequirementController extends ABasicController {
     ProjectRepository projectRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -72,6 +77,7 @@ public class RequirementController extends ABasicController {
         requirement.setDevision(devision);
         requirement.setName(name);
         requirement.setDetailClassification(detailClassification);
+        requirement.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Create a new requirement success.");
         return apiMessageDto;

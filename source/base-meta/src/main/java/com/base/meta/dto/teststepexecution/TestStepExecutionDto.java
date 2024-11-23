@@ -13,5 +13,5 @@ public class TestStepExecutionDto extends ABasicAdminDto {
     private TestCaseExecutionDto testCaseExecution;
     private CategoryDto status;
     private Boolean isDefected;
-
+    private String displayId;
 }

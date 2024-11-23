@@ -20,4 +20,5 @@ public class TestExecutionDto extends ABasicAdminDto {
     private AccountDto assignedDeveloper;
     private ProgramDto program;
     private Integer testExecutionTurnCount;
+    private String displayId;
 }

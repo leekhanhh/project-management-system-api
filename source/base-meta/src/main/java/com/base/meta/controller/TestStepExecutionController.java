@@ -11,6 +11,7 @@ import com.base.meta.mapper.TestStepExecutionMapper;
 import com.base.meta.model.*;
 import com.base.meta.model.criteria.TestStepExecutionCriteria;
 import com.base.meta.repository.*;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,12 +23,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/test-step-execution")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class TestStepExecutionController extends ABasicController{
+    private static final String PREFIX_ENTITY = "TSTE";
     @Autowired
     TestStepExecutionRepository testStepExecutionRepository;
     @Autowired
@@ -38,6 +41,8 @@ public class TestStepExecutionController extends ABasicController{
     TestCaseExecutionRepository testCaseExecutionRepository;
     @Autowired
     TestStepExecutionMapper testStepExecutionMapper;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -57,6 +62,7 @@ public class TestStepExecutionController extends ABasicController{
         testStepExecution.setTestStep(testStep);
         testStepExecution.setTestCaseExecution(testCaseExecution);
         testStepExecution.setStatus(category);
+        testCaseExecution.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testStepExecutionRepository.save(testStepExecution);
 
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();

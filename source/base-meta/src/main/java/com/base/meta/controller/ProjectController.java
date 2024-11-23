@@ -29,12 +29,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/project")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class ProjectController extends ABasicController{
+    private static final String PREFIX_ENTITY = "PJ";
     @Autowired
     ProjectMapper projectMapper;
     @Autowired
@@ -73,6 +75,7 @@ public class ProjectController extends ABasicController{
 //        }
         project = projectMapper.fromCreateProjectFormToEntity(createProjectForm);
         project.setStatus(status);
+        project.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         projectRepository.save(project);
         apiMessageDto.setMessage("Create a new project success.");
         return apiMessageDto;

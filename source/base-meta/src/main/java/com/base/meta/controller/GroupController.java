@@ -15,6 +15,7 @@ import com.base.meta.model.criteria.GroupCriteria;
 import com.base.meta.repository.GroupRepository;
 import com.base.meta.repository.PermissionRepository;
 import com.base.meta.dto.ResponseListDto;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import com.base.meta.dto.ErrorCode;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,12 +41,15 @@ import java.util.Objects;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class GroupController extends ABasicController {
+    private static final String PREFIX_ENTITY = "GR";
     @Autowired
     GroupRepository groupRepository;
     @Autowired
     GroupMapper groupMapper;
     @Autowired
     PermissionRepository permissionRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('GR_C')")
@@ -69,6 +74,7 @@ public class GroupController extends ABasicController {
                 permissions.add(permission);
             }
         }
+        group.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         group.setPermissions(permissions);
         groupRepository.save(group);
         apiMessageDto.setMessage("Create a new group success.");

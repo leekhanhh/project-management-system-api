@@ -23,5 +23,6 @@ public class TestCase extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "program_id")
     private Program program;
-
+    @Column(name = "display_id")
+    private String displayId;
 }

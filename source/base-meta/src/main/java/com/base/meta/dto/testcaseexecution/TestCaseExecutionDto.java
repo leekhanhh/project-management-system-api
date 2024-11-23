@@ -14,4 +14,5 @@ public class TestCaseExecutionDto {
     private TestSuiteDto testSuite;
     private CategoryDto status;
     private CategoryDto testExecutionTypeCode;
+    private String displayId;
 }

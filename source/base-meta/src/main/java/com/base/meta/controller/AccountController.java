@@ -44,17 +44,15 @@ import java.util.Date;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class AccountController extends ABasicController {
+    private static final String PREFIX_ENTITY = "ACC";
     @Autowired
     PasswordEncoder passwordEncoder;
-
     @Autowired
     AccountRepository accountRepository;
     @Autowired
     GroupRepository groupRepository;
-
     @Autowired
     AccountMapper accountMapper;
-
     @Autowired
     BaseMetaApiService baseMetaApiService;
 
@@ -83,6 +81,7 @@ public class AccountController extends ABasicController {
         if (StringUtils.isNoneBlank(createAccountAdminForm.getAvatarPath())) {
             account.setAvatarPath(createAccountAdminForm.getAvatarPath());
         }
+        account.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         accountRepository.save(account);
 
         apiMessageDto.setMessage("Create an account admin success.");
