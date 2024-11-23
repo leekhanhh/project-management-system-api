@@ -18,6 +18,7 @@ import com.base.meta.repository.CategoryRepository;
 import com.base.meta.repository.TestExecutionTurnRepository;
 import com.base.meta.repository.TestSuiteExecutionRepository;
 import com.base.meta.repository.TestSuiteRepository;
+import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/test-suite-execution")
@@ -46,6 +48,8 @@ public class TestSuiteExecutionController extends ABasicController {
     TestExecutionTurnRepository testExecutionTurnRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    BaseMetaApiService baseMetaApiService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -72,6 +76,7 @@ public class TestSuiteExecutionController extends ABasicController {
         testSuiteExecution.setTestSuite(testSuite);
         testSuiteExecution.setTestExecutionTurn(testExecutionTurn);
         testSuiteExecution.setStatus(category);
+        testSuiteExecution.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         testSuiteExecutionRepository.save(testSuiteExecution);
 
         apiMessageDto.setMessage("Test suite execution created successfully.");

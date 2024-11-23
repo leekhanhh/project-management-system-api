@@ -17,8 +17,9 @@ public class BaseMetaConstant {
     public static final Integer STATUS_DELETE = -2;
 
     public static final Integer GROUP_KIND_ADMIN = 1;
-    public static final Integer GROUP_KIND_DEV = 2;
-    public static final Integer GROUP_KIND_TESTER = 3;
+    public static final Integer GROUP_KIND_PM = 2;
+    public static final Integer GROUP_KIND_DEV = 3;
+    public static final Integer GROUP_KIND_TESTER = 4;
 
     public static final Integer MAX_ATTEMPT_FORGET_PWD = 5;
     public static final int MAX_TIME_FORGET_PWD = 5 * 60 * 1000; //5 minutes
