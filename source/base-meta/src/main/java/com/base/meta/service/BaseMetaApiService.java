@@ -47,19 +47,19 @@ public class BaseMetaApiService {
         StringBuilder displayId = new StringBuilder();
         displayId.append(prefix);
         displayId.append("_");
-        displayId.append(date.toString());
-        displayId.append("_");
         String formattedDate = getFormattedDate(date);
         if (!formattedDate.equals(currentDate)) {
             currentDate = formattedDate;
             orderStt.set(0);
         }
+        displayId.append(formattedDate);
+        displayId.append("_");
         String formattedOrderStt = String.format("%04d", orderStt.incrementAndGet());
         displayId.append(formattedOrderStt);
         return displayId.toString();
     }
     private String getFormattedDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
         return sdf.format(date);
     }
     public String convertGroupToUri(List<Permission> permissions) {
