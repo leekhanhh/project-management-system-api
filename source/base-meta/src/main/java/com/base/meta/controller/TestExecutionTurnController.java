@@ -8,6 +8,7 @@ import com.base.meta.dto.testexecutionturn.TestExecutionTurnDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testexecutionturn.CreateTestExecutionTurnForm;
 import com.base.meta.form.testexecutionturn.UpdateTestExecutionTurnForm;
 import com.base.meta.mapper.TestExecutionTurnMapper;
@@ -65,45 +66,26 @@ public class TestExecutionTurnController extends ABasicController {
             throw new UnauthorizationException("You are not authorized to create test execution turn");
         }
 
-        Account assignedDeveloper = accountRepository.findById(createTestExecutionTurnForm.getAssignedDeveloperId()).orElse(null);
-        if (assignedDeveloper == null) {
-            throw new BadRequestException("Assigned developer not found", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
-        }
+        Account assignedDeveloper = accountRepository.findById(createTestExecutionTurnForm.getAssignedDeveloperId()).orElseThrow(()
+                -> new NotFoundException("Assigned developer not found", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
+
         if (assignedDeveloper.getKind() != BaseMetaConstant.USER_KIND_DEV) {
             throw new BadRequestException("This account is not a developer", ErrorCode.ACCOUNT_ERROR_NOT_KIND_DEV);
         }
 
-        TestExecution testExecution = testExecutionRepository.findById(createTestExecutionTurnForm.getTestExecutionId()).orElse(null);
-        if (testExecution == null) {
-            throw new BadRequestException("Test execution not found", ErrorCode.TEST_EXECUTION_ERROR_NOT_EXIST);
-        }
+        TestExecution testExecution = testExecutionRepository.findById(createTestExecutionTurnForm.getTestExecutionId()).orElseThrow(()
+                -> new NotFoundException("Test execution not found", ErrorCode.TEST_EXECUTION_ERROR_NOT_EXIST));
 
-        TestExecutionTurn testExecutionTurn = testExecutionTurnRepository.findFirstByTurnNumber(createTestExecutionTurnForm.getTurnNumber());
+        TestExecutionTurn testExecutionTurn = testExecutionTurnRepository.findFirstByTurnNumberAndTestExecutionId(createTestExecutionTurnForm.getTurnNumber(), testExecution.getId());
         if (testExecutionTurn != null) {
             throw new BadRequestException("Turn number already exists", ErrorCode.TEST_EXECUTION_TURN_ERROR_EXIST);
         }
-//
-//        if(!baseMetaApiService.checkStartDateIsAfterNow(createTestExecutionTurnForm.getPlanStartDate())){
-//            throw new BadRequestException("Plan start date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
 
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createTestExecutionTurnForm.getPlanStartDate(), createTestExecutionTurnForm.getPlanEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(createTestExecutionTurnForm.getPlanStartDate(), createTestExecutionTurnForm.getPlanEndDate()))) {
             throw new BadRequestException("Plan end date must be after plan start date", ErrorCode.ERROR_DATE_INVALID);
         }
 
-//        if (!baseMetaApiService.checkEndDateIsAfterNow(createTestExecutionTurnForm.getPlanEndDate())){
-//            throw new BadRequestException("Plan end date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-
-//        if(!baseMetaApiService.checkStartDateIsAfterNow(createTestExecutionTurnForm.getActualStartDate())){
-//            throw new BadRequestException("Actual start date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-//
-//        if(!baseMetaApiService.checkEndDateIsAfterNow(createTestExecutionTurnForm.getActualEndDate())){
-//            throw new BadRequestException("Actual end date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createTestExecutionTurnForm.getActualStartDate(), createTestExecutionTurnForm.getActualEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(createTestExecutionTurnForm.getActualStartDate(), createTestExecutionTurnForm.getActualEndDate()))) {
             throw new BadRequestException("Actual end date must be after actual start date", ErrorCode.ERROR_DATE_INVALID);
         }
 
@@ -129,25 +111,9 @@ public class TestExecutionTurnController extends ABasicController {
             throw new NotFoundException("Test execution turn not found", ErrorCode.TEST_EXECUTION_TURN_ERROR_NOT_EXIST);
         }
 
-//        if(!baseMetaApiService.checkStartDateIsAfterNow(updateTestExecutionTurnForm.getPlanStartDate())){
-//            throw new BadRequestException("Plan start date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateTestExecutionTurnForm.getPlanEndDate(), updateTestExecutionTurnForm.getPlanStartDate())) {
             throw new BadRequestException("Plan end date must be after plan start date", ErrorCode.ERROR_DATE_INVALID);
         }
-
-//        if (!baseMetaApiService.checkEndDateIsAfterNow(updateTestExecutionTurnForm.getPlanEndDate())){
-//            throw new BadRequestException("Plan end date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-//
-//        if(!baseMetaApiService.checkStartDateIsAfterNow(updateTestExecutionTurnForm.getActualStartDate())){
-//            throw new BadRequestException("Actual start date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
-//
-//        if(!baseMetaApiService.checkEndDateIsAfterNow(updateTestExecutionTurnForm.getActualEndDate())){
-//            throw new BadRequestException("Actual end date must be after now", ErrorCode.ERROR_DATE_INVALID);
-//        }
 
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateTestExecutionTurnForm.getActualEndDate(), updateTestExecutionTurnForm.getActualStartDate())) {
             throw new BadRequestException("Actual end date must be after actual start date", ErrorCode.ERROR_DATE_INVALID);
@@ -161,7 +127,7 @@ public class TestExecutionTurnController extends ABasicController {
         }
 
         if (updateTestExecutionTurnForm.getTurnNumber() != null && !updateTestExecutionTurnForm.getTurnNumber().equals(testExecutionTurn.getTurnNumber())) {
-            TestExecutionTurn testExecutionTurnByTurnNumber = testExecutionTurnRepository.findFirstByTurnNumber(updateTestExecutionTurnForm.getTurnNumber());
+            TestExecutionTurn testExecutionTurnByTurnNumber = testExecutionTurnRepository.findFirstByTurnNumberAndTestExecutionId(updateTestExecutionTurnForm.getTurnNumber(), testExecutionTurn.getTestExecution().getId());
             if (testExecutionTurnByTurnNumber != null) {
                 throw new BadRequestException("Turn number already exists", ErrorCode.TEST_EXECUTION_TURN_ERROR_EXIST);
             }
@@ -205,7 +171,6 @@ public class TestExecutionTurnController extends ABasicController {
         testExecutionTurnDto.setTestDefectCount(countByIsDefected);
 
         List<Object[]> countTotalTestCase = testCaseRepository.countTestCasesByExecutionTurnIdWithStatusCounts(testExecutionTurn.getId());
-//        log.info("countTotalTestCase: {}", countTotalTestCase);
         testExecutionTurnDto.setTotalCasesCount(((Number)countTotalTestCase.get(0)[0]).intValue());
         testExecutionTurnDto.setNotExecutedCasesCount(((Number)countTotalTestCase.get(0)[1]).intValue());
         testExecutionTurnDto.setWaitingCasesCount(((Number)countTotalTestCase.get(0)[2]).intValue());
@@ -221,6 +186,24 @@ public class TestExecutionTurnController extends ABasicController {
         ResponseListDto<TestExecutionTurnDto> responseListDto = new ResponseListDto(testExecutionTurnMapper.fromEntitiesToDtos(testExecutionTurnPage.getContent()), testExecutionTurnPage.getTotalElements(), testExecutionTurnPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test execution turn success.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TET_UF')")
+    public ApiMessageDto<String> updateFlagTestExecutionTurn(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("You are not authorized to update flag test execution turn");
+        }
+        TestExecutionTurn testExecutionTurn = testExecutionTurnRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
+        if (testExecutionTurn == null) {
+            throw new NotFoundException("Test execution turn not found", ErrorCode.TEST_EXECUTION_TURN_ERROR_NOT_EXIST);
+        }
+        testExecutionTurn.setFlag(modifyFlagForm.getFlag());
+        testExecutionTurnRepository.save(testExecutionTurn);
+        apiMessageDto.setMessage("Update test execution turn flag successfully");
         return apiMessageDto;
     }
 }

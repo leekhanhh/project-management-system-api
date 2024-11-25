@@ -26,6 +26,7 @@ public interface TestPlanMapper {
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
     @Mapping(source = "program", target = "program", qualifiedByName = "fromEntityToAutoCompleteProgramDto")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestPlanDto")
     TestPlanDto fromEntityToTestPlanDto(TestPlan testPlan);

@@ -5,15 +5,13 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testsuite.TestSuiteDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testsuite.CreateTestSuiteForm;
 import com.base.meta.form.testsuite.UpdateTestSuiteForm;
 import com.base.meta.mapper.TestSuiteMapper;
-import com.base.meta.model.Account;
-import com.base.meta.model.TestPlan;
-import com.base.meta.model.TestPlanTestSuiteRelation;
-import com.base.meta.model.TestSuite;
+import com.base.meta.model.*;
 import com.base.meta.model.criteria.TestSuiteCriteria;
 import com.base.meta.repository.*;
 import com.base.meta.service.BaseMetaApiService;
@@ -37,14 +35,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/test-suite")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
-public class TestSuiteController extends ABasicController{
+public class TestSuiteController extends ABasicController {
     private static final String PREFIX_ENTITY = "TSU";
     @Autowired
     TestSuiteRepository testSuiteRepository;
     @Autowired
     TestSuiteMapper testSuiteMapper;
     @Autowired
-    TestPlanRepository testPlanRepository;
+    ProgramRepository programRepository;
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -65,25 +63,22 @@ public class TestSuiteController extends ABasicController{
             throw new UnauthorizationException("Not allowed create!");
         }
 
-        Account account = accountRepository.findById(createTestSuiteForm.getAccountId()).orElse(null);
-        if (account == null) {
-            throw new BadRequestException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
+        Account account = accountRepository.findById(createTestSuiteForm.getAccountId()).orElseThrow(
+                () -> new NotFoundException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
+
+        if (testSuiteRepository.existsByProgramIdAndName(createTestSuiteForm.getProgramId(), createTestSuiteForm.getName())) {
+            throw new BadRequestException("Test suite name is existed!", ErrorCode.TEST_SUITE_ERROR_NAME_EXISTED);
         }
 
-        TestPlan testPlan = testPlanRepository.findById(createTestSuiteForm.getTestPlanId()).orElse(null);
-        if (testPlan == null) {
-            throw new BadRequestException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
+        Program program = programRepository.findFirstById(createTestSuiteForm.getProgramId());
+        if (program == null) {
+            throw new BadRequestException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
         }
-
         TestSuite testSuite = testSuiteMapper.fromCreateTestSuiteFormToEntity(createTestSuiteForm);
-        testSuite.setTestPlan(testPlan);
         testSuite.setAccount(account);
+        testSuite.setProgram(program);
         testSuite.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
-        TestPlanTestSuiteRelation testPlanTestSuiteRelation = new TestPlanTestSuiteRelation();
-        testPlanTestSuiteRelation.setTestPlan(testPlan);
-        testPlanTestSuiteRelation.setTestSuite(testSuite);
         testSuiteRepository.save(testSuite);
-        testPlanTestSuiteRelationRepository.save(testPlanTestSuiteRelation);
         apiMessageDto.setMessage("Create test suite success.");
         return apiMessageDto;
     }
@@ -106,9 +101,8 @@ public class TestSuiteController extends ABasicController{
             throw new BadRequestException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
 
-        TestPlan testPlan = testPlanRepository.findById(updateTestSuiteForm.getTestPlanId()).orElse(null);
-        if (testPlan == null) {
-            throw new BadRequestException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
+        if (!updateTestSuiteForm.getName().equals(testSuite.getName()) && testSuiteRepository.existsByProgramIdAndName(testSuite.getProgram().getId(), updateTestSuiteForm.getName())) {
+            throw new BadRequestException("Test suite name is existed!", ErrorCode.TEST_SUITE_ERROR_NAME_EXISTED);
         }
 
         testSuiteMapper.updateTestSuiteFromEntity(updateTestSuiteForm, testSuite);

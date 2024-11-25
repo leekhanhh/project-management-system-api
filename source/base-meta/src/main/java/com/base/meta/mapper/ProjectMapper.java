@@ -27,6 +27,7 @@ public interface ProjectMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToProjectDto")
     ProjectDto fromEntityToProjectDto(Project project);

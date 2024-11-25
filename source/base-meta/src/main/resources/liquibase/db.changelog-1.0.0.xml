@@ -13,7 +13,7 @@
             <column name="avatar_path" type="VARCHAR(255)"/>
             <column name="email" type="VARCHAR(255)"/>
             <column name="full_name" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="kind" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -52,7 +52,7 @@
             <column name="kind" type="INT"/>
             <column name="ordering" type="INT"/>
             <column name="parent_id" type="BIGINT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="flag" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -78,7 +78,7 @@
             <column name="description" type="VARCHAR(1000)"/>
             <column name="kind" type="INT"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="is_system_role" type="TINYINT(1)"/>
             <column name="flag" type="INT">
                 <constraints nullable="false"/>
@@ -108,7 +108,7 @@
             <column name="description" type="VARCHAR(255)"/>
             <column name="kind" type="INT"/>
             <column name="permission_code" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="show_menu" type="TINYINT(1)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -154,7 +154,7 @@
             <column name="status_category_id" type="BIGINT"/>
             <column name="type_category_id" type="BIGINT"/>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -182,7 +182,7 @@
             <column name="end_date" type="datetime"/>
             <column name="category_id" type="BIGINT"/>
             <column name="description" type="LONGTEXT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -271,7 +271,7 @@
             <column name="program_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="menu_path" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -300,7 +300,7 @@
             <column name="status_category_id" type="BIGINT"/>
             <column name="test_execution_turn_id" type="BIGINT"/>
             <column name="type_code_category_id" type="BIGINT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -362,7 +362,7 @@
             <column name="test_step_execution_id" type="BIGINT"/>
             <column name="description" type="VARCHAR(255)"/>
             <column name="send_email_notification" type="BIT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -414,7 +414,7 @@
             <column name="remark" type="VARCHAR(255)"/>
             <column name="test_defect_id" type="BIGINT"/>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -439,7 +439,7 @@
             </column>
             <column name="history_content" type="VARCHAR(255)"/>
             <column name="test_defect_id" type="BIGINT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -478,7 +478,7 @@
             <column name="status_category_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -512,7 +512,7 @@
             <column name="test_execution_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -540,7 +540,7 @@
             <column name="end_date" type="datetime"/>
             <column name="program_id" type="BIGINT"/>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -558,31 +558,30 @@
             </column>
         </createTable>
     </changeSet>
-<!--    <changeSet author="GIGABYTE (generated)" id="1729698209024-20">-->
-<!--        <createTable tableName="db_project_management_test_plan_test_suite_relation">-->
-<!--            <column name="id" type="BIGINT">-->
-<!--                <constraints nullable="false" primaryKey="true" primaryKeyName="db_project_management_test_plan_test_suite_relationPK"/>-->
-<!--            </column>-->
-<!--            <column name="test_plan_id" type="BIGINT"/>-->
-<!--            <column name="test_suite_id" type="BIGINT"/>-->
-<!--            <column name="display_id" type="VARCHAR(30)"/>-->
-<!--            <column name="created_by" type="VARCHAR(255)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="created_date" type="datetime">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="modified_by" type="VARCHAR(255)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="modified_date" type="datetime">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="flag" type="INT">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
-<!--    </changeSet>-->
+    <changeSet author="GIGABYTE (generated)" id="1729698209024-20">
+        <createTable tableName="db_project_management_test_plan_test_suite_relation">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="db_project_management_test_plan_test_suite_relationPK"/>
+            </column>
+            <column name="test_plan_id" type="BIGINT"/>
+            <column name="test_suite_id" type="BIGINT"/>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flag" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-21">
         <createTable tableName="db_project_management_test_step">
             <column name="id" type="BIGINT">
@@ -593,7 +592,7 @@
             <column name="data" type="VARCHAR(255)"/>
             <column name="expected_result" type="VARCHAR(255)"/>
             <column name="test_case_id" type="BIGINT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -620,7 +619,7 @@
             <column name="test_case_execution_id" type="BIGINT"/>
             <column name="test_step_id" type="BIGINT"/>
             <column name="is_defected" type="BIT"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -645,9 +644,9 @@
             </column>
             <column name="name" type="VARCHAR(255)"/>
             <column name="account_id" type="BIGINT"/>
-            <column name="test_plan_id" type="BIGINT"/>
+            <column name="program_id" type="BIGINT"/>
             <column name="description" type="VARCHAR(255)"/>
-            <column name="display_id" type="VARCHAR(30)"/>
+            <column name="display_id" type="VARCHAR(255)"/>
             <column name="created_by" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -753,9 +752,9 @@
     <changeSet author="GIGABYTE (generated)" id="1729698209024-29">
         <addUniqueConstraint columnNames="account_id" constraintName="UK_8kqkplkq9fu2el7rv27ckag73" tableName="db_project_management_project_member"/>
     </changeSet>
-<!--    <changeSet author="GIGABYTE (generated)" id="1729698209024-30">-->
-<!--        <addForeignKeyConstraint baseColumnNames="test_suite_id" baseTableName="db_project_management_test_plan_test_suite_relation" constraintName="FK1ulgcqmc3bnt7ongqoiuej9d4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="db_project_management_test_suite" validate="true" onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+    <changeSet author="GIGABYTE (generated)" id="1729698209024-30">
+        <addForeignKeyConstraint baseColumnNames="test_suite_id" baseTableName="db_project_management_test_plan_test_suite_relation" constraintName="FK1ulgcqmc3bnt7ongqoiuej9d4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="db_project_management_test_suite" validate="true" onDelete="CASCADE"/>
+    </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-31">
         <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="db_project_management_project_member" constraintName="FK214x2ca44wbpj5y09uweb1kr7"
                                  deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="db_project_management_project" validate="true" onDelete="CASCADE"/>
@@ -780,10 +779,10 @@
         <addForeignKeyConstraint baseColumnNames="owner_account_id" baseTableName="db_project_management_program" constraintName="FK4w8dotgvga2fne5614njre4r1" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="db_project_management_account" validate="true"/>
     </changeSet>
-<!--    <changeSet author="GIGABYTE (generated)" id="1729698209024-37">-->
-<!--        <addForeignKeyConstraint baseColumnNames="test_plan_id" baseTableName="db_project_management_test_plan_test_suite_relation" constraintName="FK4w92j2lilwfvnd6ntv16id2rn" deferrable="false" initiallyDeferred="false"-->
-<!--                                 referencedColumnNames="id" referencedTableName="db_project_management_test_plan" validate="true" onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+    <changeSet author="GIGABYTE (generated)" id="1729698209024-37">
+        <addForeignKeyConstraint baseColumnNames="test_plan_id" baseTableName="db_project_management_test_plan_test_suite_relation" constraintName="FK4w92j2lilwfvnd6ntv16id2rn" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="db_project_management_test_plan" validate="true" onDelete="CASCADE"/>
+    </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-38">
         <addForeignKeyConstraint baseColumnNames="status_id" baseTableName="db_project_management_test_suite_execution" constraintName="FK5j85najs0w6cinjlkt5mk9j0g" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
@@ -929,8 +928,8 @@
                                  referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-74">
-        <addForeignKeyConstraint baseColumnNames="test_plan_id" baseTableName="db_project_management_test_suite" constraintName="FKo0934lm82buey7ny70qyjlpyg" deferrable="false" initiallyDeferred="false"
-                                 referencedColumnNames="id" referencedTableName="db_project_management_test_plan" validate="true" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseColumnNames="program_id" baseTableName="db_project_management_test_suite" constraintName="FKo0934lm82buey7ny70qyjlpyg" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="db_project_management_program" validate="true" onDelete="CASCADE"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-75">
         <addForeignKeyConstraint baseColumnNames="test_step_id" baseTableName="db_project_management_test_step_execution" constraintName="FKo5kvdqa9lxlaeii2vkl8405sq" deferrable="false" initiallyDeferred="false"

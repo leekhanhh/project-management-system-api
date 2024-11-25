@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        uses = {TestPlanMapper.class, AccountMapper.class})
+        uses = {AccountMapper.class, ProgramMapper.class})
 public interface TestSuiteMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
@@ -22,8 +22,9 @@ public interface TestSuiteMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "testPlan", target = "testPlan", qualifiedByName = "fromEntityToTestPlanDto")
     @Mapping(source = "account", target = "account", qualifiedByName = "fromEntityToAccountAutoCompleteDto")
+    @Mapping(source = "program", target = "program", qualifiedByName = "fromEntityToAutoCompleteProgramDto")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestSuiteDto")
     TestSuiteDto fromEntityToTestSuiteDto(TestSuite testSuite);

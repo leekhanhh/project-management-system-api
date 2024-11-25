@@ -21,11 +21,11 @@ public class TestSuite extends Auditable<String>{
     private String name;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "test_plan_id")
-    private TestPlan testPlan;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "account_id")
     private Account account;
     @Column(name = "display_id")
     private String displayId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "program_id")
+    private Program program;
 }

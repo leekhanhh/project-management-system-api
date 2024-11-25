@@ -143,11 +143,13 @@ public class ErrorCode {
      * Test suite error code
      */
     public static final String TEST_SUITE_ERROR_NOT_EXIST = "ERROR-TEST-SUITE-000";
+    public static final String TEST_SUITE_ERROR_NAME_EXISTED = "ERROR-TEST-SUITE-001";
 
     /**
      * Test suite test case relation error code
      */
     public static final String TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST = "ERROR-TEST-SUITE-TEST-CASE-RELATION-000";
+    public static final String TEST_SUITE_TEST_CASE_RELATION_ERROR_NOT_EXIST = "ERROR-TEST-SUITE-TEST-CASE-RELATION-001";
 
     /**
      * Test plan test suite relation error code

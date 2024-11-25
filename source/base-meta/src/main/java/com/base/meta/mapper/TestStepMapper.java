@@ -27,6 +27,7 @@ public interface TestStepMapper {
     @Mapping(source = "data", target = "data")
     @Mapping(source = "expectedResult", target = "expectedResult")
     @Mapping(source = "testCase", target = "testCase", qualifiedByName = "fromEntityToTestCaseDtoAutoComplete")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestStepDto")
     TestStepDto fromEntityToTestStepDto(TestStep testStep);

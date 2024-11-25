@@ -29,6 +29,7 @@ public interface TestExecutionMapper {
     @Mapping(source = "detail", target = "detail")
     @Mapping(source = "planStartDate", target = "planStartDate")
     @Mapping(source = "planEndDate", target = "planEndDate")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestExecutionDto")
     TestExecutionDto fromEntityToTestExecutionDto(TestExecution testExecution);

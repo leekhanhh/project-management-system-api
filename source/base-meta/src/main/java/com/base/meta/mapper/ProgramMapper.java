@@ -35,6 +35,7 @@ public interface ProgramMapper {
     @Mapping(source = "programStatus", target = "programStatus", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "programType", target = "programType", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "programCategory", target = "programCategory")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromDtoToEntity")
     ProgramDto fromDtoToEntity(Program program);

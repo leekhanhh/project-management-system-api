@@ -27,6 +27,7 @@ public interface GroupMapper {
     @Mapping(source = "createdDate", target = "createdDate")
     @Mapping(source = "modifiedDate", target = "modifiedDate")
     @Mapping(source = "flag", target = "flag")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToGroupDto")
     GroupDto fromEntityToGroupDto(Group group);

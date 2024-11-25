@@ -25,6 +25,7 @@ public interface TestCaseMapper {
     @Mapping(source = "precondition", target = "precondition")
     @Mapping(source = "menuPath", target = "menuPath")
     @Mapping(source = "program", target = "program", qualifiedByName = "fromEntityToAutoCompleteProgramDto")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToTestCaseDto")
     TestCaseDto fromEntityToTestCaseDto(TestCase testCase);

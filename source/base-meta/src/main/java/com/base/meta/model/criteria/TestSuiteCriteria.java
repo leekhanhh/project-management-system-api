@@ -34,12 +34,8 @@ public class TestSuiteCriteria implements Serializable {
                     predicateList.add(criteriaBuilder.equal(join.get("id"), getAccountId()));
                 }
                 if (!StringUtils.isEmpty(getProjectName())) {
-                    Join<TestSuite, Project> join = root.join("project", JoinType.INNER);
-                    predicateList.add(criteriaBuilder.like(join.get("name"), "%" + getProjectName() + "%"));
-                }
-                if (getProgramId() != null) {
                     Join<TestSuite, Program> join = root.join("program", JoinType.INNER);
-                    predicateList.add(criteriaBuilder.equal(join.get("id"), getProgramId()));
+                    predicateList.add(criteriaBuilder.like(join.get("name"), "%" + getProjectName() + "%"));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

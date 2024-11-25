@@ -29,6 +29,7 @@ public interface TestExecutionTurnMapper {
     @Mapping(source = "actualEndDate", target = "actualEndDate")
     @Mapping(source = "assignedDeveloper", target = "assignedDeveloper", qualifiedByName = "fromAccountToAutoCompleteDto")
     @Mapping(source = "testExecution", target = "testExecution", qualifiedByName = "fromEntityToTestExecutionDtoAutoComplete")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestExecutionTurnDto fromEntityToDto(TestExecutionTurn testExecutionTurn);

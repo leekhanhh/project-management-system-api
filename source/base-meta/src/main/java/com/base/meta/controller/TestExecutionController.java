@@ -7,6 +7,7 @@ import com.base.meta.dto.testexecution.TestExecutionDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testexecution.CreateTestExecutionForm;
 import com.base.meta.form.testexecution.UpdateTestExecutionForm;
 import com.base.meta.mapper.TestExecutionMapper;
@@ -172,6 +173,24 @@ public class TestExecutionController extends ABasicController {
         ResponseListDto<TestExecutionDto> responseListDto = new ResponseListDto(testExecutionPage.getContent(), testExecutionPage.getTotalElements(), testExecutionPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("Get list test execution successfully!");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TE_UF')")
+    public ApiMessageDto<String> updateFlagTestExecution(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("Not allowed update flag!");
+        }
+        TestExecution testExecution = testExecutionRepository.findFirstById(modifyFlagForm.getObjectId());
+        if (testExecution == null) {
+            throw new BadRequestException("TestExecution is not existed!", ErrorCode.TEST_EXECUTION_ERROR_EXISTED);
+        }
+        testExecution.setFlag(modifyFlagForm.getFlag());
+        testExecutionRepository.save(testExecution);
+        apiMessageDto.setMessage("Update flag test execution successfully!");
         return apiMessageDto;
     }
 

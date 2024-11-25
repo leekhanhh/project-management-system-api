@@ -28,6 +28,7 @@ public interface TestDefectMapper {
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "assignedDeveloper", target = "assignedDeveloper", qualifiedByName = "fromAccountToAutoCompleteDto")
     @Mapping(source = "testStepExecution", target = "testStepExecution", qualifiedByName = "fromEntityToDto")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestDefectDto fromEntityToDto(TestDefect testDefect);

@@ -3,8 +3,10 @@ package com.base.meta.controller;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
+import com.base.meta.dto.testcase.TestCaseDto;
 import com.base.meta.dto.testsuitetestcaseralation.TestSuiteTestCaseRelationDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testsuitetestcaserelation.CreateTestSuiteTestCaseRelationForm;
 import com.base.meta.mapper.TestSuiteTestCaseRelationMapper;
@@ -26,6 +28,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/test-suite-test-case-relation")
@@ -52,23 +56,27 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
 
         TestSuite testSuite = testSuiteRepository.findById(createTestSuiteTestCaseRelationForm.getTestSuiteId()).orElse(null);
         if (testSuite == null) {
-            throw new BadRequestException("Test suite not found.", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST);
+            throw new NotFoundException("Test suite not found.", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST);
         }
 
-        TestCase testCase = testCaseRepository.findById(createTestSuiteTestCaseRelationForm.getTestCaseId()).orElse(null);
-        if (testCase == null) {
-            throw new BadRequestException("Test case not found.", ErrorCode.TEST_CASE_ERROR_NOT_EXIST);
+        List<TestCase> availableTestCases = new ArrayList<>();
+        for (Long testCaseId : createTestSuiteTestCaseRelationForm.getTestCaseIds()) {
+            TestCase testCase = testCaseRepository.findById(testCaseId)
+                    .orElseThrow(() -> new NotFoundException("Test case " + testCaseId + " not found.", ErrorCode.TEST_CASE_ERROR_NOT_EXIST));
+            availableTestCases.add(testCase);
+            TestSuiteTestCaseRelation existingRelation = testSuiteTestCaseRelationRepository
+                    .findByTestSuiteIdAndTestCaseId(createTestSuiteTestCaseRelationForm.getTestSuiteId(), testCaseId);
+            if (existingRelation != null) {
+                throw new BadRequestException("Test suite and test case " + testCaseId + "already exist.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
+            }
         }
 
-        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findByTestSuiteIdAndTestCaseId(createTestSuiteTestCaseRelationForm.getTestSuiteId(), createTestSuiteTestCaseRelationForm.getTestCaseId());
-        if (testSuiteTestCaseRelation != null) {
-            throw new BadRequestException("Test suite and test case already exist.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
+        for (TestCase testCase : availableTestCases) {
+            TestSuiteTestCaseRelation testSuiteTestCaseRelation = new TestSuiteTestCaseRelation();
+            testSuiteTestCaseRelation.setTestSuite(testSuite);
+            testSuiteTestCaseRelation.setTestCase(testCase);
+            testSuiteTestCaseRelationRepository.save(testSuiteTestCaseRelation);
         }
-        TestSuiteTestCaseRelation newTestSuiteTestCaseRelation = new TestSuiteTestCaseRelation();
-        newTestSuiteTestCaseRelation.setTestSuite(testSuite);
-        newTestSuiteTestCaseRelation.setTestCase(testCase);
-        testSuiteTestCaseRelationRepository.save(newTestSuiteTestCaseRelation);
-
         apiMessageDto.setMessage("Create test suite test case relation success.");
         return apiMessageDto;
     }
@@ -82,12 +90,9 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
             throw new UnauthorizationException("You are not authorized to perform this action.");
         }
 
-        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findById(id).orElse(null);
-        if (testSuiteTestCaseRelation == null) {
-            throw new BadRequestException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
-        }
+        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_NOT_EXIST));
         testSuiteTestCaseRelationRepository.delete(testSuiteTestCaseRelation);
-
         apiMessageDto.setMessage("Delete test suite test case relation success.");
         return apiMessageDto;
     }
@@ -113,5 +118,4 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
         apiMessageDto.setMessage("Get test suite test case relation success.");
         return apiMessageDto;
     }
-
 }

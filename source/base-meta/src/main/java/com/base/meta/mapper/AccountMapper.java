@@ -34,6 +34,7 @@ public interface AccountMapper {
     @Mapping(source = "status.name", target = "memberStatus")
     @Mapping(source = "position.name", target = "memberPosition")
     @Mapping(source = "isSuperAdmin", target = "isSuperAdmin")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromAccountToDto")
     AccountDto fromAccountToDto(Account account);

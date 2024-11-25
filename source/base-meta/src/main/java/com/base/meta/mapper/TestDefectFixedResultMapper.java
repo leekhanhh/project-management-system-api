@@ -30,6 +30,7 @@ public interface TestDefectFixedResultMapper {
     @Mapping(source = "actionStartDate", target = "fixedDate")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "remark", target = "remark")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestDefectFixedResultDto fromEntityToDto(TestDefectFixedResult testDefectFixedResult);

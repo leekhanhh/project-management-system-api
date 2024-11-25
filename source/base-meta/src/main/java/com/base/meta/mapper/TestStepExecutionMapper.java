@@ -21,6 +21,7 @@ public interface TestStepExecutionMapper {
     @Mapping(source = "testCaseExecution", target = "testCaseExecution", qualifiedByName = "fromEntityToTestCaseExecutionDto")
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "isDefected", target = "isDefected")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestStepExecutionDto fromEntityToDto(TestStepExecution testStepExecution);

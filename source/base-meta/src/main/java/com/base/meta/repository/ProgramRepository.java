@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ProgramRepository extends JpaRepository<Program, Long>, JpaSpecificationExecutor<Program> {
-    Program findFirstByName(String name);
+    boolean existsProgramByNameAndProjectId(String name, Long projectId);
     Program findFirstById(Long id);
+    Program findFirstByName(String name);
 }

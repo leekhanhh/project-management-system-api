@@ -15,8 +15,6 @@ public class UpdateTestSuiteForm {
     private String name;
     @ApiModelProperty(name = "description")
     private String description;
-    @ApiModelProperty(name = "test plan id")
-    private Long testPlanId;
     @ApiModelProperty(name = "account id")
     private Long accountId;
 }

@@ -39,6 +39,7 @@ public interface CategoryMapper {
     @Mapping(source = "flag", target = "flag")
     @Mapping(source = "modifiedDate", target = "modifiedDate")
     @Mapping(source = "createdDate", target = "createdDate")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("adminGetMapping")
     CategoryDto fromEntityToAdminDto(Category category);

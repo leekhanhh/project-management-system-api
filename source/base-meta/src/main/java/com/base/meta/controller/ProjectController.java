@@ -55,24 +55,19 @@ public class ProjectController extends ABasicController{
             throw new UnauthorizationException("Not allowed create!");
         }
         Project project = projectRepository.findFirstByName(createProjectForm.getName());
+        if (project != null) {
+            throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
+        }
 
         Category status = categoryRepository.findFirstById(createProjectForm.getStatusId());
         if (status == null) {
             throw new NotFoundException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if (project != null) {
-            throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
-        }
-//        if(!baseMetaApiService.checkEndDateIsAfterNow(createProjectForm.getEndDate())){
-//            throw new BadRequestException("End date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
         if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectForm.getStartDate(), createProjectForm.getEndDate())) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
-//        if (!baseMetaApiService.checkStartDateIsAfterNow(createProjectForm.getStartDate())) {
-//            throw new BadRequestException("Start date must be after now!", ErrorCode.ERROR_DATE_INVALID);
-//        }
+
         project = projectMapper.fromCreateProjectFormToEntity(createProjectForm);
         project.setStatus(status);
         project.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));

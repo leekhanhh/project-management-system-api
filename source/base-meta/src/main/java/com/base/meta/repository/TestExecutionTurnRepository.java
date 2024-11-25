@@ -17,7 +17,7 @@ public interface TestExecutionTurnRepository extends JpaRepository<TestExecution
     @Query("SELECT t.testExecution.id, COUNT(t) FROM TestExecutionTurn t WHERE t.testExecution.id IN :testExecutionIds GROUP BY t.testExecution.id")
     Map<Long, Integer> countTestExecutionTurnByTestExecutionIds(@Param("testExecutionIds") List<Long> testExecutionIds);
 
-    TestExecutionTurn findFirstByTurnNumber(Integer turnNumber);
+    TestExecutionTurn findFirstByTurnNumberAndTestExecutionId(Integer turnNumber, Long testExecutionId);
     TestExecutionTurn findFirstById(Long id);
 
     @Query("SELECT t.isDefected, COUNT(t) FROM TestStepExecution t WHERE t.testCaseExecution.testExecutionTurn.id = :testExecutionTurnId")

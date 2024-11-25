@@ -13,8 +13,9 @@ public class CreateTestSuiteForm {
     private String name;
     @ApiModelProperty(name = "description")
     private String description;
-    @ApiModelProperty(name = "testPlanId", required = true)
-    private Long testPlanId;
     @ApiModelProperty(name = "accountId", required = true)
     private Long accountId;
+    @ApiModelProperty(name = "programId", required = true)
+    @NotNull(message = "programId cannot be null")
+    private Long programId;
 }

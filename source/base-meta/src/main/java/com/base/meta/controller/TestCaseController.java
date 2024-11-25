@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -151,6 +152,16 @@ public class TestCaseController extends ABasicController{
         testCase.setFlag(modifyFlagForm.getFlag());
         testCaseRepository.save(testCase);
         apiMessageDto.setMessage("Delete test case success.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/get-all-test-case-not-in-test-suite-by-program-id", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<ResponseListDto<TestCaseDto>> getAllTestCaseNotInTestSuiteByProgramId(@RequestParam Long programId, Pageable pageable) {
+        ApiMessageDto<ResponseListDto<TestCaseDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<TestCase> testCasePage = testCaseRepository.testCaseListExceptThoseAlreadyInTestSuite(programId, pageable);
+        ResponseListDto<TestCaseDto> responseListDto = new ResponseListDto<>(testCaseMapper.fromEntityToTestCaseDto((TestCase) testCasePage.getContent()), testCasePage.getTotalElements(), testCasePage.getTotalPages());
+        apiMessageDto.setData(responseListDto);
+        apiMessageDto.setMessage("Get all test case not in test suite by program id success.");
         return apiMessageDto;
     }
 }

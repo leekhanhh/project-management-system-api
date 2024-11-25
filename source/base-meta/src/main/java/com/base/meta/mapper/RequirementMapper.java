@@ -25,6 +25,7 @@ public interface RequirementMapper {
     @Mapping(source = "name", target = "name", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "detailClassification", target = "detailClassification", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToProjectAutoCompleteDto")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToRequirementDto")
     RequirementDto fromEntityToRequirementDto(Requirement requirement);

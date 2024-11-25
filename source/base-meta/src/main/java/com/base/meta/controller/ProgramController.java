@@ -76,9 +76,9 @@ public class ProgramController extends ABasicController {
         if (requirement == null) {
             throw new NotFoundException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
         }
-        Program program = programRepository.findFirstByName(createProgramForm.getName());
-        if (program != null) {
-            throw new NotFoundException("Program name is existed!", ErrorCode.PROGRAM_ERROR_NAME_EXIST);
+
+        if (programRepository.existsProgramByNameAndProjectId(createProgramForm.getName(), createProgramForm.getProjectId())) {
+            throw new BadRequestException("Program name is existed!", ErrorCode.PROGRAM_ERROR_NAME_EXIST);
         }
 
         Account programOwner = accountRepository.findFirstById(createProgramForm.getProgramOwnerId());
@@ -110,7 +110,7 @@ public class ProgramController extends ABasicController {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
-        program = programMapper.fromCreateProgramFormToEntity(createProgramForm);
+        Program program = programMapper.fromCreateProgramFormToEntity(createProgramForm);
         program.setProject(project);
         program.setRequirement(requirement);
         program.setProgramOwner(programOwner);
@@ -136,18 +136,23 @@ public class ProgramController extends ABasicController {
         if (program == null) {
             throw new NotFoundException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
         }
-        Program programCheck = programRepository.findFirstByName(updateProgramForm.getName());
-        if (programCheck != null && !programCheck.getId().equals(program.getId())) {
-            throw new NotFoundException("Program name is existed!", ErrorCode.PROGRAM_ERROR_NAME_EXIST);
+
+        if (updateProgramForm.getName() != program.getName()) {
+            if (programRepository.existsProgramByNameAndProjectId(updateProgramForm.getName(), program.getProject().getId())) {
+                throw new BadRequestException("Program name is existed!", ErrorCode.PROGRAM_ERROR_NAME_EXIST);
+            }
         }
+
         Account programOwner = accountRepository.findFirstById(updateProgramForm.getOwnerId());
         if (programOwner == null) {
             throw new NotFoundException("Program owner is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
+
         Account developer = accountRepository.findFirstById(updateProgramForm.getDeveloperId());
         if (developer == null) {
             throw new NotFoundException("Developer is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
+
         Account tester = accountRepository.findFirstById(updateProgramForm.getTesterId());
         if (tester == null) {
             throw new NotFoundException("Tester is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
@@ -262,8 +267,7 @@ public class ProgramController extends ABasicController {
                         message.append("Requirement is not existed!").append(" Requirement id: ").append(programUploadForm.getRequirementId());
                         throw new NotFoundException(message.toString(), ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
                     }
-                    Program program = programRepository.findFirstByName(programUploadForm.getProgramName());
-                    if (program != null) {
+                    if (programRepository.existsProgramByNameAndProjectId(programUploadForm.getProgramName(), project.getId())) {
                         message.append("Program name is existed!").append(" Program name: ").append(programUploadForm.getProgramName());
                         message.append("Project name: ").append(project.getName());
                         throw new NotFoundException(message.toString(), ErrorCode.PROGRAM_ERROR_NAME_EXIST);
@@ -279,7 +283,7 @@ public class ProgramController extends ABasicController {
                         message.append("Project id: ").append(programUploadForm.getProjectId());
                         throw new NotFoundException(message.toString(), ErrorCode.CATEGORY_ERROR_NOT_FOUND);
                     }
-                    program = new Program();
+                    Program program = new Program();
                     program.setProject(project);
                     program.setRequirement(requirement);
                     program.setProgramCategory(programUploadForm.getProgramCategory());

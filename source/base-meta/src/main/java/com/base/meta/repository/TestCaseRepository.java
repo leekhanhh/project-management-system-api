@@ -1,6 +1,8 @@
 package com.base.meta.repository;
 
 import com.base.meta.model.TestCase;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -8,16 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface TestCaseRepository extends JpaRepository<TestCase, Long> , JpaSpecificationExecutor<TestCase> {
+public interface TestCaseRepository extends JpaRepository<TestCase, Long>, JpaSpecificationExecutor<TestCase> {
     TestCase findFirstByName(String name);
-
-//    @Query("SELECT COUNT(tc.id) " +
-//            "FROM TestCase tc " +
-//            "JOIN Program p ON p.id = tc.program.id " +
-//            "JOIN TestExecution te ON te.program.id = p.id " +
-//            "JOIN TestExecutionTurn tet ON tet.testExecution.id = te.id " +
-//            "WHERE tet.id = :testExecutionTurnId")
-//    Integer countTestCasesByTestExecutionTurnId(@Param("testExecutionTurnId") Long testExecutionTurnId);
 
     @Query("SELECT " +
             "COUNT(tc.id) AS totalCases, " +
@@ -32,5 +26,6 @@ public interface TestCaseRepository extends JpaRepository<TestCase, Long> , JpaS
             "WHERE tet.id = :testExecutionTurnId")
     List<Object[]> countTestCasesByExecutionTurnIdWithStatusCounts(@Param("testExecutionTurnId") Long testExecution);
 
-
+    @Query("SELECT tc FROM TestCase tc WHERE tc.id NOT IN (SELECT tstc.testCase.id FROM TestSuiteTestCaseRelation tstc) AND tc.program.id = :programId")
+    Page<TestCase> testCaseListExceptThoseAlreadyInTestSuite(@Param("programId") Long programId, Pageable pageable);
 }
