@@ -54,8 +54,7 @@ public class ProjectController extends ABasicController{
         if(!isPM()){
             throw new UnauthorizationException("Not allowed create!");
         }
-        Project project = projectRepository.findFirstByName(createProjectForm.getName());
-        if (project != null) {
+        if (projectRepository.existsByName(createProjectForm.getName())) {
             throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
         }
 
