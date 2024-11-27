@@ -6,6 +6,7 @@ import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testcaseexecution.TestCaseExecutionDto;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testcaseexecution.CreateTestCaseExecutionForm;
 import com.base.meta.form.testcaseexecution.UpdateTestCaseExecutionForm;
 import com.base.meta.mapper.TestCaseExecutionMapper;
@@ -142,6 +143,22 @@ public class TestCaseExecutionController extends ABasicController {
                 testCaseExecutionPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List test case execution successfully!");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TCE_UF')")
+    public ApiMessageDto<String> updateFlagTestCaseExecution(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("Not allowed update flag!");
+        }
+        TestCaseExecution testCaseExecution = testCaseExecutionRepository.findById(modifyFlagForm.getObjectId()).orElseThrow(()
+                -> new NotFoundException("Test case execution not found!", ErrorCode.TEST_CASE_EXECUTION_ERROR_NOT_EXIST));
+        testCaseExecution.setFlag(modifyFlagForm.getFlag());
+        testCaseExecutionRepository.save(testCaseExecution);
+        apiMessageDto.setMessage("Update flag test case execution successfully!");
         return apiMessageDto;
     }
 }

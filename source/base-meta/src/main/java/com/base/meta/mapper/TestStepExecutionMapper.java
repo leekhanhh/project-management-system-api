@@ -12,10 +12,6 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {TestStepMapper.class, CategoryMapper.class, TestCaseExecutionMapper.class})
 public interface TestStepExecutionMapper {
-    @Mapping(source = "isDefected", target = "isDefected")
-    @BeanMapping(ignoreByDefault = true)
-    void mappingUpdateTestStepExecutionFormToEntity(UpdateTestStepExecutionForm updateTestStepExecutionForm, @MappingTarget TestStepExecution testStepExecution);
-
     @Mapping(source = "id", target = "id")
     @Mapping(source = "testStep", target = "testStep", qualifiedByName = "fromEntityToAutoCompleteTestStepDto")
     @Mapping(source = "testCaseExecution", target = "testCaseExecution", qualifiedByName = "fromEntityToTestCaseExecutionDto")

@@ -17,6 +17,7 @@ public interface TestDefectMapper {
     @Mapping(source = "priority", target = "priority")
     @Mapping(source = "severity", target = "severity")
     @Mapping(source = "description", target = "description")
+    @Mapping(source = "sendEmailNotification", target = "sendEmailNotification")
     @BeanMapping(ignoreByDefault = true)
     TestDefect fromCreateTestDefectFormToEntity(CreateTestDefectForm createTestDefectForm);
 

@@ -63,11 +63,13 @@ public class TestDefectController extends ABasicController {
         if (category == null){
             throw new NotFoundException("Category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
+        testStepExecution.setIsDefected(true);
         TestDefect testDefect = testDefectMapper.fromCreateTestDefectFormToEntity(createTestDefectForm);
         testDefect.setTestStepExecution(testStepExecution);
         testDefect.setAssignedDeveloper(account);
         testDefect.setStatus(category);
         testDefect.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
+        testStepExecutionRepository.save(testStepExecution);
         testDefectRepository.save(testDefect);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create a new Test Defect successfully.");
@@ -81,9 +83,6 @@ public class TestDefectController extends ABasicController {
         TestDefect testDefect = testDefectRepository.findFirstById(updateTestDefectForm.getId()).orElseThrow(
                 () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
         );
-        TestStepExecution testStepExecution = testStepExecutionRepository.findFirstById(updateTestDefectForm.getId()).orElseThrow(
-                () -> new NotFoundException("Test Step Execution not found!", ErrorCode.TEST_STEP_EXECUTION_ERROR_NOT_EXIST)
-        );
         Category category = categoryRepository.findFirstById(updateTestDefectForm.getStatusId());
         if (category == null){
             throw new NotFoundException("Category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
@@ -96,7 +95,6 @@ public class TestDefectController extends ABasicController {
         testDefectMapper.mappingUpdateTestDefectFormToEntity(updateTestDefectForm, testDefect);
         testDefect.setStatus(category);
         testDefect.setAssignedDeveloper(account);
-        testDefect.setTestStepExecution(testStepExecution);
         testDefectRepository.save(testDefect);
 
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
@@ -143,8 +141,7 @@ public class TestDefectController extends ABasicController {
     @PreAuthorize("hasRole('TDE_UF')")
     public ApiMessageDto<String> updateFlagTestDefect(@RequestBody ModifyFlagForm modifyFlagForm) {
         TestDefect testDefect = testDefectRepository.findFirstById(modifyFlagForm.getObjectId()).orElseThrow(
-                () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST)
-        );
+                () -> new NotFoundException("Test Defect not found!", ErrorCode.TEST_DEFECT_ERROR_NOT_EXIST));
         testDefect.setFlag(modifyFlagForm.getFlag());
         testDefectRepository.save(testDefect);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();

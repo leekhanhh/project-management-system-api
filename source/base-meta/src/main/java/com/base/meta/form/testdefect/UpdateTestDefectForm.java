@@ -28,8 +28,6 @@ public class UpdateTestDefectForm {
     private Long assignedDeveloperId;
     @ApiModelProperty(value = "Test defect description")
     private String description;
-    @ApiModelProperty(value = "Check if test defect is executed")
-    private Boolean isDefected;
     @ApiModelProperty(value = "Check whether send email notification or not")
     private Boolean sendEmailNotification;
 }

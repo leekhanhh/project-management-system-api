@@ -1,5 +1,6 @@
 package com.base.meta.form.group;
 
+import com.base.meta.validation.UserKind;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,5 +22,6 @@ public class CreateGroupForm {
     private Long[] permissions;
     @NotNull(message = "kind cant not be null")
     @ApiModelProperty(name = "kind", required = true)
+    @UserKind
     private Integer kind;
 }

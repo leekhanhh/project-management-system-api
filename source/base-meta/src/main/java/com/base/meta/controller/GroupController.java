@@ -204,4 +204,20 @@ public class GroupController extends ABasicController {
         apiMessageDto.setMessage("Auto complete group success.");
         return apiMessageDto;
     }
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('GR_D')")
+    public ApiMessageDto<String> delete(@PathVariable Long id) {
+        if (!isSuperAdmin()) {
+            throw new UnauthorizationException("Not allowed delete!");
+        }
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        Group group = groupRepository.findById(id).orElse(null);
+        if (group == null) {
+            throw new NotFoundException("Group not found!", ErrorCode.GROUP_ERROR_NOT_FOUND);
+        }
+        groupRepository.delete(group);
+        apiMessageDto.setMessage("Delete group success.");
+        return apiMessageDto;
+    }
 }

@@ -39,7 +39,6 @@ public interface ProjectMapper {
     @Mapping(source = "description", target = "description")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
-    @Mapping(source = "flag", target = "flag")
     @BeanMapping(ignoreByDefault = true)
     void updateProjectFromEntity(UpdateProjectForm updateProjectForm, @MappingTarget Project project);
 

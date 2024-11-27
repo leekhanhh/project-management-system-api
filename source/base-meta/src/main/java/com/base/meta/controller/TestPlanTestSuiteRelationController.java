@@ -5,6 +5,8 @@ import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testplantestsuiterelation.TestPlanTestSuiteRelationDto;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.BindingErrorsHandler;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testplantestsuiterelation.CreateTestPlanTestSuiteRelationForm;
 import com.base.meta.mapper.TestPlanTestSuiteRelationMapper;
@@ -26,6 +28,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/test-plan-test-suite-relation")
@@ -46,6 +51,9 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
     @PreAuthorize("hasRole('TPTSR_C')")
     public ApiMessageDto<String> createTestPlanTestSuiteRelation(@Valid @RequestBody CreateTestPlanTestSuiteRelationForm createTestPlanTestSuiteRelationForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), ErrorCode.TEST_CASE_ERROR_INVALID);
+        }
         if (!isTester()) {
             throw new UnauthorizationException("You are not authorized to perform this action.");
         }
@@ -55,15 +63,24 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
             throw new BadRequestException("Test plan not found.", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
         }
 
-        TestSuite testSuite = testSuiteRepository.findById(createTestPlanTestSuiteRelationForm.getTestSuiteId()).orElse(null);
-        if (testSuite == null) {
-            throw new BadRequestException("Test suite not found.", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST);
+        List<TestSuite> availableTestSuites = new ArrayList<>();
+        StringBuilder message = new StringBuilder();
+        for (Long testSuiteId : createTestPlanTestSuiteRelationForm.getTestSuiteIds()) {
+            TestSuite testSuite = testSuiteRepository.findById(testSuiteId).orElseThrow(()
+                    -> new NotFoundException("Test suite not found.", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST));
+            if (testPlanTestSuiteRelationRepository.existsByTestPlanIdAndTestSuiteId(createTestPlanTestSuiteRelationForm.getTestPlanId(), testSuiteId)) {
+                message.append("Test plan test suite relation already exists for test plan ").append(testPlan.getId()).append(" and test suite ").append(testSuite.getId()).append(". ");
+                throw new BadRequestException(message.toString(), ErrorCode.TEST_PLAN_TEST_SUITE_RELATION_ERROR_EXIST);
+            }
+            availableTestSuites.add(testSuite);
         }
 
-        TestPlanTestSuiteRelation testPlanTestSuiteRelation = testPlanTestSuiteRelationMapper.fromCreateTestPlanTestSuiteRelationFormToEntity(createTestPlanTestSuiteRelationForm);
-        testPlanTestSuiteRelation.setTestPlan(testPlan);
-        testPlanTestSuiteRelation.setTestSuite(testSuite);
-        testPlanTestSuiteRelationRepository.save(testPlanTestSuiteRelation);
+        for (TestSuite testSuite : availableTestSuites) {
+            TestPlanTestSuiteRelation testPlanTestSuiteRelation = new TestPlanTestSuiteRelation();
+            testPlanTestSuiteRelation.setTestPlan(testPlan);
+            testPlanTestSuiteRelation.setTestSuite(testSuite);
+            testPlanTestSuiteRelationRepository.save(testPlanTestSuiteRelation);
+        }
         apiMessageDto.setMessage("Create test plan test suite relation success.");
         return apiMessageDto;
     }
@@ -103,7 +120,7 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
     public ApiMessageDto<ResponseListDto<TestPlanTestSuiteRelationDto>> listTestPlanTestSuiteRelation(TestPlanTestSuiteRelationCriteria criteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestPlanTestSuiteRelationDto>> apiMessageDto = new ApiMessageDto<>();
         Page<TestPlanTestSuiteRelation> testPlanTestSuiteRelationPage = testPlanTestSuiteRelationRepository.findAll(criteria.getSpecification(), pageable);
-        ResponseListDto<TestPlanTestSuiteRelationDto> responseListDto = new ResponseListDto(testPlanTestSuiteRelationMapper.fromDtoToTestPlanTestSuiteRelationDtoList(testPlanTestSuiteRelationPage.getContent()), testPlanTestSuiteRelationPage.getTotalElements(), testPlanTestSuiteRelationPage.getTotalPages());
+        ResponseListDto responseListDto = new ResponseListDto(testPlanTestSuiteRelationMapper.fromDtoToTestPlanTestSuiteRelationDtoList(testPlanTestSuiteRelationPage.getContent()), testPlanTestSuiteRelationPage.getTotalElements(), testPlanTestSuiteRelationPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("Get test plan test suite relation list success.");
         return apiMessageDto;

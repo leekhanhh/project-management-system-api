@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class CreateTestPlanTestSuiteRelationForm {
@@ -12,5 +13,5 @@ public class CreateTestPlanTestSuiteRelationForm {
     private Long testPlanId;
     @ApiModelProperty(value = "Test Suite ID", required = true)
     @NotNull(message = "Test Suite ID cannot be null")
-    private Long testSuiteId;
+    private List<Long> testSuiteIds;
 }

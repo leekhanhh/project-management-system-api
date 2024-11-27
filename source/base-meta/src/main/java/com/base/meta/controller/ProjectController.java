@@ -64,7 +64,7 @@ public class ProjectController extends ABasicController{
             throw new NotFoundException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectForm.getStartDate(), createProjectForm.getEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectForm.getStartDate(), createProjectForm.getEndDate()))) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
@@ -84,18 +84,14 @@ public class ProjectController extends ABasicController{
         if(!isPM()){
             throw new UnauthorizationException("Not allowed update!");
         }
-        Project project = projectRepository.findById(updateProjectForm.getId()).orElse(null);
-        if (project == null) {
-            throw new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST);
-        }
-        Project projectCheck = projectRepository.findFirstByName(updateProjectForm.getName());
-        if(projectCheck != null && !projectCheck.getId().equals(project.getId())){
+        Project project = projectRepository.findById(updateProjectForm.getId()).orElseThrow(()
+                -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
+        if(projectRepository.existsByName(updateProjectForm.getName()) && !project.getName().equals(updateProjectForm.getName())){
             throw new BadRequestException("Project name is existed!", ErrorCode.PROJECT_ERROR_NAME_DUPLICATED);
         }
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateProjectForm.getStartDate(), updateProjectForm.getEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(updateProjectForm.getStartDate(), updateProjectForm.getEndDate()))) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
-
         Category status = categoryRepository.findFirstById(updateProjectForm.getStatusId());
         if (status == null) {
             throw new NotFoundException("Status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);

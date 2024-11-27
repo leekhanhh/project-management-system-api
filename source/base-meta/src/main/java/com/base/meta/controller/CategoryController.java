@@ -57,7 +57,6 @@ public class CategoryController extends ABasicController{
     @GetMapping(value = "/auto-complete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<CategoryDto>> autoCompleteListCategory(CategoryCriteria categoryCriteria, @PageableDefault(size = 10) Pageable pageable) {
         ApiMessageDto<ResponseListDto<CategoryDto>> apiMessageDto = new ApiMessageDto<>();
-        categoryCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<Category> listCategory = categoryRepository.findAll(categoryCriteria.getSpecification(), pageable);
         ResponseListDto<CategoryDto> responseListObj = new ResponseListDto(categoryMapper.fromEntityListToCategoryDtoAutoComplete(listCategory.getContent()), listCategory.getTotalElements(), listCategory.getTotalPages());
         apiMessageDto.setData(responseListObj);
@@ -98,6 +97,9 @@ public class CategoryController extends ABasicController{
         Category checkCode = categoryRepository.findFirstByCode(createCategoryForm.getCategoryCode());
         if (checkCode != null && checkCode.getParentCategory() == null && !StringUtils.equals("", createCategoryForm.getCategoryCode())) {
             throw new BadRequestException("[Category] Code exist in kind!", ErrorCode.CATEGORY_ERROR_CODE_EXIST);
+        }
+        if(Boolean.TRUE.equals(categoryRepository.existsByKind(createCategoryForm.getCategoryKind()))){
+            throw new BadRequestException("[Category] Kind exist!", ErrorCode.CATEGORY_ERROR_KIND_EXIST);
         }
         category.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         categoryRepository.save(category);

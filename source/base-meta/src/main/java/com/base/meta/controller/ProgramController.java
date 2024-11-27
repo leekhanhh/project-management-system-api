@@ -106,7 +106,7 @@ public class ProgramController extends ABasicController {
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(createProgramForm.getStartDate(), createProgramForm.getEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(createProgramForm.getStartDate(), createProgramForm.getEndDate()))) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
@@ -135,6 +135,11 @@ public class ProgramController extends ABasicController {
         Program program = programRepository.findFirstById(updateProgramForm.getId());
         if (program == null) {
             throw new NotFoundException("Program is not existed!", ErrorCode.PROGRAM_ERROR_NOT_EXIST);
+        }
+
+        Requirement requirement = requirementRepository.findFirstById(updateProgramForm.getRequirementId());
+        if (requirement == null) {
+            throw new NotFoundException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
         }
 
         if (updateProgramForm.getName() != program.getName()) {
@@ -168,11 +173,12 @@ public class ProgramController extends ABasicController {
             throw new NotFoundException("Program status is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
 
-        if (!baseMetaApiService.checkStartDateIsBeforeEndDate(updateProgramForm.getStartDate(), updateProgramForm.getEndDate())) {
+        if (Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(updateProgramForm.getStartDate(), updateProgramForm.getEndDate()))) {
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
         programMapper.fromUpdateFormToEntity(updateProgramForm, program);
+        program.setRequirement(requirement);
         program.setProgramOwner(programOwner);
         program.setAssignedDeveloper(developer);
         program.setAssignedTester(tester);
@@ -274,7 +280,7 @@ public class ProgramController extends ABasicController {
                     }
                     Boolean isStartDateBeforeEndDate = baseMetaApiService.checkStartDateIsBeforeEndDate(programUploadForm.getStartDate(), programUploadForm.getEndDate());
                     if (!isStartDateBeforeEndDate) {
-                        message.append("Start date must be before end date!").append(" Start date: ").append(programUploadForm.getStartDate());
+                        message.append("Start date must be before end date!").append(" Start date: ").append(programUploadForm.getStartDate()).append(" End date: ").append(programUploadForm.getEndDate()).append(".");
                         throw new BadRequestException(message.toString(), ErrorCode.ERROR_DATE_INVALID);
                     }
                     Category programType = categoryRepository.findByNameAndKind(programUploadForm.getProgramType(), BaseMetaConstant.CATEGORY_KIND_PROGRAM);

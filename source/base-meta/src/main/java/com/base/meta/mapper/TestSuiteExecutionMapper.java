@@ -13,11 +13,6 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {TestPlanMapper.class, AccountMapper.class})
 public interface TestSuiteExecutionMapper {
-    @Mapping(source = "orderNumber", target = "orderNumber")
-    @BeanMapping(ignoreByDefault = true)
-    @Named("fromCreateTestSuiteExecutionFormToEntity")
-    TestSuiteExecution fromCreateTestSuiteExecutionFormToEntity(CreateTestSuiteExecutionForm createTestSuiteExecutionForm);
-
     @Mapping(source = "id", target = "id")
     @Mapping(source = "orderNumber", target = "orderNumber")
     @Mapping(source = "status", target = "status", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
@@ -31,9 +26,4 @@ public interface TestSuiteExecutionMapper {
     @IterableMapping(qualifiedByName = "fromEntityToTestSuiteExecutionDto", elementTargetType = TestSuiteExecutionDto.class)
     @Named("fromEntityToTestSuiteExecutionDtoList")
     List<TestSuiteExecutionDto> fromEntityToTestSuiteExecutionDtoList(List<TestSuiteExecution> testSuiteExecutionList);
-
-    @Mapping(source = "orderNumber", target = "orderNumber")
-    @Mapping(source = "flag", target = "flag")
-    @BeanMapping(ignoreByDefault = true)
-    void updateTestSuiteExecutionFromEntity(UpdateTestSuiteExecutionForm updateTestSuiteExecutionForm, @MappingTarget TestSuiteExecution testSuiteExecution);
 }

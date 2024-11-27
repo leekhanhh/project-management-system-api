@@ -81,7 +81,6 @@ public class TestStepExecutionController extends ABasicController{
         if (category == null){
             throw new NotFoundException("Category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND);
         }
-        testStepExecutionMapper.mappingUpdateTestStepExecutionFormToEntity(updateTestStepExecutionForm, testStepExecution);
         testStepExecution.setStatus(category);
         testStepExecutionRepository.save(testStepExecution);
 

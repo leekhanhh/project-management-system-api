@@ -28,4 +28,6 @@ public class CreateTestDefectForm {
     private Long assignedDeveloperId;
     @ApiModelProperty(value = "Test defect description")
     private String description;
+    @ApiModelProperty(value = "Check whether send email notification or not")
+    private Boolean sendEmailNotification;
 }

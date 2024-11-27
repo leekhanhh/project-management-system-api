@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TestSuiteExecutionRepository extends JpaRepository<TestSuiteExecution, Long>, JpaSpecificationExecutor<TestSuiteExecution> {
     TestSuiteExecution findFirstById(Long id);
     Optional<TestSuiteExecution> findFirstByTestSuiteAndOrderNumber(Long id, Integer orderNumber);
+    boolean existsByTestSuiteAndOrderNumber(Long id, Integer orderNumber);
 }

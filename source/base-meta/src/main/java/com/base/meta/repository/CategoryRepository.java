@@ -13,4 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
     Category findFirstByCodeAndKind(String code, Integer kind);
 
     Category findFirstById(Long id);
+    boolean existsByKind(Integer kind);
 }

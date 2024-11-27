@@ -155,6 +155,8 @@ public class ErrorCode {
      * Test plan test suite relation error code
      */
     public static final String TEST_PLAN_TEST_SUITE_RELATION_ERROR_NOT_EXIST = "ERROR-TEST-PLAN-TEST-SUITE-RELATION-000";
+    public static final String TEST_PLAN_TEST_SUITE_RELATION_ERROR_EXIST = "ERROR-TEST-PLAN-TEST-SUITE-RELATION-001";
+    public static final String TEST_PLAN_TEST_SUITE_RELATION_ERROR_BINDING = "ERROR-TEST-PLAN-TEST-SUITE-RELATION-002";
 
     /**
      * Test execution error code

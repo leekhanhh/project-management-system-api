@@ -4,8 +4,10 @@ import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testsuiteexecution.TestSuiteExecutionDto;
+import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.testsuiteexecution.CreateTestSuiteExecutionForm;
 import com.base.meta.form.testsuiteexecution.UpdateTestSuiteExecutionForm;
 import com.base.meta.mapper.TestSuiteExecutionMapper;
@@ -69,10 +71,12 @@ public class TestSuiteExecutionController extends ABasicController {
         Category category = categoryRepository.findById(createTestSuiteExecutionForm.getStatusId()).orElseThrow(()
                 -> new NotFoundException("Category not found.", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        if (testSuiteExecutionRepository.findFirstByTestSuiteAndOrderNumber(createTestSuiteExecutionForm.getTestSuiteId(), createTestSuiteExecutionForm.getOrderNumber()) != null) {
-            throw new NotFoundException("Order number is existed.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED);
+        if (Boolean.TRUE.equals(testSuiteExecutionRepository.existsByTestSuiteAndOrderNumber(testSuite.getId(), createTestSuiteExecutionForm.getOrderNumber()))) {
+            throw new BadRequestException("Order number is existed.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED);
         }
-        TestSuiteExecution testSuiteExecution = testSuiteExecutionMapper.fromCreateTestSuiteExecutionFormToEntity(createTestSuiteExecutionForm);
+
+        TestSuiteExecution testSuiteExecution = new TestSuiteExecution();
+        testSuiteExecution.setOrderNumber(createTestSuiteExecutionForm.getOrderNumber());
         testSuiteExecution.setTestSuite(testSuite);
         testSuiteExecution.setTestExecutionTurn(testExecutionTurn);
         testSuiteExecution.setStatus(category);
@@ -95,14 +99,14 @@ public class TestSuiteExecutionController extends ABasicController {
                 -> new NotFoundException("Test suite execution not found.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_NOT_EXIST));
 
         if (updateTestSuiteExecutionForm.getOrderNumber() != null && !updateTestSuiteExecutionForm.getOrderNumber().equals(testSuiteExecution.getOrderNumber())) {
-            if (testSuiteExecutionRepository.findFirstByTestSuiteAndOrderNumber(testSuiteExecution.getTestSuite().getId(), updateTestSuiteExecutionForm.getOrderNumber()) != null) {
-                throw new NotFoundException("Order number is existed.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED);
+            if(Boolean.TRUE.equals(testSuiteExecutionRepository.existsByTestSuiteAndOrderNumber(testSuiteExecution.getTestSuite().getId(), updateTestSuiteExecutionForm.getOrderNumber()))){
+                throw new BadRequestException("Order number is existed.", ErrorCode.TEST_SUITE_EXECUTION_ERROR_ORDER_NUMBER_EXISTED);
             }
         }
         Category status = categoryRepository.findById(updateTestSuiteExecutionForm.getStatusId()).orElseThrow(()
                 -> new NotFoundException("Category not found.", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        testSuiteExecutionMapper.updateTestSuiteExecutionFromEntity(updateTestSuiteExecutionForm, testSuiteExecution);
+        testSuiteExecution.setOrderNumber(updateTestSuiteExecutionForm.getOrderNumber());
         testSuiteExecution.setStatus(status);
         testSuiteExecutionRepository.save(testSuiteExecution);
 
@@ -141,6 +145,21 @@ public class TestSuiteExecutionController extends ABasicController {
         Page<TestSuiteExecution> testSuiteExecutionPage = testSuiteExecutionRepository.findAll(testSuiteExecutionCriteria.getSpecification(), pageable);
         ResponseListDto<TestSuiteExecutionDto> responseListDto = new ResponseListDto(testSuiteExecutionMapper.fromEntityToTestSuiteExecutionDtoList(testSuiteExecutionPage.getContent()), testSuiteExecutionPage.getTotalElements(), testSuiteExecutionPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ApiMessageDto<String> updateFlagTestSuiteExecution(@RequestBody ModifyFlagForm modifyFlagForm) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("Not allowed update!");
+        }
+        TestSuiteExecution testSuiteExecution = testSuiteExecutionRepository.findById(modifyFlagForm.getObjectId()).orElseThrow(()
+                -> new NotFoundException("Test suite execution not found!", ErrorCode.TEST_SUITE_EXECUTION_ERROR_NOT_EXIST));
+        testSuiteExecution.setFlag(modifyFlagForm.getFlag());
+        testSuiteExecutionRepository.save(testSuiteExecution);
+        apiMessageDto.setMessage("Update flag test suite execution successfully!");
         return apiMessageDto;
     }
 

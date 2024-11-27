@@ -13,6 +13,4 @@ public class UpdateTestStepExecutionForm {
     @ApiModelProperty(value = "Test step execution status id", required = true)
     @NotNull(message = "Test step execution status id is required")
     private Long categoryId;
-    @ApiModelProperty(value = "Test Defect Execution")
-    private Boolean isDefected;
 }

@@ -7,10 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestSuiteTestCaseRelation, Long>, JpaSpecificationExecutor<TestSuiteTestCaseRelation> {
-    TestSuiteTestCaseRelation findByTestSuiteIdAndTestCaseId(Long testSuiteId, Long testCaseId);
+    boolean existsByTestSuiteIdAndTestCaseId(Long testSuiteId, Long testCaseId);
     @Query("SELECT t.testSuite.id, COUNT(t) FROM TestSuiteTestCaseRelation t WHERE t.testSuite.id IN :testSuiteIds GROUP BY t.testSuite.id")
     List<Object[]> countTestSuiteTestCaseRelationsByTestSuiteIds(@Param("testSuiteIds") List<Long> testSuiteIds);
 

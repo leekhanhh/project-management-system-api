@@ -63,12 +63,10 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
         for (Long testCaseId : createTestSuiteTestCaseRelationForm.getTestCaseIds()) {
             TestCase testCase = testCaseRepository.findById(testCaseId)
                     .orElseThrow(() -> new NotFoundException("Test case " + testCaseId + " not found.", ErrorCode.TEST_CASE_ERROR_NOT_EXIST));
-            availableTestCases.add(testCase);
-            TestSuiteTestCaseRelation existingRelation = testSuiteTestCaseRelationRepository
-                    .findByTestSuiteIdAndTestCaseId(createTestSuiteTestCaseRelationForm.getTestSuiteId(), testCaseId);
-            if (existingRelation != null) {
+            if (testSuiteTestCaseRelationRepository.existsByTestSuiteIdAndTestCaseId(createTestSuiteTestCaseRelationForm.getTestSuiteId(), testCaseId)) {
                 throw new BadRequestException("Test suite and test case " + testCaseId + "already exist.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
             }
+            availableTestCases.add(testCase);
         }
 
         for (TestCase testCase : availableTestCases) {
