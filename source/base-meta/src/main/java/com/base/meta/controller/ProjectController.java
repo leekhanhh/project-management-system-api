@@ -67,7 +67,7 @@ public class ProjectController extends ABasicController{
             throw new BadRequestException("Start date must be before end date!", ErrorCode.ERROR_DATE_INVALID);
         }
 
-        project = projectMapper.fromCreateProjectFormToEntity(createProjectForm);
+        Project project = projectMapper.fromCreateProjectFormToEntity(createProjectForm);
         project.setStatus(status);
         project.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         projectRepository.save(project);
