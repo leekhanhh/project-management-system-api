@@ -48,6 +48,7 @@ public interface GroupMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "kind", target = "kind")
+    @Mapping(source = "displayId", target = "displayId")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToGroupDtoAutoComplete")
     GroupDto fromEntityToGroupDtoAutoComplete(Group group);

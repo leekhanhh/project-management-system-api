@@ -128,10 +128,8 @@ public class ProjectController extends ABasicController{
         if (!isPM()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
-        Project project = projectRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
-        if (project == null) {
-            throw new BadRequestException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST);
-        }
+        Project project = projectRepository.findById(modifyFlagForm.getObjectId()).orElseThrow(()
+                -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
         project.setFlag(modifyFlagForm.getFlag());
         projectRepository.save(project);
         apiMessageDto.setMessage("Update project flag success.");

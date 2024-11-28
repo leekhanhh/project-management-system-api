@@ -105,7 +105,6 @@ public class TestCaseUploadController extends ABasicController {
                 List<TestCaseUpload> testCaseUploads = excelService.mapExcelToData(file.getInputStream());
                 for (TestCaseUpload testCaseUpload : testCaseUploads) {
                     TestCase testCase = testCaseRepository.findFirstByName(testCaseUpload.getTestCaseName());
-
                     if (testCase == null) {
                         testCase = testCaseMapper.fromCreateTestCaseFromTestCaseUpload(testCaseUpload);
                         testCase.setProgram(testCaseUpload.getProgram());

@@ -32,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1/project-member")
@@ -57,7 +58,7 @@ public class ProjectMemberController extends ABasicController{
     public ApiMessageDto<String> createProjectMember(@Valid @RequestBody CreateProjectMemberForm createProjectMemberForm, BindingResult bindingResult) {
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         if(bindingResult.hasErrors()){
-            throw new BadRequestException(bindingResult.getFieldError().getDefaultMessage(), ErrorCode.PROJECT_MEMBER_ERROR_INVALID);
+            throw new BadRequestException(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage(), ErrorCode.PROJECT_MEMBER_ERROR_INVALID);
         }
         if(!isPM()){
             throw new UnauthorizationException("Not allowed create!");
@@ -71,17 +72,19 @@ public class ProjectMemberController extends ABasicController{
         if (account == null) {
             throw new NotFoundException("Account is not existed!", ErrorCode.USER_ERROR_NOT_FOUND);
         }
-        if(!baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectMemberForm.getOnBoardedDate(), createProjectMemberForm.getOffBoardedDate())){
+        if(Boolean.FALSE.equals(baseMetaApiService.checkStartDateIsBeforeEndDate(createProjectMemberForm.getOnBoardedDate(), createProjectMemberForm.getOffBoardedDate()))){
             throw new BadRequestException("Onboarded date must be before offboarded date!", ErrorCode.PROJECT_MEMBER_ERROR_ONBOARDED_DATE_AFTER_OFFBOARDED_DATE);
         }
 
-        if(!(account.getStatus().getCode().equals(BaseMetaConstant.USER_STATUS_AVAILABLE) && account.getStatus().getKind().equals(BaseMetaConstant.CATEGORY_KIND_ACCOUNT))){
+        if(Integer.parseInt(account.getStatus().getCode()) != BaseMetaConstant.USER_STATUS_AVAILABLE
+                && account.getStatus().getKind().equals(BaseMetaConstant.CATEGORY_KIND_ACCOUNT)){
             throw new BadRequestException("Account is not available!", ErrorCode.USER_ERROR_NOT_AVAILABLE);
         }
 
         ProjectMember projectMember = projectMemberMapper.fromCreateProjectMemberFormToEntity(createProjectMemberForm);
 
-        account.setStatus(categoryRepository.findFirstByCodeAndKind(String.valueOf(BaseMetaConstant.USER_STATUS_BUSY), BaseMetaConstant.CATEGORY_KIND_ACCOUNT));
+        account.setStatus(categoryRepository.findFirstByCodeAndKind(String.valueOf(BaseMetaConstant.USER_STATUS_BUSY),
+                BaseMetaConstant.CATEGORY_KIND_ACCOUNT));
         accountRepository.save(account);
 
         projectMember.setProject(project);

@@ -58,20 +58,14 @@ public class RequirementController extends ABasicController {
         if (!isPM()) {
             throw new UnauthorizationException("Not allowed create!");
         }
-        Project project = projectRepository.findById(createRequirementForm.getProjectId()).orElse(null);
-        if (project == null) {
-            throw new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST);
-        }
-
+        Project project = projectRepository.findById(createRequirementForm.getProjectId()).orElseThrow(()
+                -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
         Category devision = categoryRepository.findById(createRequirementForm.getDevisionId()).orElseThrow(()
                 -> new NotFoundException("Devision is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
-
         Category name = categoryRepository.findById(createRequirementForm.getNameId()).orElseThrow(()
                 -> new NotFoundException("Name is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
-
         Category detailClassification = categoryRepository.findById(createRequirementForm.getClassificationId()).orElseThrow(()
                 -> new NotFoundException("Classification is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
-
         Requirement requirement = requirementMapper.fromCreateRequirementFormToEntity(createRequirementForm);
         requirement.setProject(project);
         requirement.setDevision(devision);
