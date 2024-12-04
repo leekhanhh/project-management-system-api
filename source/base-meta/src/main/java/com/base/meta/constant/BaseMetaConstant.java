@@ -31,14 +31,6 @@ public class BaseMetaConstant {
     }
 
     /*
-    Project Status
-     */
-    public static final Integer PROJECT_STATUS_NOT_STARTED = 1;
-    public static final Integer PROJECT_STATUS_IN_PROGRESS = 2;
-    public static final Integer PROJECT_STATUS_COMPLETED = 3;
-    public static final Integer PROJECT_STATUS_CANCELLED = 4;
-
-    /*
     User Status
      */
     public static final Integer USER_STATUS_ONLEAVE = 1;
@@ -46,36 +38,6 @@ public class BaseMetaConstant {
     public static final Integer USER_STATUS_BUSY = 3;
     public static final Integer USER_STATUS_ON_SITE_PATERNITY = 4;
     public static final Integer USER_STATUS_RETIRED = 5;
-
-    /*
-    Requirement Status Name
-     */
-    public static final String REQUIREMENT_STATUS_NAME_DRAFT = "1";
-    public static final String REQUIREMENT_STATUS_NAME_IN_VIEW = "2";
-    public static final String REQUIREMENT_STATUS_NAME_APPROVED = "3";
-    public static final String REQUIREMENT_STATUS_NAME_IMPLEMENTED = "4";
-
-    /*
-    Requirement Devision Name
-     */
-    public static final String REQUIREMENT_DEVISION_NAME_FUNCTIONAL = "1";
-    public static final String REQUIREMENT_DEVISION_NAME_DATA = "2";
-    public static final String REQUIREMENT_DEVISION_NAME_UI_UX = "3";
-
-    /*
-    Requirement Classification Name
-     */
-    public static final String REQUIREMENT_CLASSIFICATION_NAME_USER_MANAGEMENT = "1";
-    public static final String REQUIREMENT_CLASSIFICATION_NAME_RESERVATION_MANAGEMENT = "2";
-    public static final String REQUIREMENT_CLASSIFICATION_NAME_OTHER = "3";
-
-    /*
-    Program type
-     */
-    public static final String PROGRAM_TYPE_NAME_NEW_DEVELOPMENT = "N";
-    public static final String PROGRAM_TYPE_NAME_MAINTENANCE = "M";
-    public static final String PROGRAM_TYPE_NAME_ENHANCEMENT = "E";
-
     /*
     Category kind
      */

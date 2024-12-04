@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-25T20:49:55+0700",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+    date = "2024-12-02T17:51:40+0700",
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 3.40.0.z20241112-1021, environment: Java 17.0.13 (Eclipse Adoptium)"
 )
 @Component
 public class TestDefectMapperImpl implements TestDefectMapper {
@@ -36,6 +36,7 @@ public class TestDefectMapperImpl implements TestDefectMapper {
         testDefect.setSeverity( createTestDefectForm.getSeverity() );
         testDefect.setDescription( createTestDefectForm.getDescription() );
         testDefect.setPriority( createTestDefectForm.getPriority() );
+        testDefect.setSendEmailNotification( createTestDefectForm.getSendEmailNotification() );
         testDefect.setName( createTestDefectForm.getName() );
 
         return testDefect;

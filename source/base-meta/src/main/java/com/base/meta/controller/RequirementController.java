@@ -132,10 +132,8 @@ public class RequirementController extends ABasicController {
         if (!isPM()) {
             throw new UnauthorizationException("Not allowed update!");
         }
-        Requirement requirement = requirementRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
-        if (requirement == null) {
-            throw new BadRequestException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
-        }
+        Requirement requirement = requirementRepository.findById(modifyFlagForm.getObjectId()).orElseThrow(()
+                -> new NotFoundException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND));
         requirement.setFlag(modifyFlagForm.getFlag());
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Update a requirement flag success.");

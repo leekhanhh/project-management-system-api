@@ -46,17 +46,6 @@ public class CategoryCriteria implements Serializable {
                 if (getParentId() != null) {
                     Join<Category, Category> parentCategory = root.join("parentCategory", JoinType.INNER);
                     predicates.add(cb.equal(parentCategory.get("id"), getParentId()));
-                } else {
-                    if (getKind() != null && (getKind().equals(BaseMetaConstant.CATEGORY_KIND_PROJECT)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_REQUIREMENT)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_PROGRAM)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_EXECUTION)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_SUITE_EXECUTION)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_CASE_EXECUTION)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_STEP_EXECUTION)
-                            || getKind().equals(BaseMetaConstant.CATEGORY_KIND_TEST_DEFECT))) {
-                        predicates.add(cb.isNull(root.get("parentCategory")));
-                    }
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

@@ -1,7 +1,6 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.teststepexecution.TestStepExecutionDto;
-import com.base.meta.form.teststepexecution.UpdateTestStepExecutionForm;
 import com.base.meta.model.TestStepExecution;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-25T20:49:55+0700",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
+    date = "2024-12-02T17:51:41+0700",
+    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 3.40.0.z20241112-1021, environment: Java 17.0.13 (Eclipse Adoptium)"
 )
 @Component
 public class TestStepExecutionMapperImpl implements TestStepExecutionMapper {
@@ -23,17 +22,6 @@ public class TestStepExecutionMapperImpl implements TestStepExecutionMapper {
     private CategoryMapper categoryMapper;
     @Autowired
     private TestCaseExecutionMapper testCaseExecutionMapper;
-
-    @Override
-    public void mappingUpdateTestStepExecutionFormToEntity(UpdateTestStepExecutionForm updateTestStepExecutionForm, TestStepExecution testStepExecution) {
-        if ( updateTestStepExecutionForm == null ) {
-            return;
-        }
-
-        if ( updateTestStepExecutionForm.getIsDefected() != null ) {
-            testStepExecution.setIsDefected( updateTestStepExecutionForm.getIsDefected() );
-        }
-    }
 
     @Override
     public TestStepExecutionDto fromEntityToDto(TestStepExecution testStepExecution) {

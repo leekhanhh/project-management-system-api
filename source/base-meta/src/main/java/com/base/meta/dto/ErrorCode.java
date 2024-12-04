@@ -144,6 +144,7 @@ public class ErrorCode {
      */
     public static final String TEST_SUITE_ERROR_NOT_EXIST = "ERROR-TEST-SUITE-000";
     public static final String TEST_SUITE_ERROR_NAME_EXISTED = "ERROR-TEST-SUITE-001";
+    public static final String TEST_SUITE_ERROR_NOT_EMPTY = "ERROR-TEST-SUITE-003";
 
     /**
      * Test suite test case relation error code

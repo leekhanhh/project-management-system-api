@@ -15,4 +15,6 @@ public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestS
 
     @Query("SELECT count(t) FROM TestSuiteTestCaseRelation t WHERE t.testSuite.id = :testSuiteId")
     Integer countByTestSuiteId(@Param("testSuiteId") Long testSuiteId);
+
+    boolean existsByTestSuiteId(Long testSuiteId);
 }

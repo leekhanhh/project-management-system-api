@@ -65,7 +65,6 @@ public class CategoryController extends ABasicController{
     }
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('CATE_V')")
     public ApiMessageDto<CategoryDto> get(@PathVariable("id") Long id) {
         ApiMessageDto<CategoryDto> apiMessageDto = new ApiMessageDto<>();
         Category category = categoryRepository.findById(id).orElse(null);

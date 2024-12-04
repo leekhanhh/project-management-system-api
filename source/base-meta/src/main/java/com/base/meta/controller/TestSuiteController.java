@@ -191,10 +191,14 @@ public class TestSuiteController extends ABasicController {
         if (!isTester()) {
             throw new UnauthorizationException("Not allowed delete!");
         }
+        if(testSuiteTestCaseRelationRepository.existsByTestSuiteId(modifyFlagForm.getObjectId())){
+            throw new BadRequestException("Test suite must be empty to delete!", ErrorCode.TEST_SUITE_ERROR_NOT_EMPTY);
+        }
         TestSuite testSuite = testSuiteRepository.findById(modifyFlagForm.getObjectId()).orElse(null);
         if (testSuite == null) {
             throw new BadRequestException("Test suite is not existed!", ErrorCode.TEST_SUITE_ERROR_NOT_EXIST);
         }
+
         testSuite.setFlag(modifyFlagForm.getFlag());
         testSuiteRepository.save(testSuite);
         apiMessageDto.setMessage("Update test suite flag success.");
