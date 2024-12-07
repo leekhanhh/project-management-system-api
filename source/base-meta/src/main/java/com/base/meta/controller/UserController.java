@@ -90,18 +90,7 @@ public class UserController extends ABasicController {
         account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
         account.setPassword(passwordEncoder.encode(randomPasswordUtils.createPassword()));
         account.setFlag(1);
-        if (createUserForm.getKind()==BaseMetaConstant.GROUP_KIND_PM)
-        {
-            account.setKind(BaseMetaConstant.USER_KIND_PM);
-        }
-        if(createUserForm.getKind()==BaseMetaConstant.GROUP_KIND_DEV)
-        {
-            account.setKind(BaseMetaConstant.USER_KIND_DEV);
-        }
-        if (createUserForm.getKind()==BaseMetaConstant.GROUP_KIND_TESTER)
-        {
-            account.setKind(BaseMetaConstant.USER_KIND_TESTER);
-        }
+        account.setKind(createUserForm.getKind());
         user = userMapper.fromCreateUserFormToEntity(createUserForm);
         user.setAccount(account);
         accountRepository.save(account);
