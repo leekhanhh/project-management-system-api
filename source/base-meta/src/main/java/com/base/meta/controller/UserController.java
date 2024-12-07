@@ -1,6 +1,5 @@
 package com.base.meta.controller;
 
-import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -30,7 +29,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.sql.DataSource;
 import javax.validation.Valid;
-import java.util.Objects;
+import java.util.Date;
+
+import static com.base.meta.controller.AccountController.PREFIX_ENTITY;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -88,6 +89,7 @@ public class UserController extends ABasicController {
         account.setPassword(passwordEncoder.encode(password));
         account.setFlag(1);
         account.setKind(createUserForm.getKind());
+        account.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         User user = userMapper.fromCreateUserFormToEntity(createUserForm);
         user.setAccount(account);
         accountRepository.save(account);

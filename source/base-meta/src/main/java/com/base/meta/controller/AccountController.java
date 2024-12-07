@@ -45,7 +45,7 @@ import java.util.Date;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class AccountController extends ABasicController {
-    private static final String PREFIX_ENTITY = "ACC";
+    public static final String PREFIX_ENTITY = "ACC";
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
