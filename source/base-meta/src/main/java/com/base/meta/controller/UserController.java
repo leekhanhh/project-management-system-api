@@ -68,15 +68,11 @@ public class UserController extends ABasicController {
         }
         Account account = accountRepository.findAccountByUsername(createUserForm.getUsername());
         if (account != null) {
-            throw new BadRequestException("Account is exist!", ErrorCode.USER_ERROR_USERNAME_EXIST);
+            throw new BadRequestException("Username is existed!", ErrorCode.ACCOUNT_ERROR_USERNAME_EXIST);
         }
         Group group = groupRepository.findFirstByKind(createUserForm.getKind());
         if (group == null) {
             throw new NotFoundException("Group not found! [User kind is invalid!]", ErrorCode.USER_ERROR_GROUP_NOT_FOUND);
-        }
-        User user = userRepository.findFirstByAccount_Email(createUserForm.getEmail()).orElse(null);
-        if (user != null) {
-            throw new BadRequestException("User is exist!", ErrorCode.USER_ERROR_EXIST);
         }
         Category status = categoryRepository.findById(createUserForm.getMemberStatusCategoryId()).orElseThrow(()
                 -> new NotFoundException("Member status category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
@@ -88,15 +84,16 @@ public class UserController extends ABasicController {
         account.setStatus(status);
         account.setPosition(position);
         account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
-        account.setPassword(passwordEncoder.encode(randomPasswordUtils.createPassword()));
+        String password = randomPasswordUtils.createPassword();
+        account.setPassword(passwordEncoder.encode(password));
         account.setFlag(1);
         account.setKind(createUserForm.getKind());
-        user = userMapper.fromCreateUserFormToEntity(createUserForm);
+        User user = userMapper.fromCreateUserFormToEntity(createUserForm);
         user.setAccount(account);
         accountRepository.save(account);
         userRepository.save(user);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
-        apiMessageDto.setMessage("Create user success. Password: " + account.getPassword());
+        apiMessageDto.setMessage("Create user success. Password: " + password);
         return apiMessageDto;
     }
 

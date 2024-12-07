@@ -106,9 +106,6 @@ public class CategoryController extends ABasicController{
         if (checkCode != null && checkCode.getParentCategory() == null && !StringUtils.equals("", createCategoryForm.getCategoryCode())) {
             throw new BadRequestException("[Category] Code exist in kind!", ErrorCode.CATEGORY_ERROR_CODE_EXIST);
         }
-        if(Boolean.TRUE.equals(categoryRepository.existsByKind(createCategoryForm.getCategoryKind()))){
-            throw new BadRequestException("[Category] Kind exist!", ErrorCode.CATEGORY_ERROR_KIND_EXIST);
-        }
         category.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         categoryRepository.save(category);
         apiMessageDto.setData(category.getId());

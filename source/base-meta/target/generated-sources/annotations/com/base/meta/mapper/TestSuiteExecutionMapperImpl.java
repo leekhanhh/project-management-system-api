@@ -32,8 +32,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-02T17:51:36+0700",
-    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 3.40.0.z20241112-1021, environment: Java 17.0.13 (Eclipse Adoptium)"
+    date = "2024-12-07T17:54:45+0700",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
@@ -77,22 +77,22 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         PermissionDto permissionDto = new PermissionDto();
 
-        if ( permission.getCreatedDate() != null ) {
-            permissionDto.setCreatedDate( LocalDateTime.ofInstant( permission.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         permissionDto.setFlag( permission.getFlag() );
         if ( permission.getModifiedDate() != null ) {
             permissionDto.setModifiedDate( LocalDateTime.ofInstant( permission.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        permissionDto.setAction( permission.getAction() );
-        permissionDto.setDescription( permission.getDescription() );
-        permissionDto.setDisplayId( permission.getDisplayId() );
+        if ( permission.getCreatedDate() != null ) {
+            permissionDto.setCreatedDate( LocalDateTime.ofInstant( permission.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         permissionDto.setId( permission.getId() );
-        permissionDto.setKind( permission.getKind() );
         permissionDto.setName( permission.getName() );
+        permissionDto.setAction( permission.getAction() );
+        permissionDto.setShowMenu( permission.getShowMenu() );
+        permissionDto.setDescription( permission.getDescription() );
         permissionDto.setNameGroup( permission.getNameGroup() );
         permissionDto.setPermissionCode( permission.getPermissionCode() );
-        permissionDto.setShowMenu( permission.getShowMenu() );
+        permissionDto.setKind( permission.getKind() );
+        permissionDto.setDisplayId( permission.getDisplayId() );
 
         return permissionDto;
     }
@@ -117,20 +117,20 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         GroupDto groupDto = new GroupDto();
 
-        if ( group.getCreatedDate() != null ) {
-            groupDto.setCreatedDate( LocalDateTime.ofInstant( group.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         groupDto.setFlag( group.getFlag() );
         if ( group.getModifiedDate() != null ) {
             groupDto.setModifiedDate( LocalDateTime.ofInstant( group.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        groupDto.setDescription( group.getDescription() );
-        groupDto.setDisplayId( group.getDisplayId() );
+        if ( group.getCreatedDate() != null ) {
+            groupDto.setCreatedDate( LocalDateTime.ofInstant( group.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         groupDto.setId( group.getId() );
-        groupDto.setIsSystemRole( group.getIsSystemRole() );
-        groupDto.setKind( group.getKind() );
         groupDto.setName( group.getName() );
+        groupDto.setDescription( group.getDescription() );
+        groupDto.setKind( group.getKind() );
+        groupDto.setIsSystemRole( group.getIsSystemRole() );
         groupDto.setPermissions( permissionListToPermissionDtoList( group.getPermissions() ) );
+        groupDto.setDisplayId( group.getDisplayId() );
 
         return groupDto;
     }
@@ -142,23 +142,23 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         AccountDto accountDto = new AccountDto();
 
-        if ( account.getCreatedDate() != null ) {
-            accountDto.setCreatedDate( LocalDateTime.ofInstant( account.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         accountDto.setFlag( account.getFlag() );
         if ( account.getModifiedDate() != null ) {
             accountDto.setModifiedDate( LocalDateTime.ofInstant( account.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        accountDto.setDisplayId( account.getDisplayId() );
+        if ( account.getCreatedDate() != null ) {
+            accountDto.setCreatedDate( LocalDateTime.ofInstant( account.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
+        accountDto.setId( account.getId() );
+        accountDto.setKind( account.getKind() );
+        accountDto.setUsername( account.getUsername() );
+        accountDto.setPhone( account.getPhone() );
         accountDto.setEmail( account.getEmail() );
         accountDto.setFullName( account.getFullName() );
         accountDto.setGroup( groupToGroupDto( account.getGroup() ) );
-        accountDto.setId( account.getId() );
-        accountDto.setIsSuperAdmin( account.getIsSuperAdmin() );
-        accountDto.setKind( account.getKind() );
         accountDto.setLastLogin( account.getLastLogin() );
-        accountDto.setPhone( account.getPhone() );
-        accountDto.setUsername( account.getUsername() );
+        accountDto.setIsSuperAdmin( account.getIsSuperAdmin() );
+        accountDto.setDisplayId( account.getDisplayId() );
 
         return accountDto;
     }
@@ -170,15 +170,15 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         CategoryDto categoryDto = new CategoryDto();
 
-        if ( category.getCreatedDate() != null ) {
-            categoryDto.setCreatedDate( LocalDateTime.ofInstant( category.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         categoryDto.setFlag( category.getFlag() );
         if ( category.getModifiedDate() != null ) {
             categoryDto.setModifiedDate( LocalDateTime.ofInstant( category.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        categoryDto.setDisplayId( category.getDisplayId() );
+        if ( category.getCreatedDate() != null ) {
+            categoryDto.setCreatedDate( LocalDateTime.ofInstant( category.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         categoryDto.setId( category.getId() );
+        categoryDto.setDisplayId( category.getDisplayId() );
 
         return categoryDto;
     }
@@ -190,20 +190,20 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         ProjectDto projectDto = new ProjectDto();
 
-        if ( project.getCreatedDate() != null ) {
-            projectDto.setCreatedDate( LocalDateTime.ofInstant( project.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         projectDto.setFlag( project.getFlag() );
         if ( project.getModifiedDate() != null ) {
             projectDto.setModifiedDate( LocalDateTime.ofInstant( project.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        projectDto.setDescription( project.getDescription() );
-        projectDto.setDisplayId( project.getDisplayId() );
-        projectDto.setEndDate( project.getEndDate() );
+        if ( project.getCreatedDate() != null ) {
+            projectDto.setCreatedDate( LocalDateTime.ofInstant( project.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         projectDto.setId( project.getId() );
         projectDto.setName( project.getName() );
+        projectDto.setDescription( project.getDescription() );
         projectDto.setStartDate( project.getStartDate() );
+        projectDto.setEndDate( project.getEndDate() );
         projectDto.setStatus( categoryToCategoryDto( project.getStatus() ) );
+        projectDto.setDisplayId( project.getDisplayId() );
 
         return projectDto;
     }
@@ -215,21 +215,21 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         RequirementDto requirementDto = new RequirementDto();
 
-        if ( requirement.getCreatedDate() != null ) {
-            requirementDto.setCreatedDate( LocalDateTime.ofInstant( requirement.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         requirementDto.setFlag( requirement.getFlag() );
         if ( requirement.getModifiedDate() != null ) {
             requirementDto.setModifiedDate( LocalDateTime.ofInstant( requirement.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        requirementDto.setAcceptance( requirement.getAcceptance() );
-        requirementDto.setDescription( requirement.getDescription() );
-        requirementDto.setDetailClassification( categoryToCategoryDto( requirement.getDetailClassification() ) );
-        requirementDto.setDevision( categoryToCategoryDto( requirement.getDevision() ) );
-        requirementDto.setDisplayId( requirement.getDisplayId() );
+        if ( requirement.getCreatedDate() != null ) {
+            requirementDto.setCreatedDate( LocalDateTime.ofInstant( requirement.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         requirementDto.setId( requirement.getId() );
         requirementDto.setName( categoryToCategoryDto( requirement.getName() ) );
+        requirementDto.setDescription( requirement.getDescription() );
+        requirementDto.setDivision( categoryToCategoryDto( requirement.getDivision() ) );
+        requirementDto.setDetailClassification( categoryToCategoryDto( requirement.getDetailClassification() ) );
+        requirementDto.setAcceptance( categoryToCategoryDto( requirement.getAcceptance() ) );
         requirementDto.setProject( projectToProjectDto( requirement.getProject() ) );
+        requirementDto.setDisplayId( requirement.getDisplayId() );
 
         return requirementDto;
     }
@@ -241,28 +241,28 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         ProgramDto programDto = new ProgramDto();
 
-        if ( program.getCreatedDate() != null ) {
-            programDto.setCreatedDate( LocalDateTime.ofInstant( program.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         programDto.setFlag( program.getFlag() );
         if ( program.getModifiedDate() != null ) {
             programDto.setModifiedDate( LocalDateTime.ofInstant( program.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        programDto.setDescription( program.getDescription() );
-        programDto.setDisplayId( program.getDisplayId() );
-        if ( program.getEndDate() != null ) {
-            programDto.setEndDate( new SimpleDateFormat().format( program.getEndDate() ) );
+        if ( program.getCreatedDate() != null ) {
+            programDto.setCreatedDate( LocalDateTime.ofInstant( program.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
         programDto.setId( program.getId() );
-        programDto.setName( program.getName() );
-        programDto.setProgramCategory( program.getProgramCategory() );
-        programDto.setProgramStatus( categoryToCategoryDto( program.getProgramStatus() ) );
-        programDto.setProgramType( categoryToCategoryDto( program.getProgramType() ) );
         programDto.setProject( projectToProjectDto( program.getProject() ) );
         programDto.setRequirement( requirementToRequirementDto( program.getRequirement() ) );
+        programDto.setName( program.getName() );
+        programDto.setDescription( program.getDescription() );
+        programDto.setProgramType( categoryToCategoryDto( program.getProgramType() ) );
+        programDto.setProgramCategory( program.getProgramCategory() );
         if ( program.getStartDate() != null ) {
             programDto.setStartDate( new SimpleDateFormat().format( program.getStartDate() ) );
         }
+        if ( program.getEndDate() != null ) {
+            programDto.setEndDate( new SimpleDateFormat().format( program.getEndDate() ) );
+        }
+        programDto.setProgramStatus( categoryToCategoryDto( program.getProgramStatus() ) );
+        programDto.setDisplayId( program.getDisplayId() );
 
         return programDto;
     }
@@ -274,19 +274,19 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         TestSuiteDto testSuiteDto = new TestSuiteDto();
 
-        if ( testSuite.getCreatedDate() != null ) {
-            testSuiteDto.setCreatedDate( LocalDateTime.ofInstant( testSuite.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         testSuiteDto.setFlag( testSuite.getFlag() );
         if ( testSuite.getModifiedDate() != null ) {
             testSuiteDto.setModifiedDate( LocalDateTime.ofInstant( testSuite.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        testSuiteDto.setAccount( accountToAccountDto( testSuite.getAccount() ) );
-        testSuiteDto.setDescription( testSuite.getDescription() );
-        testSuiteDto.setDisplayId( testSuite.getDisplayId() );
+        if ( testSuite.getCreatedDate() != null ) {
+            testSuiteDto.setCreatedDate( LocalDateTime.ofInstant( testSuite.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         testSuiteDto.setId( testSuite.getId() );
         testSuiteDto.setName( testSuite.getName() );
+        testSuiteDto.setDescription( testSuite.getDescription() );
+        testSuiteDto.setAccount( accountToAccountDto( testSuite.getAccount() ) );
         testSuiteDto.setProgram( programToProgramDto( testSuite.getProgram() ) );
+        testSuiteDto.setDisplayId( testSuite.getDisplayId() );
 
         return testSuiteDto;
     }
@@ -298,23 +298,23 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         TestExecutionDto testExecutionDto = new TestExecutionDto();
 
-        if ( testExecution.getCreatedDate() != null ) {
-            testExecutionDto.setCreatedDate( LocalDateTime.ofInstant( testExecution.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         testExecutionDto.setFlag( testExecution.getFlag() );
         if ( testExecution.getModifiedDate() != null ) {
             testExecutionDto.setModifiedDate( LocalDateTime.ofInstant( testExecution.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        testExecutionDto.setAssignedDeveloper( accountToAccountDto( testExecution.getAssignedDeveloper() ) );
-        testExecutionDto.setCategory( categoryToCategoryDto( testExecution.getCategory() ) );
-        testExecutionDto.setDetail( testExecution.getDetail() );
-        testExecutionDto.setDisplayId( testExecution.getDisplayId() );
+        if ( testExecution.getCreatedDate() != null ) {
+            testExecutionDto.setCreatedDate( LocalDateTime.ofInstant( testExecution.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         testExecutionDto.setId( testExecution.getId() );
         testExecutionDto.setName( testExecution.getName() );
-        testExecutionDto.setPlanEndDate( testExecution.getPlanEndDate() );
-        testExecutionDto.setPlanStartDate( testExecution.getPlanStartDate() );
-        testExecutionDto.setProgram( programToProgramDto( testExecution.getProgram() ) );
+        testExecutionDto.setCategory( categoryToCategoryDto( testExecution.getCategory() ) );
         testExecutionDto.setStatus( categoryToCategoryDto( testExecution.getStatus() ) );
+        testExecutionDto.setPlanStartDate( testExecution.getPlanStartDate() );
+        testExecutionDto.setPlanEndDate( testExecution.getPlanEndDate() );
+        testExecutionDto.setDetail( testExecution.getDetail() );
+        testExecutionDto.setAssignedDeveloper( accountToAccountDto( testExecution.getAssignedDeveloper() ) );
+        testExecutionDto.setProgram( programToProgramDto( testExecution.getProgram() ) );
+        testExecutionDto.setDisplayId( testExecution.getDisplayId() );
 
         return testExecutionDto;
     }
@@ -326,20 +326,20 @@ public class TestSuiteExecutionMapperImpl implements TestSuiteExecutionMapper {
 
         TestExecutionTurnDto testExecutionTurnDto = new TestExecutionTurnDto();
 
-        if ( testExecutionTurn.getCreatedDate() != null ) {
-            testExecutionTurnDto.setCreatedDate( LocalDateTime.ofInstant( testExecutionTurn.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
-        }
         testExecutionTurnDto.setFlag( testExecutionTurn.getFlag() );
         if ( testExecutionTurn.getModifiedDate() != null ) {
             testExecutionTurnDto.setModifiedDate( LocalDateTime.ofInstant( testExecutionTurn.getModifiedDate().toInstant(), ZoneId.of( "UTC" ) ) );
         }
-        testExecutionTurnDto.setActualEndDate( testExecutionTurn.getActualEndDate() );
-        testExecutionTurnDto.setActualStartDate( testExecutionTurn.getActualStartDate() );
-        testExecutionTurnDto.setAssignedDeveloper( accountToAccountDto( testExecutionTurn.getAssignedDeveloper() ) );
-        testExecutionTurnDto.setDisplayId( testExecutionTurn.getDisplayId() );
+        if ( testExecutionTurn.getCreatedDate() != null ) {
+            testExecutionTurnDto.setCreatedDate( LocalDateTime.ofInstant( testExecutionTurn.getCreatedDate().toInstant(), ZoneId.of( "UTC" ) ) );
+        }
         testExecutionTurnDto.setId( testExecutionTurn.getId() );
-        testExecutionTurnDto.setTestExecution( testExecutionToTestExecutionDto( testExecutionTurn.getTestExecution() ) );
         testExecutionTurnDto.setTurnNumber( testExecutionTurn.getTurnNumber() );
+        testExecutionTurnDto.setActualStartDate( testExecutionTurn.getActualStartDate() );
+        testExecutionTurnDto.setActualEndDate( testExecutionTurn.getActualEndDate() );
+        testExecutionTurnDto.setAssignedDeveloper( accountToAccountDto( testExecutionTurn.getAssignedDeveloper() ) );
+        testExecutionTurnDto.setTestExecution( testExecutionToTestExecutionDto( testExecutionTurn.getTestExecution() ) );
+        testExecutionTurnDto.setDisplayId( testExecutionTurn.getDisplayId() );
 
         return testExecutionTurnDto;
     }

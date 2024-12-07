@@ -6,6 +6,7 @@ import com.base.meta.dto.account.AccountDto;
 import com.base.meta.dto.account.ForgetPasswordDto;
 import com.base.meta.dto.account.RequestForgetPasswordForm;
 import com.base.meta.exception.BadRequestException;
+import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.account.CreateAccountAdminForm;
 import com.base.meta.form.account.ForgetPasswordForm;
@@ -63,7 +64,7 @@ public class AccountController extends ABasicController {
         ApiResponse<String> apiMessageDto = new ApiResponse<>();
         Account account = accountRepository.findAccountByUsername(createAccountAdminForm.getUsername());
         if (account != null) {
-            throw new BadRequestException("Username is existed!", ErrorCode.ACCOUNT_ERROR_USERNAME_EXIST);
+            throw new NotFoundException("Username is existed!", ErrorCode.ACCOUNT_ERROR_USERNAME_EXIST);
         }
         Group group = groupRepository.findById(createAccountAdminForm.getGroupId()).orElse(null);
         if (group == null) {
@@ -201,10 +202,8 @@ public class AccountController extends ABasicController {
     @PostMapping(value = "/request-forget-password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<ForgetPasswordDto> requestForgetPassword(@Valid @RequestBody RequestForgetPasswordForm forgetForm, BindingResult bindingResult) {
         ApiResponse<ForgetPasswordDto> apiMessageDto = new ApiResponse<>();
-        Account account = accountRepository.findAccountByEmail(forgetForm.getEmail());
-        if (account == null) {
-            throw new BadRequestException("Account not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
-        }
+        Account account = accountRepository.findAccountByEmail(forgetForm.getEmail()).orElseThrow(
+                () -> new BadRequestException("Email not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
 
         String otp = baseMetaApiService.getOTPForgetPassword();
         account.setAttemptCode(0);

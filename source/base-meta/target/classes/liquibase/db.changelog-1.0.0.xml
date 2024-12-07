@@ -795,10 +795,6 @@
         <addForeignKeyConstraint baseColumnNames="detail_classification_category_id" baseTableName="db_project_management_requirement" constraintName="FK8arugf8637lpo9sjq260iuxj" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
     </changeSet>
-    <changeSet author="GIGABYTE (generated)" id="1729698209024-96">
-        <addForeignKeyConstraint baseColumnNames="acceptance_category_id" baseTableName="db_project_management_requirement" constraintName="FK_acceptance_category_and_requirement" deferrable="false" initiallyDeferred="false"
-                                 referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
-    </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-41">
         <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="db_project_management_user" constraintName="FK8b12og8pwl96754q84imkthwv" deferrable="false" initiallyDeferred="false"
                                  referencedColumnNames="id" referencedTableName="db_project_management_account" validate="true" onDelete="CASCADE"/>
@@ -1171,5 +1167,9 @@
             <column name="group_id" valueNumeric="400"/>
             <column name="permission_id" valueNumeric="3"/>
         </insert>
+    </changeSet>
+    <changeSet author="GIGABYTE (generated)" id="1729698209024-96">
+        <addForeignKeyConstraint baseColumnNames="acceptance_category_id" baseTableName="db_project_management_requirement" constraintName="FK_acceptance_category_and_requirement" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="db_project_management_category" validate="true"/>
     </changeSet>
 </databaseChangeLog>
