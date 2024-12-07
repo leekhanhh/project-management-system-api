@@ -10,9 +10,9 @@ public class RequirementDto extends ABasicAdminDto {
     private Long id;
     private CategoryDto name;
     private String description;
-    private CategoryDto devision;
+    private CategoryDto division;
     private CategoryDto detailClassification;
-    private String acceptance;
+    private CategoryDto acceptance;
     private ProjectDto project;
     private String displayId;
 }

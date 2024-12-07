@@ -14,10 +14,10 @@ public class CreateRequirementForm {
     @ApiModelProperty(value = "Requirement description", required = true)
     private String description;
     @ApiModelProperty(value = "Requirement acceptance", required = true)
-    private String acceptance;
+    private Long acceptanceId;
     @ApiModelProperty(value = "Devision Id", required = true)
-    @NotNull(message = "devision cannot be null!")
-    private Long devisionId;
+    @NotNull(message = "division cannot be null!")
+    private Long divisionId;
     @ApiModelProperty(value = "Classification Id", required = true)
     private Long classificationId;
     @ApiModelProperty(value = "Project ID", required = true)

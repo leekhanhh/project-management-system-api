@@ -1,8 +1,6 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.requirement.RequirementDto;
-import com.base.meta.form.requirement.CreateRequirementForm;
-import com.base.meta.form.requirement.UpdateRequirementForm;
 import com.base.meta.model.Requirement;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-02T17:51:41+0700",
-    comments = "version: 1.3.1.Final, compiler: Eclipse JDT (IDE) 3.40.0.z20241112-1021, environment: Java 17.0.13 (Eclipse Adoptium)"
+    date = "2024-12-07T15:41:55+0700",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
 public class RequirementMapperImpl implements RequirementMapper {
@@ -24,20 +22,6 @@ public class RequirementMapperImpl implements RequirementMapper {
     private CategoryMapper categoryMapper;
 
     @Override
-    public Requirement fromCreateRequirementFormToEntity(CreateRequirementForm createRequirementForm) {
-        if ( createRequirementForm == null ) {
-            return null;
-        }
-
-        Requirement requirement = new Requirement();
-
-        requirement.setDescription( createRequirementForm.getDescription() );
-        requirement.setAcceptance( createRequirementForm.getAcceptance() );
-
-        return requirement;
-    }
-
-    @Override
     public RequirementDto fromEntityToRequirementDto(Requirement requirement) {
         if ( requirement == null ) {
             return null;
@@ -45,14 +29,14 @@ public class RequirementMapperImpl implements RequirementMapper {
 
         RequirementDto requirementDto = new RequirementDto();
 
-        requirementDto.setAcceptance( requirement.getAcceptance() );
+        requirementDto.setDivision( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getDivision() ) );
+        requirementDto.setAcceptance( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getAcceptance() ) );
         requirementDto.setName( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getName() ) );
         requirementDto.setDescription( requirement.getDescription() );
         requirementDto.setProject( projectMapper.fromEntityToProjectDto( requirement.getProject() ) );
         requirementDto.setDetailClassification( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getDetailClassification() ) );
         requirementDto.setId( requirement.getId() );
         requirementDto.setDisplayId( requirement.getDisplayId() );
-        requirementDto.setDevision( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getDevision() ) );
 
         return requirementDto;
     }
@@ -72,20 +56,6 @@ public class RequirementMapperImpl implements RequirementMapper {
     }
 
     @Override
-    public void fromUpdateRequirementFormToEntity(UpdateRequirementForm updateRequirementForm, Requirement requirement) {
-        if ( updateRequirementForm == null ) {
-            return;
-        }
-
-        if ( updateRequirementForm.getDescription() != null ) {
-            requirement.setDescription( updateRequirementForm.getDescription() );
-        }
-        if ( updateRequirementForm.getAcceptance() != null ) {
-            requirement.setAcceptance( updateRequirementForm.getAcceptance() );
-        }
-    }
-
-    @Override
     public RequirementDto fromEntityToAutoCompleteRequirementDto(Requirement requirement) {
         if ( requirement == null ) {
             return null;
@@ -93,7 +63,7 @@ public class RequirementMapperImpl implements RequirementMapper {
 
         RequirementDto requirementDto = new RequirementDto();
 
-        requirementDto.setAcceptance( requirement.getAcceptance() );
+        requirementDto.setAcceptance( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getAcceptance() ) );
         requirementDto.setName( categoryMapper.fromEntityToAutoCompleteNameToDto( requirement.getName() ) );
         requirementDto.setDescription( requirement.getDescription() );
         requirementDto.setId( requirement.getId() );

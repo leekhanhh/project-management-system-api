@@ -12,12 +12,13 @@ public class UpdateRequirementForm {
     @NotNull(message = "id cannot be null!")
     private Long id;
     @ApiModelProperty(value = "Requirement acceptance", required = true)
-    private String acceptance;
+    @NotNull(message = "acceptance cannot be null!")
+    private Long acceptanceId;
     @ApiModelProperty(value = "Requirement description", required = true)
     private String description;
-    @ApiModelProperty(value = "Devision", required = true)
-    @NotNull(message = "devision cannot be null!")
-    private Long devisionId;
+    @ApiModelProperty(value = "Division", required = true)
+    @NotNull(message = "division cannot be null!")
+    private Long divisionId;
     @ApiModelProperty(value = "Name", required = true)
     @NotNull(message = "name cannot be null!")
     private Long nameId;

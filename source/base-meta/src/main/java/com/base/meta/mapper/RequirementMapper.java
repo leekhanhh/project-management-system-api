@@ -13,15 +13,10 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {ProjectMapper.class, CategoryMapper.class})
 public interface RequirementMapper {
-    @Mapping(source = "acceptance", target = "acceptance")
-    @Mapping(source = "description", target = "description")
-    @BeanMapping(ignoreByDefault = true)
-    Requirement fromCreateRequirementFormToEntity(CreateRequirementForm createRequirementForm);
-
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "acceptance", target = "acceptance")
+    @Mapping(source = "acceptance", target = "acceptance", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "devision", target = "devision", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
+    @Mapping(source = "division", target = "division", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "name", target = "name", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "detailClassification", target = "detailClassification", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToProjectAutoCompleteDto")
@@ -33,13 +28,8 @@ public interface RequirementMapper {
     @IterableMapping(qualifiedByName = "fromEntityToRequirementDto", elementTargetType = RequirementDto.class)
     List<RequirementDto> fromEntityToRequirementDtoList(List<Requirement> requirements);
 
-    @Mapping(target = "acceptance", source = "acceptance")
-    @Mapping(target = "description", source = "description")
-    @BeanMapping(ignoreByDefault = true)
-    void fromUpdateRequirementFormToEntity(UpdateRequirementForm updateRequirementForm, @MappingTarget Requirement requirement);
-
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "acceptance", target = "acceptance")
+    @Mapping(source = "acceptance", target = "acceptance", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "name", target = "name", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @BeanMapping(ignoreByDefault = true)

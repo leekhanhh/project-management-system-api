@@ -60,17 +60,21 @@ public class RequirementController extends ABasicController {
         }
         Project project = projectRepository.findById(createRequirementForm.getProjectId()).orElseThrow(()
                 -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
-        Category devision = categoryRepository.findById(createRequirementForm.getDevisionId()).orElseThrow(()
-                -> new NotFoundException("Devision is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+        Category division = categoryRepository.findById(createRequirementForm.getDivisionId()).orElseThrow(()
+                -> new NotFoundException("Division is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
         Category name = categoryRepository.findById(createRequirementForm.getNameId()).orElseThrow(()
                 -> new NotFoundException("Name is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
         Category detailClassification = categoryRepository.findById(createRequirementForm.getClassificationId()).orElseThrow(()
                 -> new NotFoundException("Classification is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
-        Requirement requirement = requirementMapper.fromCreateRequirementFormToEntity(createRequirementForm);
+        Category acceptance = categoryRepository.findById(createRequirementForm.getAcceptanceId()).orElseThrow(()
+                -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+        Requirement requirement = new Requirement();
         requirement.setProject(project);
-        requirement.setDevision(devision);
+        requirement.setDivision(division);
         requirement.setName(name);
+        requirement.setDescription(createRequirementForm.getDescription());
         requirement.setDetailClassification(detailClassification);
+        requirement.setAcceptance(acceptance);
         requirement.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Create a new requirement success.");
@@ -89,8 +93,8 @@ public class RequirementController extends ABasicController {
         if (requirement == null) {
             throw new NotFoundException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
         }
-        Category devision = categoryRepository.findById(updateRequirementForm.getDevisionId()).orElseThrow(()
-                -> new NotFoundException("Devision is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+        Category division = categoryRepository.findById(updateRequirementForm.getDivisionId()).orElseThrow(()
+                -> new NotFoundException("Division is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
         Category name = categoryRepository.findById(updateRequirementForm.getNameId()).orElseThrow(()
                 -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
@@ -98,10 +102,13 @@ public class RequirementController extends ABasicController {
         Category detailClassification = categoryRepository.findById(updateRequirementForm.getDetailClassificationId()).orElseThrow(()
                 -> new NotFoundException("Classification is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        requirementMapper.fromUpdateRequirementFormToEntity(updateRequirementForm, requirement);
-        requirement.setDevision(devision);
+        Category acceptance = categoryRepository.findById(updateRequirementForm.getAcceptanceId()).orElseThrow(()
+                -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
+        requirement.setDivision(division);
         requirement.setName(name);
+        requirement.setDescription(updateRequirementForm.getDescription());
         requirement.setDetailClassification(detailClassification);
+        requirement.setAcceptance(acceptance);
         requirementRepository.save(requirement);
         apiMessageDto.setMessage("Update a requirement success.");
         return apiMessageDto;
@@ -144,7 +151,7 @@ public class RequirementController extends ABasicController {
     public ApiMessageDto<ResponseListDto<RequirementDto>> listRequirement(RequirementCriteria requirementCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<RequirementDto>> apiMessageDto = new ApiMessageDto<>();
         Page<Requirement> requirementPage = requirementRepository.findAll(requirementCriteria.getSpecification(), pageable);
-        ResponseListDto<RequirementDto> responseListDto = new ResponseListDto(requirementMapper.fromEntityToRequirementDtoList(requirementPage.getContent()), requirementPage.getTotalElements(), requirementPage.getTotalPages());
+        ResponseListDto responseListDto = new ResponseListDto(requirementMapper.fromEntityToRequirementDtoList(requirementPage.getContent()), requirementPage.getTotalElements(), requirementPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("List requirements success.");
         return apiMessageDto;

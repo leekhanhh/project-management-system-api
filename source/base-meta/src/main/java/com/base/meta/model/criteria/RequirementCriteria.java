@@ -19,6 +19,7 @@ public class RequirementCriteria implements Serializable {
     private String devision;
     private String status;
 
+
     public Specification<Requirement> getSpecification() {
         return new Specification<Requirement>() {
             private static final long serialVersionUID = 1L;
