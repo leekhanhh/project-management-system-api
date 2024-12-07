@@ -43,6 +43,15 @@ public class CategoryController extends ABasicController{
     @Autowired
     BaseMetaApiService baseMetaApiService;
 
+    @GetMapping(value = "/list-all-parent", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<ResponseListDto<CategoryDto>> listAllParentCategory(CategoryCriteria categoryCriteria, Pageable pageable) {
+        ApiMessageDto<ResponseListDto<CategoryDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<Category> listCategory = categoryRepository.findAllByParentCategoryIsNull(categoryCriteria.getSpecification(), pageable);
+        ResponseListDto responseListObj = new ResponseListDto(categoryMapper.fromEntityListToCategoryDtoList(listCategory.getContent()), listCategory.getTotalElements(), listCategory.getTotalPages());
+        apiMessageDto.setData(responseListObj);
+        apiMessageDto.setMessage("Get list all parent category success.");
+        return apiMessageDto;
+    }
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('CATE_L')")
     public ApiMessageDto<ResponseListDto<CategoryDto>> listCategory(CategoryCriteria categoryCriteria, Pageable pageable) {
