@@ -62,7 +62,7 @@ public class RequirementController extends ABasicController {
                 -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
         Category division = categoryRepository.findById(createRequirementForm.getDivisionId()).orElseThrow(()
                 -> new NotFoundException("Division is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
-        Category name = categoryRepository.findById(createRequirementForm.getNameId()).orElseThrow(()
+        Category name = categoryRepository.findById(createRequirementForm.getNameStatusId()).orElseThrow(()
                 -> new NotFoundException("Name is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
         Category detailClassification = categoryRepository.findById(createRequirementForm.getClassificationId()).orElseThrow(()
                 -> new NotFoundException("Classification is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
@@ -96,7 +96,7 @@ public class RequirementController extends ABasicController {
         Category division = categoryRepository.findById(updateRequirementForm.getDivisionId()).orElseThrow(()
                 -> new NotFoundException("Division is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
-        Category name = categoryRepository.findById(updateRequirementForm.getNameId()).orElseThrow(()
+        Category name = categoryRepository.findById(updateRequirementForm.getNameStatusId()).orElseThrow(()
                 -> new NotFoundException("Acceptance is not existed!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
         Category detailClassification = categoryRepository.findById(updateRequirementForm.getDetailClassificationId()).orElseThrow(()

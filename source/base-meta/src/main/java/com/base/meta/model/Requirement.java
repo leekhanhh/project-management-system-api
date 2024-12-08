@@ -23,7 +23,7 @@ public class Requirement extends Auditable<String> {
     private Category acceptance;
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "devision_category_id")
+    @JoinColumn(name = "division_category_id")
     private Category division;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "name_category_id")

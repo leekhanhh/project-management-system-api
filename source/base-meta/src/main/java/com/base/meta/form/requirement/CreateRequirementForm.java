@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class CreateRequirementForm {
-    @ApiModelProperty(value = "Requirement name", required = true)
-    @NotNull(message = "name cannot be null!")
-    private Long nameId;
+    @ApiModelProperty(value = "Requirement name status id", required = true)
+    @NotNull(message = "name status id cannot be null!")
+    private Long nameStatusId;
     @ApiModelProperty(value = "Requirement description", required = true)
     private String description;
-    @ApiModelProperty(value = "Requirement acceptance", required = true)
+    @ApiModelProperty(value = "Requirement acceptance id", required = true)
     private Long acceptanceId;
     @ApiModelProperty(value = "Devision Id", required = true)
     @NotNull(message = "division cannot be null!")
