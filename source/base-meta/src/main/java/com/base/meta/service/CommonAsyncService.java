@@ -30,7 +30,7 @@ public class CommonAsyncService {
     public void sendEmail(String email, String msg, String subject, boolean html) {
         Runnable task3 = () -> {
             try {
-                emailService.sendEmail(email, msg, subject, html);
+                emailService.sendEmail(email, msg, subject);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }

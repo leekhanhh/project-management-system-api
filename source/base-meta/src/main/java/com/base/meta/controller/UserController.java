@@ -96,6 +96,7 @@ public class UserController extends ABasicController {
         user.setAccount(account);
         accountRepository.save(account);
         userRepository.save(user);
+        baseMetaApiService.sendEmail(account.getEmail(), "This is your password: " + password + "\n Please keep it private!", "Login Project Management Password", false);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create user success. Password: " + password);
         return apiMessageDto;

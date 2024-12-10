@@ -1,30 +1,23 @@
 package com.base.meta.utils;
-
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
-import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 @Slf4j
 public class AESUtils {
-    private static final String SECRET_KEY = "codingleloiminhmot";
+    private static final String SECRET_KEY = "MRTDeathZone1011";
+    private static final String AES_TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     public static String encrypt(String input, boolean zipEnable) {
         return encrypt(SECRET_KEY, input, zipEnable);
     }
-
 
     public static String decrypt(String input, boolean zipEnable) {
         return decrypt(SECRET_KEY, input, zipEnable);
@@ -32,115 +25,72 @@ public class AESUtils {
 
     private static String encrypt(String encodeKey, String inputStr, boolean zipEnable) {
         try {
-            Cipher cipher = Cipher.getInstance("AES");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(encodeKey.getBytes(StandardCharsets.UTF_8), "AES");
+            Cipher cipher = Cipher.getInstance(AES_TRANSFORMATION);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getValidKey(encodeKey), "AES");
 
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 
             byte[] inputBytes = inputStr.getBytes(StandardCharsets.UTF_8);
-            byte[] outputBytes = cipher.doFinal(inputBytes);
+            byte[] encryptedBytes = cipher.doFinal(inputBytes);
+
+            log.info("Input bytes length: {}", inputBytes.length);
+            log.info("Encrypted bytes length: {}", encryptedBytes.length);
 
             if (zipEnable) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                Deflater deflater = new Deflater();
-                DeflaterOutputStream zip = new DeflaterOutputStream(stream, deflater);
-                zip.write(outputBytes);
-                zip.close();
-                deflater.end();
-                byte[] outDeflater = stream.toByteArray();
-                return Base64.getEncoder().encodeToString(outDeflater);
+                return compressAndEncode(encryptedBytes);
             } else {
-                return Base64.getEncoder().encodeToString(outputBytes);
+                return Base64.getEncoder().encodeToString(encryptedBytes);
             }
         } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
+            log.error("Encryption error: {}", ex.getMessage(), ex);
+            throw new RuntimeException("Failed to encrypt data.", ex);
         }
-        return null;
     }
 
     private static String decrypt(String encodeKey, String encryptedStr, boolean zipEnable) {
         try {
-            Cipher cipher = Cipher.getInstance("AES");
-            SecretKeySpec secretKeySpec = new SecretKeySpec(encodeKey.getBytes(StandardCharsets.UTF_8), "AES");
+            Cipher cipher = Cipher.getInstance(AES_TRANSFORMATION);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getValidKey(encodeKey), "AES");
 
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
 
+            byte[] decodedBytes = Base64.getDecoder().decode(encryptedStr);
+            byte[] decryptedBytes;
+
             if (zipEnable) {
-                byte[] dec = Base64.getDecoder().decode(encryptedStr.getBytes(StandardCharsets.UTF_8));
-                ByteArrayInputStream var2 = new ByteArrayInputStream(dec);
-                InflaterInputStream var3 = new InflaterInputStream(var2, new Inflater());
-                byte[] utf8 = cipher.doFinal(var3.readAllBytes());
-
-                return new String(utf8, StandardCharsets.UTF_8);
+                decryptedBytes = decompressAndDecrypt(decodedBytes, cipher);
             } else {
-                byte[] dec = Base64.getDecoder().decode(encryptedStr.getBytes(StandardCharsets.UTF_8));
-                byte[] utf8 = cipher.doFinal(dec);
-
-                // create new string based on the specified charset
-                return new String(utf8, StandardCharsets.UTF_8);
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return null;
-    }
-
-    public SecretKey generateAESKey(int keySize) {
-        try {
-            if (Cipher.getMaxAllowedKeyLength("AES") < keySize) {
-                // this may be an issue if unlimited crypto is not installed
-                throw new InvalidParameterException("Key size of " + keySize
-                        + " not supported in this runtime");
+                decryptedBytes = cipher.doFinal(decodedBytes);
             }
 
-            final KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(keySize);
-            return keyGen.generateKey();
-        } catch (final NoSuchAlgorithmException e) {
-            // AES functionality is a requirement for any Java SE runtime
-            log.error(e.getMessage(), e);
-            return null;
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception ex) {
+            log.error("Decryption error: {}", ex.getMessage(), ex);
+            throw new RuntimeException("Failed to decrypt data.", ex);
         }
     }
 
-    public SecretKey decodeBase64ToAESKey(final String encodedKey) {
-        try {
-            // throws IllegalArgumentException - if src is not in valid Base64
-            // scheme
-            final byte[] keyData = Base64.getDecoder().decode(encodedKey);
-            final int keySize = keyData.length * Byte.SIZE;
+    private static byte[] getValidKey(String key) {
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
+        byte[] validKey = new byte[16]; // AES requires 128-bit keys (16 bytes)
 
-            // this should be checked by a SecretKeyFactory, but that doesn't exist for AES
-            switch (keySize) {
-                case 128:
-                case 192:
-                case 256:
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid key size for AES: " + keySize);
-            }
-
-            if (Cipher.getMaxAllowedKeyLength("AES") < keySize) {
-                // this may be an issue if unlimited crypto is not installed
-                throw new IllegalArgumentException("Key size of " + keySize
-                        + " not supported in this runtime");
-            }
-
-            // throws IllegalArgumentException - if key is empty
-            return new SecretKeySpec(keyData, "AES");
-        } catch (final NoSuchAlgorithmException e) {
-            // AES functionality is a requirement for any Java SE runtime
-            log.error(e.getMessage(), e);
-            return null;
-        }
+        System.arraycopy(keyBytes, 0, validKey, 0, Math.min(keyBytes.length, validKey.length));
+        return validKey;
     }
 
-    public String encodeAESKeyToBase64(final SecretKey aesKey) {
-        if (!aesKey.getAlgorithm().equalsIgnoreCase("AES")) {
-            throw new IllegalArgumentException("Not an AES key");
+    private static String compressAndEncode(byte[] data) throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (DeflaterOutputStream deflaterOutputStream = new DeflaterOutputStream(outputStream)) {
+            deflaterOutputStream.write(data);
         }
+        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    }
 
-        final byte[] keyData = aesKey.getEncoded();
-        return Base64.getEncoder().encodeToString(keyData);
+    private static byte[] decompressAndDecrypt(byte[] data, Cipher cipher) throws Exception {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+        InflaterInputStream inflaterInputStream = new InflaterInputStream(inputStream);
+
+        byte[] decompressedBytes = inflaterInputStream.readAllBytes();
+        return cipher.doFinal(decompressedBytes);
     }
 }
