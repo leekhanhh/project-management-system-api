@@ -163,7 +163,7 @@ public class AccountController extends ABasicController {
         Account account = accountRepository.findById(id).orElse(null);
         ApiResponse<AccountDto> apiMessageDto = new ApiResponse<>();
         if (account == null) {
-            throw new BadRequestException("Account not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
+            throw new NotFoundException("Account not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
         }
         apiMessageDto.setData(accountMapper.fromAccountToDto(account));
         apiMessageDto.setMessage("Get Account success");
@@ -212,7 +212,7 @@ public class AccountController extends ABasicController {
         accountRepository.save(account);
 
         //send email
-        baseMetaApiService.sendEmail(account.getEmail(), "OTP: " + otp, "Reset password", false);
+        baseMetaApiService.sendOTPEmail(account.getEmail(), otp, 2);
 
         ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto();
         String hash = AESUtils.encrypt(account.getId() + ";" + otp, true);

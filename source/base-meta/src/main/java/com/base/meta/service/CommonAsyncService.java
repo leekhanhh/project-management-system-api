@@ -27,16 +27,30 @@ public class CommonAsyncService {
     private TaskExecutor taskExecutor;
 
     @Async
-    public void sendEmail(String email, String msg, String subject, boolean html) {
+    public void sendOTPEmail(String email, String msg, int time) {
         Runnable task3 = () -> {
             try {
-                emailService.sendEmail(email, msg, subject, html);
+                emailService.sendOtpEmail(email, msg, time);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
         };
         taskExecutor.execute(task3);
     }
+
+    @Async
+    public void sendPasswordEmail(String email, String fullName, String username, String password) {
+        Runnable task3 = () -> {
+            try {
+                emailService.sendPasswordEmail(email, fullName, username, password);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        };
+        taskExecutor.execute(task3);
+    }
+
+
 
     @Async
     public void pushToFirebase(String url, String data, HttpMethod httpMethod) {

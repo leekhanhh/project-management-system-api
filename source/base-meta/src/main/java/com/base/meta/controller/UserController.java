@@ -3,6 +3,7 @@ package com.base.meta.controller;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
+import com.base.meta.dto.account.AccountDto;
 import com.base.meta.dto.account.user.UserDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
@@ -94,6 +95,7 @@ public class UserController extends ABasicController {
         user.setAccount(account);
         accountRepository.save(account);
         userRepository.save(user);
+        baseMetaApiService.sendPasswordEmail(account.getEmail(), account.getFullName(), account.getUsername(), password);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create user success. Password: " + password);
         return apiMessageDto;
@@ -160,12 +162,12 @@ public class UserController extends ABasicController {
     }
 
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<UserDto> getProfile() {
+    public ApiMessageDto<AccountDto> getProfile() {
         long id = getCurrentUser();
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("user not found!", ErrorCode.USER_ERROR_NOT_FOUND));
-        ApiMessageDto<UserDto> apiMessageDto = new ApiMessageDto<>();
-        apiMessageDto.setData(userMapper.fromEntityToUserDto(user));
+        Account user = accountRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("user not found!", ErrorCode.USER_ERROR_NOT_FOUND));
+        ApiMessageDto<AccountDto> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setData(accountMapper.fromAccountToDto(user));
         apiMessageDto.setMessage("Get user profile success.");
         return apiMessageDto;
     }
