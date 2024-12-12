@@ -1,11 +1,14 @@
 package com.base.meta.controller;
 
+import com.amazonaws.services.mq.model.UnauthorizedException;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
+import com.base.meta.dto.account.AccountDto;
 import com.base.meta.dto.account.user.UserDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
+import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.user.UpdateUserForm;
 import com.base.meta.form.user.UpdateUserProfileForm;
 import com.base.meta.form.user.CreateUserForm;
@@ -94,6 +97,7 @@ public class UserController extends ABasicController {
         user.setAccount(account);
         accountRepository.save(account);
         userRepository.save(user);
+        baseMetaApiService.sendPasswordEmail(account.getEmail(), account.getFullName(), account.getUsername(), password);
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Create user success. Password: " + password);
         return apiMessageDto;
@@ -126,8 +130,8 @@ public class UserController extends ABasicController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('US_L')")
     public ApiMessageDto<ResponseListDto<UserDto>> listUser(UserCriteria userCriteria, Pageable pageable) {
-        if (!isSuperAdmin()) {
-            throw new BadRequestException("Only super admin can list user!", ErrorCode.USER_ERROR_UNAUTHORIZED);
+        if (!isSuperAdmin() && !isPM()) {
+            throw new BadRequestException("Only super admin and PM can list user!", ErrorCode.USER_ERROR_UNAUTHORIZED);
         }
         ApiMessageDto<ResponseListDto<UserDto>> apiMessageDto = new ApiMessageDto<>();
         Page<User> userPage = userRepository.findAll(userCriteria.getSpecification(), pageable);
@@ -160,12 +164,12 @@ public class UserController extends ABasicController {
     }
 
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<UserDto> getProfile() {
+    public ApiMessageDto<AccountDto> getProfile() {
         long id = getCurrentUser();
-        User user = userRepository.findById(id)
+        Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("user not found!", ErrorCode.USER_ERROR_NOT_FOUND));
-        ApiMessageDto<UserDto> apiMessageDto = new ApiMessageDto<>();
-        apiMessageDto.setData(userMapper.fromEntityToUserDto(user));
+        ApiMessageDto<AccountDto> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setData(accountMapper.fromAccountToDto(account));
         apiMessageDto.setMessage("Get user profile success.");
         return apiMessageDto;
     }
@@ -215,6 +219,21 @@ public class UserController extends ABasicController {
         //already delete user mapping in the ProjectMember table in liquibase onDeleteCascade constraint
         ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
         apiMessageDto.setMessage("Delete user success.");
+        return apiMessageDto;
+    }
+
+    @PutMapping(value = "/update-flag", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('US_UF')")
+    public ApiMessageDto<String> updateFlagUser(@RequestBody ModifyFlagForm modifyFlagForm) {
+        if (!isSuperAdmin()) {
+            throw new UnauthorizedException("Only super admin can update user flag!");
+        }
+        User user = userRepository.findById(modifyFlagForm.getObjectId())
+                .orElseThrow(() -> new NotFoundException("user not found!", ErrorCode.USER_ERROR_NOT_FOUND));
+        user.getAccount().setFlag(modifyFlagForm.getFlag());
+        userRepository.save(user);
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        apiMessageDto.setMessage("Update user flag success.");
         return apiMessageDto;
     }
 }

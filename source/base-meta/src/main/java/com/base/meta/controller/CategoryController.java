@@ -53,7 +53,6 @@ public class CategoryController extends ABasicController{
         return apiMessageDto;
     }
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('CATE_L')")
     public ApiMessageDto<ResponseListDto<CategoryDto>> listCategory(CategoryCriteria categoryCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<CategoryDto>> apiMessageDto = new ApiMessageDto<>();
         Page<Category> listCategory = categoryRepository.findAll(categoryCriteria.getSpecification(), pageable);

@@ -39,8 +39,11 @@ public class BaseMetaApiService {
         return Long.parseLong(baseMetaOTPService.generate(9)) + System.currentTimeMillis();
     }
 
-    public void sendEmail(String email, String msg, String subject, boolean html) {
-        commonAsyncService.sendEmail(email, msg, subject, html);
+    public synchronized void sendOTPEmail(String email, String otp, int time) {
+        commonAsyncService.sendOTPEmail(email, otp, time);
+    }
+    public synchronized void sendPasswordEmail(String email, String fullName, String username, String password) {
+        commonAsyncService.sendPasswordEmail(email, fullName, username, password);
     }
 
     public String generateDisplayId(String prefix, Date date){
