@@ -2,7 +2,6 @@ package com.base.meta.controller;
 
 
 import com.base.meta.constant.BaseMetaConstant;
-import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.account.AccountDto;
 import com.base.meta.dto.account.ForgetPasswordDto;
 import com.base.meta.dto.account.RequestForgetPasswordForm;
@@ -118,6 +117,7 @@ public class AccountController extends ABasicController {
         account.setEmail(updateAccountAdminForm.getEmail());
         account.setPhone(updateAccountAdminForm.getPhone());
         accountRepository.save(account);
+
         apiMessageDto.setMessage("Update account admin success.");
         return apiMessageDto;
 
@@ -200,10 +200,10 @@ public class AccountController extends ABasicController {
     }
 
     @PostMapping(value = "/request-forget-password", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiMessageDto<String> requestForgetPassword(@Valid @RequestBody RequestForgetPasswordForm forgetForm, BindingResult bindingResult) {
-        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+    public ApiResponse<ForgetPasswordDto> requestForgetPassword(@Valid @RequestBody RequestForgetPasswordForm forgetForm, BindingResult bindingResult) {
+        ApiResponse<ForgetPasswordDto> apiMessageDto = new ApiResponse<>();
         Account account = accountRepository.findAccountByEmail(forgetForm.getEmail()).orElseThrow(
-                () -> new NotFoundException("Email not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
+                () -> new BadRequestException("Email not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
 
         String otp = baseMetaApiService.getOTPForgetPassword();
         account.setAttemptCode(0);
@@ -212,11 +212,14 @@ public class AccountController extends ABasicController {
         accountRepository.save(account);
 
         //send email
-        baseMetaApiService.sendOTPEmail(account.getEmail(), otp, 2);
+        baseMetaApiService.sendEmail(account.getEmail(), "OTP: " + otp, "Reset password", false);
+
+        ForgetPasswordDto forgetPasswordDto = new ForgetPasswordDto();
         String hash = AESUtils.encrypt(account.getId() + ";" + otp, true);
+        forgetPasswordDto.setIdHash(hash);
 
         apiMessageDto.setResult(true);
-        apiMessageDto.setData(hash);
+        apiMessageDto.setData(forgetPasswordDto);
         apiMessageDto.setMessage("Request forget password successfully, please check email!");
         return apiMessageDto;
     }
@@ -225,7 +228,6 @@ public class AccountController extends ABasicController {
     public ApiResponse<Long> forgetPassword(@Valid @RequestBody ForgetPasswordForm forgetForm, BindingResult bindingResult) {
         ApiResponse<Long> apiMessageDto = new ApiResponse<>();
 
-        log.info("Forget password: {}", forgetForm.getIdHash());
         String[] hash = AESUtils.decrypt(forgetForm.getIdHash(), true).split(";", 2);
         Long id = ConvertUtils.convertStringToLong(hash[0]);
         if (id <= 0) {

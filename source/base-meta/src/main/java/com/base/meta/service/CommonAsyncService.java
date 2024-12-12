@@ -27,22 +27,10 @@ public class CommonAsyncService {
     private TaskExecutor taskExecutor;
 
     @Async
-    public void sendOTPEmail(String email, String otp, int time) {
+    public void sendEmail(String email, String msg, String subject, boolean html) {
         Runnable task3 = () -> {
             try {
-                emailService.sendOtpEmail(email, otp, time);
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        };
-        taskExecutor.execute(task3);
-    }
-
-    @Async
-    public void sendPasswordEmail(String email, String fullName, String username, String password) {
-        Runnable task3 = () -> {
-            try {
-                emailService.sendPasswordEmail(email, fullName, username, password);
+                emailService.sendEmail(email, msg, subject, html);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
