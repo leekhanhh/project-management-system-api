@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserDetailsService {
     private AccountRepository accountRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userId) {
-        Account user = accountRepository.findAccountByUsername(userId);
+    public UserDetails loadUserByUsername(String userName) {
+        Account user = accountRepository.findAccountByUsername(userName);
         if (user == null) {
             log.error("Invalid username or password!");
             throw new UsernameNotFoundException("Invalid username or password!");
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserDetailsService {
         Map<String, Serializable> extensionProperties = new HashMap<>();
 
         Account user = accountRepository.findAccountByUsername(username);
-        if (grantType.equalsIgnoreCase(SecurityConstant.GRANT_TYPE_COMPANY) && (user == null || !Objects.equals(BaseMetaConstant.USER_KIND_DEV, user.getKind()) || !Objects.equals(BaseMetaConstant.USER_KIND_TESTER, user.getKind()))) {
+        if (grantType.equalsIgnoreCase(SecurityConstant.GRANT_TYPE_COMPANY) && (user == null || !Objects.equals(BaseMetaConstant.USER_KIND_DEV, user.getKind()) || !Objects.equals(BaseMetaConstant.USER_KIND_TESTER, user.getKind()) || !Objects.equals(BaseMetaConstant.USER_KIND_ADMIN, user.getKind()) || !Objects.equals(BaseMetaConstant.USER_KIND_PM, user.getKind()))) {
             log.error("Invalid username or password!");
             throw new UsernameNotFoundException("Invalid username or password!");
         }

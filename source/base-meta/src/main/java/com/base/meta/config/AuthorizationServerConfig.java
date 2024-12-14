@@ -27,31 +27,36 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${base.meta.signing.key}")
     private String signingKey;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
-    @Autowired
+    final
     ObjectMapper objectMapper;
+
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, JdbcTemplate jdbcTemplate, UserDetailsService userDetailsService, UserServiceImpl userService, ObjectMapper objectMapper) {
+        this.authenticationManager = authenticationManager;
+        this.jdbcTemplate = jdbcTemplate;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.objectMapper = objectMapper;
+    }
 
     @Bean
     public TokenStore tokenStore() {
-        JdbcTokenStore jdbcTokenStore = new JdbcTokenStore(jdbcTemplate.getDataSource());
+        JdbcTokenStore jdbcTokenStore = new JdbcTokenStore(Objects.requireNonNull(jdbcTemplate.getDataSource()));
         jdbcTokenStore.setAuthenticationKeyGenerator(new CustomAuthenticationKeyGenerator());
         return jdbcTokenStore;
     }

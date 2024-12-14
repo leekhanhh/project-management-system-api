@@ -100,7 +100,7 @@ public class TestCaseUploadController extends ABasicController {
             return apiMessageDto;
         }
 
-        if (ExcelService.hasExcelFormat(file)) {
+        if (excelService.hasExcelFormat(file)) {
             try {
                 List<TestCaseUpload> testCaseUploads = excelService.mapExcelToData(file.getInputStream());
                 for (TestCaseUpload testCaseUpload : testCaseUploads) {

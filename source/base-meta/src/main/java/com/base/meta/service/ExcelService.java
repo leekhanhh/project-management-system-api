@@ -42,7 +42,7 @@ public class ExcelService {
         this.accountRepository = accountRepository;
     }
 
-    public static boolean hasExcelFormat(MultipartFile file) {
+    public boolean hasExcelFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType());
     }
 

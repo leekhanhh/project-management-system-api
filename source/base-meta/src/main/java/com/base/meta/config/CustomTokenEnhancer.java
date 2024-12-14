@@ -32,19 +32,18 @@ public class CustomTokenEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInfo;
         String grantType = authentication.getOAuth2Request().getRequestParameters().get("grantType");
-        String tenantId = authentication.getOAuth2Request().getRequestParameters().get("tenantId");
         String userId = authentication.getOAuth2Request().getRequestParameters().get("userId");
         String username = authentication.getName();
         if (Objects.equals(grantType, SecurityConstant.GRANT_TYPE_COMPANY)) {
-            additionalInfo = getAdditionalInfoTypePass(tenantId, username, grantType, Long.valueOf(userId));
+            additionalInfo = getAdditionalInfoTypePass(username, grantType, Long.valueOf(userId));
         } else {
-            additionalInfo = getAdditionalInfoTypePass(null, username, grantType, null);
+            additionalInfo = getAdditionalInfoTypePass(username, grantType, null);
         }
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
 
-    private Map<String, Object> getAdditionalInfoTypePass(String tenantName, String username, String grantType, Long userId) {
+    private Map<String, Object> getAdditionalInfoTypePass(String username, String grantType, Long userId) {
         Map<String, Object> additionalInfo = new HashMap<>();
         AccountForTokenDto a = getAccountByUsername(username);
 

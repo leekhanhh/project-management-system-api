@@ -39,28 +39,29 @@ import static com.base.meta.controller.AccountController.PREFIX_ENTITY;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Slf4j
 public class UserController extends ABasicController {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserMapper userMapper;
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    AccountMapper accountMapper;
-    @Autowired
-    GroupRepository groupRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    ProjectMemberRepository projectMemberRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    DataSource dataSource;
-    @Autowired
-    RandomPasswordUtils randomPasswordUtils;
-    @Autowired
-    BaseMetaApiService baseMetaApiService;
+    final UserRepository userRepository;
+    final UserMapper userMapper;
+    final AccountRepository accountRepository;
+    final AccountMapper accountMapper;
+    final GroupRepository groupRepository;
+    final CategoryRepository categoryRepository;
+    final ProjectMemberRepository projectMemberRepository;
+    final PasswordEncoder passwordEncoder;
+    final DataSource dataSource;
+    final BaseMetaApiService baseMetaApiService;
+
+    public UserController(BaseMetaApiService baseMetaApiService, DataSource dataSource, UserRepository userRepository, UserMapper userMapper, AccountRepository accountRepository, AccountMapper accountMapper, GroupRepository groupRepository, CategoryRepository categoryRepository, ProjectMemberRepository projectMemberRepository, PasswordEncoder passwordEncoder) {
+        this.baseMetaApiService = baseMetaApiService;
+        this.dataSource = dataSource;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.accountRepository = accountRepository;
+        this.accountMapper = accountMapper;
+        this.groupRepository = groupRepository;
+        this.categoryRepository = categoryRepository;
+        this.projectMemberRepository = projectMemberRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('US_C')")
@@ -86,7 +87,7 @@ public class UserController extends ABasicController {
         account.setStatus(status);
         account.setPosition(position);
         account.setFullName(createUserForm.getFirstName() + " " + createUserForm.getLastName());
-        String password = randomPasswordUtils.createPassword();
+        String password = baseMetaApiService.generateRandomPassword();
         account.setPassword(passwordEncoder.encode(password));
         account.setFlag(1);
         account.setKind(createUserForm.getKind());
@@ -107,10 +108,8 @@ public class UserController extends ABasicController {
         if (!isSuperAdmin()) {
             throw new BadRequestException("Only super admin can update user!", ErrorCode.USER_ERROR_UNAUTHORIZED);
         }
-        User user = userRepository.findById(updateUserForm.getId()).orElse(null);
-        if (user == null) {
-            throw new BadRequestException("User not found!", ErrorCode.USER_ERROR_NOT_FOUND);
-        }
+        User user = userRepository.findById(updateUserForm.getId()).orElseThrow(()
+                -> new NotFoundException("User not found!", ErrorCode.USER_ERROR_NOT_FOUND));
         Category status = categoryRepository.findById(updateUserForm.getMemberStatusCategoryId()).orElseThrow(()
                 -> new NotFoundException("Member status category not found!", ErrorCode.CATEGORY_ERROR_NOT_FOUND));
 
@@ -128,9 +127,6 @@ public class UserController extends ABasicController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('US_L')")
     public ApiMessageDto<ResponseListDto<UserDto>> listUser(UserCriteria userCriteria, Pageable pageable) {
-        if (!isSuperAdmin()) {
-            throw new BadRequestException("Only super admin can list user!", ErrorCode.USER_ERROR_UNAUTHORIZED);
-        }
         ApiMessageDto<ResponseListDto<UserDto>> apiMessageDto = new ApiMessageDto<>();
         Page<User> userPage = userRepository.findAll(userCriteria.getSpecification(), pageable);
         ResponseListDto<UserDto> responseListDto = new ResponseListDto(userMapper.fromEntityToUserDtoList(userPage.getContent()), userPage.getTotalElements(), userPage.getTotalPages());

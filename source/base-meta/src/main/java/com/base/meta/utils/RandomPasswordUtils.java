@@ -1,7 +1,5 @@
 package com.base.meta.utils;
 
-import lombok.Data;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

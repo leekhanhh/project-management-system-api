@@ -39,9 +39,6 @@ public class CreateUserForm {
     @NotEmpty(message = "lastname can not be empty!")
     @ApiModelProperty(name = "lastName", required = true)
     private String lastName;
-    @NotEmpty(message = "logoPath cant not be empty!")
-    @ApiModelProperty(name = "logoPath", required = true)
-    private String logoPath;
     @NotNull(message = "status can not be null!")
     @ApiModelProperty(name = "status", required = true)
     private Integer flag;

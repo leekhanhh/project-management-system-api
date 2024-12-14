@@ -2,6 +2,7 @@ package com.base.meta.service;
 
 import com.base.meta.model.Permission;
 import com.base.meta.model.TestCaseUpload;
+import com.base.meta.utils.RandomPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,28 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @Slf4j
 public class BaseMetaApiService {
-    @Autowired
-    BaseMetaOTPService baseMetaOTPService;
+    final BaseMetaOTPService baseMetaOTPService;
     @Autowired
     CommonAsyncService commonAsyncService;
-    @Autowired
-    ExcelService excelService;
+    final ExcelService excelService;
+    final RandomPasswordUtils randomPasswordUtils;
     private final AtomicInteger orderStt = new AtomicInteger(0);
     private String currentDate = getFormattedDate(new Date());
 
     private Map<String, Long> storeQRCodeRandom = new ConcurrentHashMap<>();
 
+    public BaseMetaApiService(BaseMetaOTPService baseMetaOTPService, ExcelService excelService, RandomPasswordUtils randomPasswordUtils) {
+        this.baseMetaOTPService = baseMetaOTPService;
+        this.excelService = excelService;
+        this.randomPasswordUtils = randomPasswordUtils;
+    }
+
     public void deleteFile(String filePath) {
         //call to mediaService for delete
 
+    }
+    public String generateRandomPassword() {
+        return randomPasswordUtils.createPassword();
     }
 
     public String getOTPForgetPassword() {

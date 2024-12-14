@@ -13,11 +13,6 @@ import java.util.List;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         uses = {ProjectMapper.class, AccountMapper.class})
 public interface ProjectMemberMapper {
-    @Mapping(source = "onBoardedDate", target = "onBoardedDate")
-    @Mapping(source = "offBoardedDate", target = "offBoardedDate")
-    @BeanMapping(ignoreByDefault = true)
-    ProjectMember fromCreateProjectMemberFormToEntity(CreateProjectMemberForm createProjectMemberForm);
-
     @Mapping(source = "id", target = "id")
     @Mapping(source = "project", target = "project", qualifiedByName = "fromEntityToProjectAutoCompleteDto")
     @Mapping(source = "account", target = "account", qualifiedByName = "fromEntityToAccountAutoCompleteDto")

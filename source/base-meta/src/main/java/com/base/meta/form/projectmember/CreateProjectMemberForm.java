@@ -14,11 +14,5 @@ public class CreateProjectMemberForm {
     private Long projectId;
     @ApiModelProperty(value = "Account ID")
     @NotNull(message = "Account ID cannot be null!")
-    private Long accountId;
-    @ApiModelProperty(value = "On boarded date")
-    @FutureOrPresent(message = "On boarded date must be in the present or future!")
-    private Date onBoardedDate;
-    @ApiModelProperty(value = "Off boarded date")
-    @FutureOrPresent(message = "Off boarded date must be in the present or future!")
-    private Date offBoardedDate;
+    private Long[] accountIds;
 }

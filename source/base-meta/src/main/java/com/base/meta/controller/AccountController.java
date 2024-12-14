@@ -203,7 +203,7 @@ public class AccountController extends ABasicController {
     public ApiResponse<ForgetPasswordDto> requestForgetPassword(@Valid @RequestBody RequestForgetPasswordForm forgetForm, BindingResult bindingResult) {
         ApiResponse<ForgetPasswordDto> apiMessageDto = new ApiResponse<>();
         Account account = accountRepository.findAccountByEmail(forgetForm.getEmail()).orElseThrow(
-                () -> new BadRequestException("Email not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
+                () -> new NotFoundException("Email not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
 
         String otp = baseMetaApiService.getOTPForgetPassword();
         account.setAttemptCode(0);
@@ -237,12 +237,8 @@ public class AccountController extends ABasicController {
         }
 
 
-        Account account = accountRepository.findById(id).orElse(null);
-        if (account == null) {
-            apiMessageDto.setResult(false);
-            apiMessageDto.setCode(ErrorCode.ACCOUNT_ERROR_NOT_FOUND);
-            return apiMessageDto;
-        }
+        Account account = accountRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Account not found!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
 
         if (account.getAttemptCode() >= BaseMetaConstant.MAX_ATTEMPT_FORGET_PWD) {
             throw new BadRequestException("Account is locked!", ErrorCode.ACCOUNT_ERROR_LOCKED);
