@@ -46,8 +46,8 @@ public class UserCriteria implements Serializable {
                     predicates.add(cb.equal(join.get("name"), getPosition()));
                 }
                 if (!StringUtils.isEmpty(getStatus())) {
-                    Join<Category, User> join = root.join("status", JoinType.INNER);
-                    predicates.add(cb.equal(join.get("name"), getStatus()));
+                    Join<Category, User> join = root.join("account", JoinType.INNER).join("status", JoinType.INNER);
+                    predicates.add(cb.equal(join.get("id"), getStatus()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }
