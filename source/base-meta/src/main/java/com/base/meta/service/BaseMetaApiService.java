@@ -2,6 +2,7 @@ package com.base.meta.service;
 
 import com.base.meta.model.Permission;
 import com.base.meta.model.TestCaseUpload;
+import com.base.meta.utils.DateUtils;
 import com.base.meta.utils.RandomPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class BaseMetaApiService {
     final ExcelService excelService;
     final RandomPasswordUtils randomPasswordUtils;
     private final AtomicInteger orderStt = new AtomicInteger(0);
-    private String currentDate = getFormattedDate(new Date());
+    private String currentDate = DateUtils.getFormatDateYyyyMmDd(new Date());
 
     private Map<String, Long> storeQRCodeRandom = new ConcurrentHashMap<>();
 
@@ -59,7 +60,7 @@ public class BaseMetaApiService {
         StringBuilder displayId = new StringBuilder();
         displayId.append(prefix);
         displayId.append("_");
-        String formattedDate = getFormattedDate(date);
+        String formattedDate = DateUtils.getFormatDateYyyyMmDd(date);
         if (!formattedDate.equals(currentDate)) {
             currentDate = formattedDate;
             orderStt.set(0);
@@ -69,10 +70,6 @@ public class BaseMetaApiService {
         String formattedOrderStt = String.format("%04d", orderStt.incrementAndGet());
         displayId.append(formattedOrderStt);
         return displayId.toString();
-    }
-    private String getFormattedDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-        return sdf.format(date);
     }
     public String convertGroupToUri(List<Permission> permissions) {
         if (permissions != null) {

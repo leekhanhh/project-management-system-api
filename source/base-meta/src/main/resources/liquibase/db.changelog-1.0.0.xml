@@ -750,7 +750,8 @@
         <addUniqueConstraint columnNames="name" constraintName="UC_DB_PROJECT_MANAGEMENT_PERMISSIONNAME_COL" tableName="db_project_management_permission"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-29">
-        <addUniqueConstraint columnNames="account_id" constraintName="UK_8kqkplkq9fu2el7rv27ckag73" tableName="db_project_management_project_member"/>
+        <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="db_project_management_project_member" constraintName="FK_8kqkplkq9fu2el7rv27ckag73"
+                                 deferrable="false" referencedTableName="db_project_management_account" referencedColumnNames="id" initiallyDeferred="false" validate="true" onDelete="CASCADE"/>
     </changeSet>
     <changeSet author="GIGABYTE (generated)" id="1729698209024-30">
         <addForeignKeyConstraint baseColumnNames="test_suite_id" baseTableName="db_project_management_test_plan_test_suite_relation" constraintName="FK1ulgcqmc3bnt7ongqoiuej9d4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="db_project_management_test_suite" validate="true" onDelete="CASCADE"/>

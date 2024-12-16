@@ -11,10 +11,14 @@ import com.base.meta.form.ModifyFlagForm;
 import com.base.meta.form.project.CreateProjectForm;
 import com.base.meta.form.project.UpdateProjectForm;
 import com.base.meta.mapper.ProjectMapper;
+import com.base.meta.mapper.ProjectMemberMapper;
 import com.base.meta.model.Category;
 import com.base.meta.model.Project;
+import com.base.meta.model.ProjectMember;
 import com.base.meta.model.criteria.ProjectCriteria;
+import com.base.meta.repository.AccountRepository;
 import com.base.meta.repository.CategoryRepository;
+import com.base.meta.repository.ProjectMemberRepository;
 import com.base.meta.repository.ProjectRepository;
 import com.base.meta.service.BaseMetaApiService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +41,23 @@ import java.util.Date;
 @Slf4j
 public class ProjectController extends ABasicController{
     private static final String PREFIX_ENTITY = "PJ";
-    @Autowired
-    ProjectMapper projectMapper;
-    @Autowired
-    ProjectRepository projectRepository;
-    @Autowired
-    BaseMetaApiService baseMetaApiService;
-    @Autowired
-    CategoryRepository categoryRepository;
+    final ProjectMapper projectMapper;
+    final ProjectRepository projectRepository;
+    final BaseMetaApiService baseMetaApiService;
+    final CategoryRepository categoryRepository;
+    final AccountRepository accountRepository;
+    final ProjectMemberRepository projectMemberRepository;
+    final ProjectMemberMapper projectMemberMapper;
+
+    public ProjectController(ProjectMapper projectMapper, ProjectRepository projectRepository, BaseMetaApiService baseMetaApiService, CategoryRepository categoryRepository, AccountRepository accountRepository, ProjectMemberRepository projectMemberRepository, ProjectMemberMapper projectMemberMapper) {
+        this.projectMapper = projectMapper;
+        this.projectRepository = projectRepository;
+        this.baseMetaApiService = baseMetaApiService;
+        this.categoryRepository = categoryRepository;
+        this.accountRepository = accountRepository;
+        this.projectMemberRepository = projectMemberRepository;
+        this.projectMemberMapper = projectMemberMapper;
+    }
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -71,6 +84,12 @@ public class ProjectController extends ABasicController{
         project.setStatus(status);
         project.setDisplayId(baseMetaApiService.generateDisplayId(PREFIX_ENTITY, new Date()));
         projectRepository.save(project);
+        Long accountId = getCurrentUser();
+        ProjectMember projectMember = new ProjectMember();
+        projectMember.setProject(project);
+        projectMember.setAccount(accountRepository.findFirstById(accountId));
+        projectMember.setOnBoardedDate(new Date());
+        projectMemberRepository.save(projectMember);
         apiMessageDto.setMessage("Create a new project success.");
         return apiMessageDto;
     }
@@ -149,9 +168,24 @@ public class ProjectController extends ABasicController{
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ProjectDto> getProject(@PathVariable Long id) {
         ApiMessageDto<ProjectDto> apiMessageDto = new ApiMessageDto<>();
-        Project project = projectRepository.findById(id).orElseThrow(() -> new BadRequestException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
+        Project project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("Project is not existed!", ErrorCode.PROJECT_ERROR_NOT_EXIST));
         apiMessageDto.setData(projectMapper.fromEntityToProjectDto(project));
         apiMessageDto.setMessage("Get project success.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/list-by-pm-account", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasRole('PJ_LBPMA')")
+    public ApiMessageDto<ResponseListDto<ProjectDto>> listProjectByPmAccount(Pageable pageable) {
+        if(!isPM()){
+            throw new UnauthorizationException("Not allowed list!");
+        }
+        ApiMessageDto<ResponseListDto<ProjectDto>> apiMessageDto = new ApiMessageDto<>();
+        Long accountId = getCurrentUser();
+        Page<ProjectMember> project = projectMemberRepository.findAllByAccountId(accountId, pageable);
+        ResponseListDto responseListDto = new ResponseListDto(projectMemberMapper.fromEntityToProjectMemberDtoList(project.getContent()), project.getTotalElements(), project.getTotalPages());
+        apiMessageDto.setData(responseListDto);
+        apiMessageDto.setMessage("List projects by PM account success.");
         return apiMessageDto;
     }
 

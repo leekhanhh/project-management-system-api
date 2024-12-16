@@ -14,6 +14,7 @@ import java.util.TimeZone;
 @Slf4j
 public class DateUtils {
     public static final String FORMAT_DATE = "dd/MM/yyyy HH:mm:ss";
+    public static final String FORMAT_DATE_YYYY_MM_DD = "ddMMyyyy";
 
     private DateUtils() {
     }
@@ -32,6 +33,10 @@ public class DateUtils {
     public static String formatDate(Date date, String format) {
         SimpleDateFormat fm = new SimpleDateFormat(format);
         return fm.format(date);
+    }
+    public static String getFormatDateYyyyMmDd(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_DATE_YYYY_MM_DD);
+        return format.format(date);
     }
 
     public static Date converDate(String date, String format) {

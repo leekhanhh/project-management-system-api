@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -16,10 +17,8 @@ import com.base.meta.model.*;
 import com.base.meta.model.criteria.UserCriteria;
 import com.base.meta.repository.*;
 import com.base.meta.service.BaseMetaApiService;
-import com.base.meta.utils.RandomPasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.sql.DataSource;
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 import static com.base.meta.controller.AccountController.PREFIX_ENTITY;
 

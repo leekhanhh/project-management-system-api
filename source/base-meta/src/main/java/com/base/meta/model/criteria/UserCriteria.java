@@ -20,6 +20,7 @@ public class UserCriteria implements Serializable {
     private String lastName;
     private String position;
     private String status;
+    private Integer kind;
 
     public Specification<User> getSpecification() {
         return new Specification<User>() {
@@ -48,6 +49,9 @@ public class UserCriteria implements Serializable {
                 if (!StringUtils.isEmpty(getStatus())) {
                     Join<Category, User> join = root.join("account", JoinType.INNER).join("status", JoinType.INNER);
                     predicates.add(cb.equal(join.get("id"), getStatus()));
+                }
+                if(getKind() != null){
+                    predicates.add(cb.equal(root.get("account").get("kind"), getKind()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

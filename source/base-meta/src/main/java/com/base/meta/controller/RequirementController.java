@@ -162,7 +162,7 @@ public class RequirementController extends ABasicController {
         ApiMessageDto<RequirementDto> apiMessageDto = new ApiMessageDto<>();
         Requirement requirement = requirementRepository.findById(id).orElse(null);
         if (requirement == null) {
-            throw new BadRequestException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
+            throw new NotFoundException("Requirement is not existed!", ErrorCode.REQUIREMENT_ERROR_NOT_FOUND);
         }
         apiMessageDto.setData(requirementMapper.fromEntityToRequirementDto(requirement));
         apiMessageDto.setMessage("Get a requirement success.");

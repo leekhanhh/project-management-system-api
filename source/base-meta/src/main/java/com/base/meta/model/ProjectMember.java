@@ -18,10 +18,10 @@ public class ProjectMember extends Auditable<String> {
     @GenericGenerator(name = "idGenerator", strategy = "com.base.meta.service.id.IdGenerator")
     @GeneratedValue(generator = "idGenerator")
     private Long id;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
     @Column(name = "on_boarded_date")

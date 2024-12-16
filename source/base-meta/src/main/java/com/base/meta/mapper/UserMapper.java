@@ -29,9 +29,16 @@ public interface UserMapper {
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToUserDto")
     UserDto fromEntityToUserDto(User user);
+    @Mapping(source = "account", target = "account", qualifiedByName = "fromAccountToAutoCompleteDto")
+    @BeanMapping(ignoreByDefault = true)
+    @Named("fromEntityToUserAccountDto")
+    UserDto fromEntityToUserAccountDto(User user);
 
     @IterableMapping(qualifiedByName = "fromEntityToUserDto", elementTargetType = UserDto.class)
-    List<UserDto> fromEntityToUserDtoList(List<User> careers);
+    List<UserDto> fromEntityToUserDtoList(List<User> users);
+
+    @IterableMapping(qualifiedByName = "fromEntityToUserAccountDto", elementTargetType = UserDto.class)
+    List<UserDto> fromEntityToUserAccountDtoList(List<User> users);
 
     @Mapping(target = "account.fullName", source = "fullName")
     @Mapping(target = "account.phone", source = "phone")

@@ -74,7 +74,7 @@ public class ProjectMemberController extends ABasicController{
             Account account = accountRepository.findById(accountId).orElseThrow(()
                     -> new NotFoundException("Account is not existed!", ErrorCode.ACCOUNT_ERROR_NOT_FOUND));
 
-            if (Integer.parseInt(account.getStatus().getCode()) != BaseMetaConstant.USER_STATUS_AVAILABLE
+            if (!(Integer.parseInt(account.getStatus().getCode()) == BaseMetaConstant.USER_STATUS_AVAILABLE || Integer.parseInt(account.getStatus().getCode()) == BaseMetaConstant.USER_STATUS_BUSY)
                     && account.getStatus().getKind().equals(BaseMetaConstant.CATEGORY_KIND_ACCOUNT)) {
                 throw new BadRequestException("Account is not available!", ErrorCode.USER_ERROR_NOT_AVAILABLE);
             }

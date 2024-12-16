@@ -3,6 +3,7 @@ package com.base.meta.model.criteria;
 import com.base.meta.model.Account;
 import com.base.meta.model.Category;
 import com.base.meta.model.Program;
+import com.base.meta.model.Project;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +25,7 @@ public class ProgramCriteria implements Serializable {
     private String programOwnerName;
     private String assignedDeveloperName;
     private String assignedTesterName;
-
+    private Long projectId;
     public Specification<Program> getSpecification() {
         return new Specification<Program>() {
             public static final long serialVersionUID = 1L;
@@ -63,6 +64,10 @@ public class ProgramCriteria implements Serializable {
                 }
                 if (getProgramCategory() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("programCategory"), getProgramCategory()));
+                }
+                if(getProjectId() != null){
+                    Join<Project, Program> join = root.join("project", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(join.get("id"), getProjectId()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
