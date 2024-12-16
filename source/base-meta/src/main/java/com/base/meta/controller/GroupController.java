@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.group.GroupDto;
 import com.base.meta.exception.BadRequestException;
@@ -138,6 +139,7 @@ public class GroupController extends ABasicController {
             throw new UnauthorizationException("Not allowed list group!");
         }
         ApiMessageDto<ResponseListDto<GroupDto>> apiMessageDto = new ApiMessageDto<>();
+        groupCriteria.setStatus(BaseMetaConstant.STATUS_ACTIVE);
         Page<Group> groups = groupRepository.findAll(groupCriteria.getSpecification(), pageable);
         ResponseListDto<GroupDto> responseListDto = new ResponseListDto(groupMapper.fromEntityToGroupDtoList(groups.getContent()), groups.getTotalElements(), groups.getTotalPages());
         apiMessageDto.setData(responseListDto);

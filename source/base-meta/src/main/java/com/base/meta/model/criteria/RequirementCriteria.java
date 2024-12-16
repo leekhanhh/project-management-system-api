@@ -1,5 +1,6 @@
 package com.base.meta.model.criteria;
 
+import com.base.meta.model.Category;
 import com.base.meta.model.Project;
 import com.base.meta.model.Requirement;
 import lombok.Data;
@@ -14,10 +15,11 @@ import java.util.List;
 @Data
 public class RequirementCriteria implements Serializable {
     private String name;
-    private String projectName;
     private Long projectId;
-    private String devision;
-    private String status;
+    private Long acceptanceId;
+    private Integer flag;
+    private Long divisionId;
+    private Long detailClassificationId;
 
 
     public Specification<Requirement> getSpecification() {
@@ -30,19 +32,24 @@ public class RequirementCriteria implements Serializable {
                 if (!StringUtils.isEmpty(getName())) {
                     return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + getName().toLowerCase() + "%");
                 }
-                if (!StringUtils.isEmpty(getProjectName())) {
-                    Join<Requirement, Project> project = root.join("project", JoinType.INNER);
-                    return criteriaBuilder.like(criteriaBuilder.lower(project.get("name")), "%" + getProjectName().toLowerCase() + "%");
-                }
                 if (getProjectId() != null) {
-                    Join<Requirement, Project> project = root.join("project", JoinType.INNER);
-                    return criteriaBuilder.equal(project.get("id"), getProjectId());
+                    Join<Project, Requirement> join = root.join("project", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(join.get("id"), getProjectId()));
                 }
-                if (!StringUtils.isEmpty(getDevision())) {
-                    return criteriaBuilder.like(criteriaBuilder.lower(root.get("devision")), "%" + getDevision().toLowerCase() + "%");
+                if (getDivisionId() != null) {
+                    Join<Category, Requirement> join = root.join("division", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(join.get("id"), getDivisionId()));
                 }
-                if (getStatus() != null) {
-                    return criteriaBuilder.equal(root.get("flag"), getStatus());
+                if (getDetailClassificationId() != null) {
+                    Join<Category, Requirement> join = root.join("detailClassification", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(join.get("id"), getDetailClassificationId()));
+                }
+                if (getAcceptanceId() != null) {
+                    Join<Category, Requirement> join = root.join("acceptance", JoinType.INNER);
+                    predicates.add(criteriaBuilder.equal(join.get("id"), getAcceptanceId()));
+                }
+                if (getFlag() != null) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

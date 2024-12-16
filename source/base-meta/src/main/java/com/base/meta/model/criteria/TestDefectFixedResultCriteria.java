@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class TestDefectFixedResultCriteria implements Serializable {
     private Long testDefectId;
+    private int flag;
     public Specification<TestDefectFixedResult> getSpecification() {
         return new Specification<TestDefectFixedResult> () {
             public static final long serialVersionUID = 1L;
@@ -20,6 +21,9 @@ public class TestDefectFixedResultCriteria implements Serializable {
                 if (getTestDefectId() != null) {
                     Join<TestDefectFixedResult, TestDefect> join = root.join("testDefect", JoinType.INNER);
                     predicateList.add(criteriaBuilder.equal(join.get("id"), getTestDefectId()));
+                }
+                if (getFlag() != 0) {
+                    predicateList.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

@@ -19,8 +19,11 @@ public class UserCriteria implements Serializable {
     private String firstName;
     private String lastName;
     private String position;
+    private Long statusId;
+    private Long positionId;
     private String status;
     private Integer kind;
+    private int flag;
 
     public Specification<User> getSpecification() {
         return new Specification<User>() {
@@ -52,6 +55,17 @@ public class UserCriteria implements Serializable {
                 }
                 if(getKind() != null){
                     predicates.add(cb.equal(root.get("account").get("kind"), getKind()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(cb.equal(root.get("flag"), getFlag()));
+                }
+                if(getPositionId() != null){
+                    Join<Category, User> join = root.join("position", JoinType.INNER);
+                    predicates.add(cb.equal(join.get("id"), getPositionId()));
+                }
+                if(getStatusId() != null){
+                    Join<Category, User> join = root.join("account", JoinType.INNER).join("status", JoinType.INNER);
+                    predicates.add(cb.equal(join.get("id"), getStatusId()));
                 }
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));
             }

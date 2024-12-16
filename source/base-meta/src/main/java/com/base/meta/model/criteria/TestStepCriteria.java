@@ -14,6 +14,7 @@ import java.util.List;
 public class TestStepCriteria implements Serializable {
     private Long testcaseId;
     private Integer stepNumber;
+    private int flag;
 
     public Specification<TestStep> getSpecification() {
         return new Specification<TestStep>() {
@@ -28,6 +29,9 @@ public class TestStepCriteria implements Serializable {
                 }
                 if (getStepNumber() != null) {
                     predicates.add(criteriaBuilder.equal(root.get("stepNumber"), getStepNumber()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

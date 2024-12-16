@@ -128,6 +128,7 @@ public class UserController extends ABasicController {
     @PreAuthorize("hasRole('US_L')")
     public ApiMessageDto<ResponseListDto<UserDto>> listUser(UserCriteria userCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<UserDto>> apiMessageDto = new ApiMessageDto<>();
+        userCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<User> userPage = userRepository.findAll(userCriteria.getSpecification(), pageable);
         ResponseListDto<UserDto> responseListDto = new ResponseListDto(userMapper.fromEntityToUserDtoList(userPage.getContent()), userPage.getTotalElements(), userPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

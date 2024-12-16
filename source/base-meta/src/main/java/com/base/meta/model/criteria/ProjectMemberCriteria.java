@@ -16,6 +16,7 @@ import java.util.List;
 public class ProjectMemberCriteria implements Serializable {
     private Long projectId;
     private Long accountId;
+    private int flag;
 
     public Specification<ProjectMember> getSpecification(){
         return new Specification<ProjectMember>() {
@@ -30,6 +31,9 @@ public class ProjectMemberCriteria implements Serializable {
                 if(accountId != null){
                     Join<ProjectMember, Account> account = root.join("account", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(account.get("id"), accountId));
+                }
+                if(flag != 0){
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), flag));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

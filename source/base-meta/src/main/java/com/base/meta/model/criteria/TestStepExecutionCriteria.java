@@ -14,6 +14,7 @@ public class TestStepExecutionCriteria implements Serializable {
     private Long testCaseExecutionId;
     private Long statusId;
     private Boolean isDefected;
+    private int flag;
 
     public Specification<TestStepExecution> getSpecification(){
         return new Specification<TestStepExecution>() {
@@ -35,6 +36,9 @@ public class TestStepExecutionCriteria implements Serializable {
                 }
                 if (getIsDefected() != null) {
                     predicateList.add(criteriaBuilder.equal(root.get("isDefected"), getIsDefected()));
+                }
+                if (getFlag() != 0) {
+                    predicateList.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

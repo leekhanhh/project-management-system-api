@@ -15,7 +15,7 @@ import java.util.List;
 public class TestSuiteTestCaseRelationCriteria implements Serializable {
     private Long testSuiteId;
     private Long testCaseId;
-
+    private int flag;
     public Specification<TestSuiteTestCaseRelation> getSpecification() {
         return new Specification<TestSuiteTestCaseRelation>() {
             public static final long serialVersionUID = 1L;
@@ -29,6 +29,9 @@ public class TestSuiteTestCaseRelationCriteria implements Serializable {
                 if (getTestCaseId() != null) {
                     Join<TestSuiteTestCaseRelation, TestCase> join = root.join("testCase", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(join.get("id"), getTestCaseId()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

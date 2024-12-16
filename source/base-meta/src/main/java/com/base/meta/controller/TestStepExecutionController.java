@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -102,6 +103,7 @@ public class TestStepExecutionController extends ABasicController{
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestStepExecutionDto>> listTestStepExecution(TestStepExecutionCriteria criteria, Pageable pageable) {
+        criteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestStepExecution> page = testStepExecutionRepository.findAll(criteria.getSpecification(), pageable);
         ResponseListDto<TestStepExecutionDto> responseListDto = new ResponseListDto(testStepExecutionMapper.fromEntityListToDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         ApiMessageDto<ResponseListDto<TestStepExecutionDto>> apiMessageDto = new ApiMessageDto<>();

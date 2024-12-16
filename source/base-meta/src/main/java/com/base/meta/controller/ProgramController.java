@@ -204,6 +204,7 @@ public class ProgramController extends ABasicController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<ProgramDto>> programList(ProgramCriteria programCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<ProgramDto>> apiMessageDto = new ApiMessageDto<>();
+        programCriteria.setStatus(BaseMetaConstant.STATUS_ACTIVE);
         Page<Program> programPage = programRepository.findAll(programCriteria.getSpecification(), pageable);
         ResponseListDto<ProgramDto> responseListDto = new ResponseListDto(programMapper.fromEntityToProgramDtoList(programPage.getContent()), programPage.getTotalElements(), programPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

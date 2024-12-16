@@ -73,6 +73,7 @@ public class PermissionController extends ABasicController {
         ApiMessageDto<ResponseListDto<PermissionDto>> apiMessageDto = new ApiMessageDto<>();
         /*Page<Permission> accounts = permissionRepository.findAll(PageRequest.of(0, 1000, Sort.by(new Sort.Order(Sort.Direction.DESC, "createdDate"))));
         apiMessageDto.setData(accounts.getContent());*/
+        permissionCriteria.setStatus(BaseMetaConstant.STATUS_ACTIVE);
         Page<Permission> page = permissionRepository.findAll(permissionCriteria.getSpecification(), pageable);
         ResponseListDto<PermissionDto> responseListDto = new ResponseListDto(permissionMapper.fromEntityToPermissionDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         apiMessageDto.setData(responseListDto);

@@ -15,6 +15,7 @@ public class TestSuiteExecutionCriteria implements Serializable {
     private Long statusId;
     private Long testSuiteId;
     private Long testExecutionTurnId;
+    private int flag;
 
     public Specification<TestSuiteExecution> getSpecification(){
         return new Specification<TestSuiteExecution>() {
@@ -33,6 +34,9 @@ public class TestSuiteExecutionCriteria implements Serializable {
                 if (getTestExecutionTurnId() != null) {
                     Join<Category, TestSuiteExecution> join = root.join("testExecutionTurn", JoinType.INNER);
                     predicateList.add(criteriaBuilder.equal(join.get("id"), getTestExecutionTurnId()));
+                }
+                if (getFlag() != 0) {
+                    predicateList.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

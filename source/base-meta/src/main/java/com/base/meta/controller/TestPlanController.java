@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -119,10 +120,8 @@ public class TestPlanController extends ABasicController{
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<TestPlanDto> getTestPlan(@PathVariable Long id){
         ApiMessageDto<TestPlanDto> apiMessageDto = new ApiMessageDto<>();
-        TestPlan testPlan = testPlanRepository.findById(id).orElse(null);
-        if (testPlan == null) {
-            throw new BadRequestException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST);
-        }
+        TestPlan testPlan = testPlanRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Test plan is not existed!", ErrorCode.TEST_PLAN_ERROR_NOT_EXIST));
         apiMessageDto.setData(testPlanMapper.fromEntityToTestPlanDto(testPlan));
         apiMessageDto.setMessage("Get test plan success.");
         return apiMessageDto;
@@ -131,6 +130,7 @@ public class TestPlanController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestPlanDto>> listTestPlan(TestPlanCriteria testPlanCriteria, Pageable pageable){
         ApiMessageDto<ResponseListDto<TestPlanDto>> apiMessageDto = new ApiMessageDto<>();
+        testPlanCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestPlan> testPlanPage = testPlanRepository.findAll(testPlanCriteria.getSpecification(), pageable);
         ResponseListDto<TestPlanDto> responseListDto = new ResponseListDto(testPlanMapper.fromEntityToTestPlanDtoList(testPlanPage.getContent()), testPlanPage.getTotalElements(), testPlanPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

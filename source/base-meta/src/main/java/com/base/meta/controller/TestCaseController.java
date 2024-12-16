@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -115,6 +116,7 @@ public class TestCaseController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestCaseDto>> listTestCase(TestCaseCriteria testCaseCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestCaseDto>> apiMessageDto = new ApiMessageDto<>();
+        testCaseCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestCase> testCasePage = testCaseRepository.findAll(testCaseCriteria.getSpecification(), pageable);
         ResponseListDto responseListDto = new ResponseListDto(testCaseMapper.fromEntityToTestCaseDtoList(
                 testCasePage.getContent()),

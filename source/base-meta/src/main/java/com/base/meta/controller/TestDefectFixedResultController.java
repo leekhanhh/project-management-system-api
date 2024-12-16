@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+
+import static com.base.meta.constant.BaseMetaConstant.STATUS_ACTIVE;
 
 @RestController
 @RequestMapping("/v1/test-defect-fixed-result")
@@ -84,6 +87,7 @@ public class TestDefectFixedResultController extends ABasicController {
 
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestDefectFixedResultDto>> listTestDefectFixedResult(TestDefectFixedResultCriteria criteria, Pageable pageable) {
+        criteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestDefectFixedResult> page = testDefectFixedResultRepository.findAll(criteria.getSpecification(), pageable);
         ResponseListDto<TestDefectFixedResultDto> responseListDto = new ResponseListDto(testDefectFixedResultMapper.fromEntityListToDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         ApiMessageDto<ResponseListDto<TestDefectFixedResultDto>> apiMessageDto = new ApiMessageDto<>();

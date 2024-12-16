@@ -267,6 +267,7 @@ public class AccountController extends ABasicController {
             throw new UnauthorizationException("Not allowed view!");
         }
         ApiResponse<ResponseListDto<AccountDto>> apiMessageDto = new ApiResponse<>();
+        accountCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<Account> page = accountRepository.findAll(accountCriteria.getSpecification(), pageable);
         ResponseListDto<AccountDto> responseListDto = new ResponseListDto(accountMapper.fromEntityToAccountDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         apiMessageDto.setData(responseListDto);

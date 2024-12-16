@@ -10,13 +10,15 @@ import java.io.Serializable;
 public class TestDefectCommentCriteria implements Serializable {
     private Long testDefectId;
     private Long senderId;
+    private int flag;
 
     public Specification<TestDefectComment> getSpecification() {
         return (root, query, cb) -> {
             query.distinct(true);
             return cb.and(
                     testDefectId == null ? cb.conjunction() : cb.equal(root.get("testDefect").get("id"), testDefectId),
-                    senderId == null ? cb.conjunction() : cb.equal(root.get("sender").get("id"), senderId)
+                    senderId == null ? cb.conjunction() : cb.equal(root.get("sender").get("id"), senderId),
+                    flag == 0 ? cb.conjunction() : cb.equal(root.get("flag"), flag)
             );
         };
     }

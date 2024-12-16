@@ -21,6 +21,7 @@ public class TestPlanCriteria implements Serializable {
     private Date endDate;
     private Long programId;
     private Long projectId;
+    private int flag;
 
     public Specification<TestPlan> getSpecification() {
         return new Specification<TestPlan>() {
@@ -49,6 +50,9 @@ public class TestPlanCriteria implements Serializable {
                     Join<TestPlan, Program> programJoin = root.join("program", JoinType.INNER);
                     Join<Program, Project> projectJoin = programJoin.join("project", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(projectJoin.get("id"), getProjectId()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

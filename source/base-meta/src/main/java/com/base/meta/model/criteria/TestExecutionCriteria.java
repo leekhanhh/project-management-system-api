@@ -19,9 +19,11 @@ public class TestExecutionCriteria implements Serializable {
     private Long categoryId;
     private Long statusId;
     private String assignedDeveloperName;
+    private Long assignedDeveloperId;
     private Long projectId;
     private Date planStartDate;
     private Date planEndDate;
+    private int flag;
 
     public Specification<TestExecution> getSpecification() {
         return new Specification<TestExecution>() {
@@ -56,6 +58,13 @@ public class TestExecutionCriteria implements Serializable {
                 }
                 if(getPlanStartDate() != null && getPlanEndDate() != null) {
                     predicates.add(criteriaBuilder.between(root.get("planStartDate"), getPlanStartDate(), getPlanEndDate()));
+                }
+                if(getAssignedDeveloperId() != null) {
+                    Join<Account, TestExecution> account = root.join("assignedDeveloper");
+                    predicates.add(criteriaBuilder.equal(account.get("id"), getAssignedDeveloperId()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }

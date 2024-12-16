@@ -15,28 +15,38 @@ import java.util.List;
 @Data
 public class TestExecutionTurnCriteria implements Serializable {
     private String developerName;
+    private Long developerId;
     private Long testExecutionId;
     private Date startDate;
     private Date endDate;
+    private int flag;
 
     public Specification<TestExecutionTurn> getSpecification() {
         return new Specification<TestExecutionTurn>() {
             public static final long serialVersionUID = 1L;
+
             @Override
             public Predicate toPredicate(Root<TestExecutionTurn> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicateList = new ArrayList<>();
-                if(!StringUtils.isEmpty(getDeveloperName())) {
+                if (!StringUtils.isEmpty(getDeveloperName())) {
                     Join<Account, TestExecutionTurn> join = root.join("assignedDeveloper", JoinType.INNER);
                     predicateList.add(criteriaBuilder.like(join.get("fullname"), "%" + getDeveloperName() + "%"));
                 }
-                if(getTestExecutionId() != null) {
+                if (getTestExecutionId() != null) {
                     predicateList.add(criteriaBuilder.equal(root.get("testExecution").get("id"), getTestExecutionId()));
                 }
-                if(getStartDate() != null) {
+                if (getStartDate() != null) {
                     predicateList.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), getStartDate()));
                 }
-                if(getEndDate() != null) {
+                if (getEndDate() != null) {
                     predicateList.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), getEndDate()));
+                }
+                if (getDeveloperId() != null) {
+                    Join<Account, TestExecutionTurn> join = root.join("assignedDeveloper", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(join.get("id"), getDeveloperId()));
+                }
+                if (getFlag() != 0) {
+                    predicateList.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

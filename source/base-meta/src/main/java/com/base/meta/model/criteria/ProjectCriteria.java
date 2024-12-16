@@ -18,6 +18,7 @@ public class ProjectCriteria implements Serializable {
     private Long statusId;
     private Date startDate;
     private Date endDate;
+    private int flag;
 
     public Specification<Project> getSpecification() {
         return new Specification<Project>() {
@@ -38,6 +39,9 @@ public class ProjectCriteria implements Serializable {
                 }
                 if (getEndDate() != null) {
                     predicates.add(cb.lessThanOrEqualTo(root.get("endDate"), getEndDate()));
+                }
+                if(flag != 0){
+                    predicates.add(cb.equal(root.get("flag"), getFlag()));
                 }
                 query.orderBy(cb.desc(root.get("createdDate")));
                 return cb.and(predicates.toArray(new Predicate[predicates.size()]));

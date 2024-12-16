@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -150,6 +151,7 @@ public class RequirementController extends ABasicController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<RequirementDto>> listRequirement(RequirementCriteria requirementCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<RequirementDto>> apiMessageDto = new ApiMessageDto<>();
+        requirementCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<Requirement> requirementPage = requirementRepository.findAll(requirementCriteria.getSpecification(), pageable);
         ResponseListDto responseListDto = new ResponseListDto(requirementMapper.fromEntityToRequirementDtoList(requirementPage.getContent()), requirementPage.getTotalElements(), requirementPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

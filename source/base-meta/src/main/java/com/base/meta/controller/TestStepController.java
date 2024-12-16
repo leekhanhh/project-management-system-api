@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -54,12 +55,8 @@ public class TestStepController extends ABasicController{
         if(!isTester()){
             throw new UnauthorizationException("Not allowed create!");
         }
-        TestCase testCase = testCaseRepository.findById(createTestStepForm.getTestCaseId()).orElseThrow(()
+        TestCase testCase = testCaseRepository.findFirstById(createTestStepForm.getTestCaseId()).orElseThrow(()
                 -> new NotFoundException("Test case is not existed!", ErrorCode.TEST_CASE_ERROR_NOT_EXIST));
-
-        if(testStepRepository.findFirstByTestCaseAndStepNumber(testCase.getId(), createTestStepForm.getStepNumber()) != null){
-            throw new BadRequestException("Step number is existed!", ErrorCode.TEST_STEP_ERROR_STEP_NUMBER_EXISTED);
-        }
 
         TestStep testStep = testStepMapper.fromCreateTestStepFormToEntity(createTestStepForm);
         testStep.setTestCase(testCase);
@@ -107,10 +104,8 @@ public class TestStepController extends ABasicController{
     @GetMapping(value="/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<TestStepDto> getTestStep(@PathVariable("id") Long id) {
         ApiMessageDto<TestStepDto> apiMessageDto = new ApiMessageDto<>();
-        TestStep testStep = testStepRepository.findById(id).orElse(null);
-        if (testStep == null) {
-            throw new BadRequestException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST);
-        }
+        TestStep testStep = testStepRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Test step is not existed!", ErrorCode.TEST_STEP_ERROR_NOT_EXIST));
         apiMessageDto.setData(testStepMapper.fromEntityToTestStepDto(testStep));
         apiMessageDto.setMessage("Get test step success.");
         return apiMessageDto;
@@ -119,6 +114,7 @@ public class TestStepController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestStepDto>> listTestStep(TestStepCriteria testStepCriteria, Pageable pageable){
         ApiMessageDto<ResponseListDto<TestStepDto>> apiMessageDto = new ApiMessageDto<>();
+        testStepCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestStep> testStepPage = testStepRepository.findAll(testStepCriteria.getSpecification(), pageable);
         ResponseListDto<TestStepDto> responseListDto = new ResponseListDto(testStepMapper.fromEntityToTestStepDtoList(testStepPage.getContent()), testStepPage.getTotalElements(), testStepPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

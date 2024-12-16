@@ -26,6 +26,7 @@ public class ProgramCriteria implements Serializable {
     private String assignedDeveloperName;
     private String assignedTesterName;
     private Long projectId;
+    private int status;
     public Specification<Program> getSpecification() {
         return new Specification<Program>() {
             public static final long serialVersionUID = 1L;
@@ -68,6 +69,9 @@ public class ProgramCriteria implements Serializable {
                 if(getProjectId() != null){
                     Join<Project, Program> join = root.join("project", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(join.get("id"), getProjectId()));
+                }
+                if(status != 0){
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), status));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

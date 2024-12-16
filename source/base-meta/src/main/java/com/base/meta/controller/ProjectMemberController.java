@@ -135,6 +135,7 @@ public class ProjectMemberController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<ProjectMemberDto>> listProjectMembers(ProjectMemberCriteria projectMemberCriteria, @PageableDefault(size = 1000) Pageable pageable) {
         ApiMessageDto<ResponseListDto<ProjectMemberDto>> apiMessageDto = new ApiMessageDto<>();
+        projectMemberCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<ProjectMember> page = projectMemberRepository.findAll(projectMemberCriteria.getSpecification(), pageable);
         ResponseListDto<ProjectMemberDto> responseListDto = new ResponseListDto(projectMemberMapper.fromEntityToProjectMemberDtoList(page.getContent()), page.getTotalElements(), page.getTotalPages());
         apiMessageDto.setData(responseListDto);

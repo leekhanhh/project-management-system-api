@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TestCaseRepository extends JpaRepository<TestCase, Long>, JpaSpecificationExecutor<TestCase> {
     TestCase findFirstByName(String name);
-
+    Optional<TestCase> findFirstById(Long id);
     @Query("SELECT " +
             "COUNT(tc.id) AS totalCases, " +
             "SUM(CASE WHEN tce.status.id = (SELECT c.id FROM Category c WHERE c.name = 'Not-Executed' AND c.kind = 7) THEN 1 ELSE 0 END) AS notExecuted, " +

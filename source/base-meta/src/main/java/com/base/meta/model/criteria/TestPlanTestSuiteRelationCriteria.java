@@ -14,6 +14,7 @@ import java.util.List;
 public class TestPlanTestSuiteRelationCriteria implements Serializable {
     private Long testPlanId;
     private Long testSuiteId;
+    private int flag;
 
     public Specification<TestPlanTestSuiteRelation> getSpecification() {
         return new Specification<TestPlanTestSuiteRelation>() {
@@ -29,6 +30,9 @@ public class TestPlanTestSuiteRelationCriteria implements Serializable {
                 if (getTestSuiteId() != null) {
                     Join<TestSuite, TestPlanTestSuiteRelationCriteria> testSuiteJoin = root.join("testSuite", JoinType.INNER);
                     predicates.add(criteriaBuilder.equal(testSuiteJoin.get("id"), getTestSuiteId()));
+                }
+                if (getFlag() != 0) {
+                    predicates.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
             }

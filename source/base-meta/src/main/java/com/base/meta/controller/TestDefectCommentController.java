@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -123,6 +124,7 @@ public class TestDefectCommentController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestDefectCommentDto>> listTestDefectComment(TestDefectCommentCriteria testDefectCommentCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestDefectCommentDto>> apiMessageDto = new ApiMessageDto<>();
+        testDefectCommentCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestDefectComment> testDefectCommentPage = testDefectCommentRepository.findAll(testDefectCommentCriteria.getSpecification(), pageable);
         ResponseListDto<TestDefectCommentDto> responseListDto = new ResponseListDto(testDefectCommentMapper.fromEntityToDtoList(testDefectCommentPage.getContent()), testDefectCommentPage.getTotalElements(), testDefectCommentPage.getTotalPages());
         apiMessageDto.setData(responseListDto);

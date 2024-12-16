@@ -19,6 +19,8 @@ public class TestSuiteCriteria implements Serializable {
     private Long accountId;
     private String projectName;
     private Long programId;
+    private Long projectId;
+    private int flag;
 
     public Specification<TestSuite> getSpecification(){
         return new Specification<TestSuite>() {
@@ -29,6 +31,15 @@ public class TestSuiteCriteria implements Serializable {
                 if (!StringUtils.isEmpty(getName())) {
                     predicateList.add(criteriaBuilder.like(root.get("name"), "%" + getName() + "%"));
                 }
+                if (getProgramId() != null) {
+                    Join<TestSuite, Program> join = root.join("program", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(join.get("id"), getProgramId()));
+                }
+                if (getProjectId() != null) {
+                    Join<TestSuite, Program> pgJoin = root.join("program", JoinType.INNER);
+                    Join<Program, Project> pjJoin = pgJoin.join("project", JoinType.INNER);
+                    predicateList.add(criteriaBuilder.equal(pjJoin.get("id"), getProjectId()));
+                }
                 if (getAccountId() != null) {
                     Join<TestSuite, Account> join = root.join("account", JoinType.INNER);
                     predicateList.add(criteriaBuilder.equal(join.get("id"), getAccountId()));
@@ -36,6 +47,9 @@ public class TestSuiteCriteria implements Serializable {
                 if (!StringUtils.isEmpty(getProjectName())) {
                     Join<TestSuite, Program> join = root.join("program", JoinType.INNER);
                     predicateList.add(criteriaBuilder.like(join.get("name"), "%" + getProjectName() + "%"));
+                }
+                if (getFlag() != 0) {
+                    predicateList.add(criteriaBuilder.equal(root.get("flag"), getFlag()));
                 }
                 return criteriaBuilder.and(predicateList.toArray(new Predicate[predicateList.size()]));
             }

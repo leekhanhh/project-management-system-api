@@ -1,5 +1,6 @@
 package com.base.meta.controller;
 
+import com.base.meta.constant.BaseMetaConstant;
 import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
@@ -158,6 +159,7 @@ public class ProjectController extends ABasicController{
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<ProjectDto>> listProject(ProjectCriteria projectCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<ProjectDto>> apiMessageDto = new ApiMessageDto<>();
+        projectCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<Project> project = projectRepository.findAll(projectCriteria.getSpecification(), pageable);
         ResponseListDto<ProjectDto> responseListDto = new ResponseListDto(projectMapper.fromEntityToProjectDtoList(project.getContent()), project.getTotalElements(), project.getTotalPages());
         apiMessageDto.setData(responseListDto);

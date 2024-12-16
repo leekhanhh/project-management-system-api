@@ -182,6 +182,7 @@ public class TestExecutionTurnController extends ABasicController {
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<ResponseListDto<TestExecutionTurnDto>> listExecutionTurn(TestExecutionTurnCriteria testExecutionTurnCriteria, Pageable pageable) {
         ApiMessageDto<ResponseListDto<TestExecutionTurnDto>> apiMessageDto = new ApiMessageDto<>();
+        testExecutionTurnCriteria.setFlag(BaseMetaConstant.STATUS_ACTIVE);
         Page<TestExecutionTurn> testExecutionTurnPage = testExecutionTurnRepository.findAll(testExecutionTurnCriteria.getSpecification(), pageable);
         ResponseListDto<TestExecutionTurnDto> responseListDto = new ResponseListDto(testExecutionTurnMapper.fromEntitiesToDtos(testExecutionTurnPage.getContent()), testExecutionTurnPage.getTotalElements(), testExecutionTurnPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
