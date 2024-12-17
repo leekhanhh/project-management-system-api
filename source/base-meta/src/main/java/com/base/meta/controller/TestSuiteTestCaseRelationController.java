@@ -110,12 +110,20 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiMessageDto<TestSuiteTestCaseRelationDto> getTestSuiteTestCaseRelation(@PathVariable("id") Long id) {
         ApiMessageDto<TestSuiteTestCaseRelationDto> apiMessageDto = new ApiMessageDto<>();
-        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findById(id).orElse(null);
-        if (testSuiteTestCaseRelation == null) {
-            throw new BadRequestException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_EXIST);
-        }
+        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_NOT_EXIST));
         apiMessageDto.setData(testSuiteTestCaseRelationMapper.fromEntityToDto(testSuiteTestCaseRelation));
         apiMessageDto.setMessage("Get test suite test case relation success.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/list-test-case-items-by-test-suite")
+    public ApiMessageDto<ResponseListDto<TestSuiteTestCaseRelationDto>> getTestCaseItemsByTestSuite(TestSuiteTestCaseRelationCriteria testSuiteTestCaseRelationCriteria, Pageable pageable) {
+        ApiMessageDto<ResponseListDto<TestSuiteTestCaseRelationDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<TestSuiteTestCaseRelation> testCases = testSuiteTestCaseRelationRepository.findAll(testSuiteTestCaseRelationCriteria.getSpecification(), pageable);
+        ResponseListDto responseListDto = new ResponseListDto(testSuiteTestCaseRelationMapper.fromShortenedEntitiesToDtos(testCases.getContent()), testCases.getTotalElements(), testCases.getTotalPages());
+        apiMessageDto.setData(responseListDto);
+        apiMessageDto.setMessage("Get test case items by test suite success.");
         return apiMessageDto;
     }
 }

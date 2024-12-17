@@ -1,6 +1,7 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.program.ProgramAutoCompleteDto;
+import com.base.meta.dto.program.ProgramAutoCompleteNameDto;
 import com.base.meta.dto.program.ProgramDto;
 import com.base.meta.form.program.CreateProgramForm;
 import com.base.meta.form.program.UpdateProgramForm;
@@ -61,4 +62,11 @@ public interface ProgramMapper {
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToAutoCompleteProgramDto")
     ProgramDto fromEntityToAutoCompleteProgramDto(Program program);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "displayId", target = "displayId")
+    @Mapping(source = "name", target = "name")
+    @BeanMapping(ignoreByDefault = true)
+    @Named("fromEntityToAutoCompleteProgramNameDto")
+    ProgramDto fromEntityToAutoCompleteNameToDto(Program program);
 }

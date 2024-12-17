@@ -1,6 +1,7 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.account.AccountAutoCompleteDto;
+import com.base.meta.dto.account.AccountAutoCompleteNameDto;
 import com.base.meta.dto.account.AccountDto;
 import com.base.meta.form.user.CreateUserForm;
 import com.base.meta.model.Account;
@@ -54,5 +55,10 @@ public interface AccountMapper {
     @Named("fromEntityToAccountDtoList")
     List<AccountDto> fromEntityToAccountDtoList(List<Account> accounts);
 
-
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "displayId", target = "displayId")
+    @Mapping(source = "fullName", target = "fullName")
+    @BeanMapping(ignoreByDefault = true)
+    @Named("fromEntityToAutoCompleteAccountNameDto")
+    AccountDto fromEntityToAutoCompleteNameToDto(Account account);
 }

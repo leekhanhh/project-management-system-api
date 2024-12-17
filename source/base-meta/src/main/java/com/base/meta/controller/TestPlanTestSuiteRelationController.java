@@ -5,6 +5,7 @@ import com.base.meta.dto.ApiMessageDto;
 import com.base.meta.dto.ErrorCode;
 import com.base.meta.dto.ResponseListDto;
 import com.base.meta.dto.testplantestsuiterelation.TestPlanTestSuiteRelationDto;
+import com.base.meta.dto.testsuite.TestSuiteDto;
 import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.BindingErrorsHandler;
 import com.base.meta.exception.NotFoundException;
@@ -125,6 +126,16 @@ public class TestPlanTestSuiteRelationController extends ABasicController {
         ResponseListDto responseListDto = new ResponseListDto(testPlanTestSuiteRelationMapper.fromDtoToTestPlanTestSuiteRelationDtoList(testPlanTestSuiteRelationPage.getContent()), testPlanTestSuiteRelationPage.getTotalElements(), testPlanTestSuiteRelationPage.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("Get test plan test suite relation list success.");
+        return apiMessageDto;
+    }
+
+    @GetMapping(value = "/list-by-test-plan", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiMessageDto<ResponseListDto<TestSuiteDto>> listTestSuiteByTestPlan(TestPlanTestSuiteRelationCriteria criteria, Pageable pageable) {
+        ApiMessageDto<ResponseListDto<TestSuiteDto>> apiMessageDto = new ApiMessageDto<>();
+        Page<TestPlanTestSuiteRelation> testPlanTestSuiteRelations = testPlanTestSuiteRelationRepository.findAll(criteria.getSpecification(), pageable);
+        ResponseListDto responseListDto = new ResponseListDto(testPlanTestSuiteRelationMapper.fromShortenedEntitiesToTestPlanTestSuiteRelationDtos(testPlanTestSuiteRelations.getContent()), testPlanTestSuiteRelations.getTotalElements(), testPlanTestSuiteRelations.getTotalPages());
+        apiMessageDto.setData(responseListDto);
+        apiMessageDto.setMessage("Get test suite list by test plan success.");
         return apiMessageDto;
     }
 }
