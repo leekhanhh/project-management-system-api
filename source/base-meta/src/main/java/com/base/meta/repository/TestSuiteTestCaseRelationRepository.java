@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestSuiteTestCaseRelation, Long>, JpaSpecificationExecutor<TestSuiteTestCaseRelation> {
     boolean existsByTestSuiteIdAndTestCaseId(Long testSuiteId, Long testCaseId);
@@ -17,4 +18,5 @@ public interface TestSuiteTestCaseRelationRepository extends JpaRepository<TestS
     Integer countByTestSuiteId(@Param("testSuiteId") Long testSuiteId);
 
     boolean existsByTestSuiteId(Long testSuiteId);
+    Optional<TestSuiteTestCaseRelation> findFirstByTestCaseIdAndTestSuiteId(Long testCaseId, Long testSuiteId);
 }

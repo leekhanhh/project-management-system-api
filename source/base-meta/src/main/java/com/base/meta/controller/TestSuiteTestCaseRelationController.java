@@ -10,6 +10,7 @@ import com.base.meta.exception.BadRequestException;
 import com.base.meta.exception.NotFoundException;
 import com.base.meta.exception.UnauthorizationException;
 import com.base.meta.form.testsuitetestcaserelation.CreateTestSuiteTestCaseRelationForm;
+import com.base.meta.form.testsuitetestcaserelation.DeleteTestSuiteTestCaseRelationForm;
 import com.base.meta.mapper.TestSuiteTestCaseRelationMapper;
 import com.base.meta.model.TestCase;
 import com.base.meta.model.TestSuite;
@@ -124,6 +125,23 @@ public class TestSuiteTestCaseRelationController extends ABasicController {
         ResponseListDto responseListDto = new ResponseListDto(testSuiteTestCaseRelationMapper.fromShortenedEntitiesToDtos(testCases.getContent()), testCases.getTotalElements(), testCases.getTotalPages());
         apiMessageDto.setData(responseListDto);
         apiMessageDto.setMessage("Get test case items by test suite success.");
+        return apiMessageDto;
+    }
+
+    @DeleteMapping(value = "/delete-by-test-case-id", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    @PreAuthorize("hasRole('TSTCR_D')")
+    public ApiMessageDto<String> deleteByTestCaseId(@Valid @RequestBody DeleteTestSuiteTestCaseRelationForm deleteTestSuiteTestCaseRelationForm, BindingResult bindingResult) {
+        ApiMessageDto<String> apiMessageDto = new ApiMessageDto<>();
+        if (!isTester()) {
+            throw new UnauthorizationException("You are not authorized to perform this action.");
+        }
+        TestSuiteTestCaseRelation testSuiteTestCaseRelation = testSuiteTestCaseRelationRepository.findFirstByTestCaseIdAndTestSuiteId(
+                deleteTestSuiteTestCaseRelationForm.getTestCaseId(),
+                deleteTestSuiteTestCaseRelationForm.getTestSuiteId()).orElseThrow(()
+                -> new NotFoundException("Test suite test case relation not found.", ErrorCode.TEST_SUITE_TEST_CASE_RELATION_ERROR_NOT_EXIST));
+        testSuiteTestCaseRelationRepository.delete(testSuiteTestCaseRelation);
+        apiMessageDto.setMessage("Delete test suite test case relation success.");
         return apiMessageDto;
     }
 }
