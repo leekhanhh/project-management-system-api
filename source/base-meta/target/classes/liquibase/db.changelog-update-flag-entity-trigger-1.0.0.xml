@@ -1,0 +1,250 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+<!--    project-->
+    <changeSet id="disable-project-member-after-project-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_project_members_after_project_update`
+                AFTER UPDATE ON `db_project_management_project`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_project_member
+                SET flag = 0
+                WHERE db_project_management_project_member.project_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-requirement-after-project-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_requirement_after_project_update`
+                AFTER UPDATE ON `db_project_management_project`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_requirement
+                SET flag = 0
+                WHERE db_project_management_requirement.project_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="activate-account-after-project-member-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+                <![CDATA[
+                CREATE TRIGGER `activate_account_after_project_member_update`
+                    AFTER UPDATE ON `db_project_management_project_member`
+                    FOR EACH ROW
+                BEGIN
+                    IF NEW.flag = 0 THEN
+                    UPDATE db_project_management_account
+                    SET status_category_id = (SELECT cast(id as FLOAT) FROM db_project_management_category WHERE code = '2' and kind = '2')
+                    WHERE db_project_management_account.id = NEW.account_id;
+                END IF;
+                END;
+                ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-programs-after-project-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_programs_after_project_update`
+                AFTER UPDATE ON `db_project_management_project`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_program
+                SET flag = 0
+                WHERE db_project_management_program.project_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+<!--    program-->
+    <changeSet id="disable-test-case-after-program-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_case_after_program_update`
+                AFTER UPDATE ON `db_project_management_program`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_case
+                SET flag = 0
+                WHERE db_project_management_test_case.program_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-test-suite-after-program-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_suite_after_program_update`
+                AFTER UPDATE ON `db_project_management_program`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_suite
+                SET flag = 0
+                WHERE db_project_management_test_suite.program = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-test-plan-after-program-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_plan_after_program_update`
+                AFTER UPDATE ON `db_project_management_program`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_plan
+                SET flag = 0
+                WHERE db_project_management_test_plan.program_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-test-execution-after-program-update" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_execution_after_program_update`
+                AFTER UPDATE ON `db_project_management_program`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_execution
+                SET flag = 0
+                WHERE db_project_management_test_execution.program_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+<!--    testcase-->
+
+    <changeSet id="disable-test-step-after-test-case-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_step_after_test_case_update`
+                AFTER UPDATE ON `db_project_management_test_case`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_step
+                SET flag = 0
+                WHERE db_project_management_test_step.test_case_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+    <changeSet id="disable-test-case-execution-after-test-case-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_case_execution_after_test_case_update`
+                AFTER UPDATE ON `db_project_management_test_case`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_case_execution
+                SET flag = 0
+                WHERE db_project_management_test_case_execution.test_case_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+<!--    testsuite-->
+    <changeSet id="disable-test-suite-execution-after-test-suite-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_suite_execution_after_test_suite_update`
+                AFTER UPDATE ON `db_project_management_test_suite`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_suite_execution
+                SET flag = 0
+                WHERE db_project_management_test_suite_execution.test_suite_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+
+<!--    test step execution-->
+    <changeSet id="disable-test-defect-after-test-step-execution-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_defect_after_test_step_execution_update`
+                AFTER UPDATE ON `db_project_management_test_step_execution`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_defect
+                SET flag = 0
+                WHERE db_project_management_test_defect.test_step_execution_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+<!--test step-->
+    <changeSet id="disable-test-step-execution-after-test-step-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+            <![CDATA[
+            CREATE TRIGGER `disable_test_step_execution_after_test_step_update`
+                AFTER UPDATE ON `db_project_management_test_step`
+                FOR EACH ROW
+            BEGIN
+                IF NEW.flag = 0 THEN
+                UPDATE db_project_management_test_step_execution
+                SET flag = 0
+                WHERE db_project_management_test_step_execution.test_step_id = NEW.id;
+            END IF;
+            END;
+            ]]>
+        </createProcedure>
+    </changeSet>
+<!--    testplan-->
+    <changeSet id="disable-test-plan-test-suite-relation-after-test-plan-update-trigger" author="GIGABYTE (generated)">
+        <createProcedure dbms="mysql">
+                <![CDATA[
+                CREATE TRIGGER `disable_test_plan_test_suite_relation_after_test_plan_update`
+                    AFTER UPDATE ON `db_project_management_test_plan`
+                    FOR EACH ROW
+                BEGIN
+                    IF NEW.flag = 0 THEN
+                    UPDATE db_project_management_test_plan_test_suite_relation
+                    SET flag = 0
+                    WHERE db_project_management_test_plan_test_suite_relation.test_plan_id = NEW.id;
+                END IF;
+                END;
+                ]]>
+        </createProcedure>
+    </changeSet>
+
+</databaseChangeLog>
