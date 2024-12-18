@@ -1,6 +1,7 @@
 package com.base.meta.mapper;
 
 import com.base.meta.dto.account.AccountAutoCompleteDto;
+import com.base.meta.dto.account.AccountAutoCompleteNameDto;
 import com.base.meta.dto.account.AccountDto;
 import com.base.meta.form.user.CreateUserForm;
 import com.base.meta.model.Account;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-18T02:45:15+0700",
+    date = "2024-12-18T18:09:20+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.9 (Oracle Corporation)"
 )
 @Component
@@ -118,18 +119,18 @@ public class AccountMapperImpl implements AccountMapper {
     }
 
     @Override
-    public AccountDto fromEntityToAutoCompleteNameToDto(Account account) {
+    public AccountAutoCompleteNameDto fromEntityToAutoCompleteNameToDto(Account account) {
         if ( account == null ) {
             return null;
         }
 
-        AccountDto accountDto = new AccountDto();
+        AccountAutoCompleteNameDto accountAutoCompleteNameDto = new AccountAutoCompleteNameDto();
 
-        accountDto.setFullName( account.getFullName() );
-        accountDto.setId( account.getId() );
-        accountDto.setDisplayId( account.getDisplayId() );
+        accountAutoCompleteNameDto.setFullName( account.getFullName() );
+        accountAutoCompleteNameDto.setId( account.getId() );
+        accountAutoCompleteNameDto.setDisplayId( account.getDisplayId() );
 
-        return accountDto;
+        return accountAutoCompleteNameDto;
     }
 
     protected Category createUserFormToCategory(CreateUserForm createUserForm) {

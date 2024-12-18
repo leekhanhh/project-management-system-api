@@ -25,9 +25,8 @@ public interface TestDefectCommentMapper {
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "testDefect", target = "testDefect", qualifiedByName = "fromEntityToDtoAutoComplete")
-
     @Mapping(source = "comment", target = "comment")
-    @Mapping(source = "sender", target = "sender", qualifiedByName = "fromAccountToAutoCompleteDto")
+    @Mapping(source = "sender", target = "sender", qualifiedByName = "fromEntityToAutoCompleteNameToDto")
     @BeanMapping(ignoreByDefault = true)
     @Named("fromEntityToDto")
     TestDefectCommentDto fromEntityToDto(TestDefectComment testDefectComment);
